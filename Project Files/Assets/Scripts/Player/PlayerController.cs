@@ -23,8 +23,8 @@ public class PlayerController : PhysicalObject
     public float            powerLimit;
     public float            powerIncrement;
     private float           power;
-    private short           arms;
-    private short           enabledArms;
+    private int             arms;
+    private int             enabledArms;
     private bool            isLeftRetrieving;
     private bool            isRightRetrieving;
 
@@ -430,7 +430,7 @@ public class PlayerController : PhysicalObject
     public void SetOnTreadmill(bool isOnTreadmill)
     { this.isOnTreadmill = isOnTreadmill; }
 
-    public void EnableArms(short enabledArms)
+    public void EnableArms(int enabledArms)
     { this.enabledArms = arms = enabledArms; }
 
     public int GetEnabledArms()
@@ -457,6 +457,6 @@ public class PlayerController : PhysicalObject
     public void SetRightRetrieving(bool input)
     { isRightRetrieving = input; }
 
-    public short GetArms()
+    public int GetArms()
     { return arms; }
 }

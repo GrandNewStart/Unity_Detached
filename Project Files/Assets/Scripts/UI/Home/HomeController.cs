@@ -1,25 +1,50 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class HomeController : MonoBehaviour
 {
     public GameObject   indicator;
-    public GameObject   menu_1;
-    public GameObject   menu_2;
-    public GameObject   menu_3;
-    public GameObject   menu_4;
-    public GameObject   noSaveDataDialog;
-    public GameObject   saveDataExistsDialog;
-    public GameObject   settingsDialog;
-    public GameObject   quitDialog;
     private int         selectedMenu = 1;
-    private enum        focus { main, noSaveData, saveDataExists, settings, quit };
-    private             focus focusStatus = focus.main;
- 
+    private enum        focus { main, noSaveData, saveDataExists, settings, quit, none };
+    private focus       focusStatus = focus.main;
+
+    [Header("No Save Data")]
+    public GameObject   noSaveDataDialog;
+    public GameObject   menu_1;
+    public GameObject   menu_1_yes;
+    public GameObject   menu_1_no;
+    public GameObject   menu_1_background;
+    private bool        menu_1_affirmative = false;
+
+    [Header("Save Data Exists")]
+    public GameObject   saveDataExistsDialog;
+    public GameObject   menu_2;
+    public GameObject   menu_2_yes;
+    public GameObject   menu_2_no;
+    private bool        menu_2_affirmative = false;
+
+    [Header("Settings")]
+    public GameObject   settingsDialog;
+    public GameObject   menu_3;
+
+    [Header("Quit")]
+    public GameObject   quitDialog;
+    public GameObject   menu_4;
+    public GameObject   menu_4_yes;
+    public GameObject   menu_4_no;
+    private bool        menu_4_affirmative = false;
+
+    [Header("Loading Screens")]
+    public GameObject loading_1;
+    private StageLoader stageLoader;
+
     void Start()
     {
-        Cursor.visible = false;
+        Cursor.visible   = false;
+        Cursor.lockState = CursorLockMode.Locked;
 
         // Dialogs
         noSaveDataDialog    .SetActive(false);
@@ -31,6 +56,8 @@ public class HomeController : MonoBehaviour
         Vector3 origin = menu_1.transform.position;
         origin.x += 2.5f;
         indicator.transform.position = origin;
+
+        stageLoader = loading_1.GetComponent<StageLoader>();
     }
 
     void Update()
@@ -38,22 +65,29 @@ public class HomeController : MonoBehaviour
         switch (focusStatus)
         {
             case focus.main:
-                DirectionalKeys();
-                EnterKey();
+                MainControl();
+                MainEnterKey();
                 break;
             case focus.noSaveData:
+                NoSaveDataControl();
+                NoSaveDataEnterKey();
                 break;
             case focus.saveDataExists:
+                SaveDataExistsControl();
+                SaveDataExistsEnterKey();
                 break;
             case focus.settings:
+                SettingsControl();
                 break;
             case focus.quit:
+                QuitControl();
+                QuitEnterKey();
                 break;
         }
         
     }
 
-    private void DirectionalKeys()
+    private void MainControl()
     {
         if (Input.GetKeyDown("down") || Input.GetKeyDown("s"))
         {
@@ -125,7 +159,7 @@ public class HomeController : MonoBehaviour
         }
     }
 
-    private void EnterKey()
+    private void MainEnterKey()
     {
         if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown("return"))
         {
@@ -152,10 +186,13 @@ public class HomeController : MonoBehaviour
         SaveData data = SaveSystem.LoadGame();
         if (data == null)
         {
-            
+            loading_1.SetActive(true);
+            stageLoader.LoadStage(1);
         }
         else
         {
+            ToggleButton(menu_2_yes, false);
+            ToggleButton(menu_2_no, true);
             saveDataExistsDialog.SetActive(true);
             focusStatus = focus.saveDataExists;
         }
@@ -166,12 +203,20 @@ public class HomeController : MonoBehaviour
         SaveData data = SaveSystem.LoadGame();
         if (data == null)
         {
+            ToggleButton(menu_1_yes, false);
+            ToggleButton(menu_1_no, true);
+            menu_1_affirmative = false;
             noSaveDataDialog.SetActive(true);
             focusStatus = focus.noSaveData;
         }
         else
         {
-
+            GameManager.stage               = data.GetStage();
+            GameManager.enabledArms         = data.GetEnabledArms();
+            GameManager.position            = data.GetPosition();
+            GameManager.shouldLoadSaveFile  = true;
+            loading_1.SetActive(true);
+            stageLoader.LoadStage(GameManager.stage);
         }
     }
 
@@ -183,7 +228,170 @@ public class HomeController : MonoBehaviour
     
     private void Quit()
     {
+        ToggleButton(menu_4_yes, false);
+        ToggleButton(menu_4_no, true);
+        menu_4_affirmative = false;
         quitDialog.SetActive(true);
         focusStatus = focus.quit;
+    }
+
+    private void NoSaveDataControl()
+    {
+        if (Input.GetKeyDown("left"))
+        {
+            if (menu_1_affirmative) return;
+
+            menu_1_affirmative = true;
+            ToggleButton(menu_1_yes, true);
+            ToggleButton(menu_1_no, false);
+        }
+        if (Input.GetKeyDown("right"))
+        {
+            if (!menu_1_affirmative) return;
+
+            menu_1_affirmative = false;
+            ToggleButton(menu_1_yes, false);
+            ToggleButton(menu_1_no, true);
+        }
+        if (Input.GetKeyDown("escape"))
+        {
+            focusStatus = focus.main;
+            noSaveDataDialog.SetActive(false);
+        }
+    }
+
+    private void NoSaveDataEnterKey()
+    {
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown("return"))
+        {
+            if (menu_1_affirmative)
+            {
+                focusStatus = focus.none;
+                loading_1.SetActive(true);
+                stageLoader.LoadStage(SaveSystem.initialStage);
+            }
+            else
+            {
+                focusStatus = focus.main;
+            }
+            noSaveDataDialog.SetActive(false);
+        }
+    }
+
+    private void SaveDataExistsControl()
+    {
+        if (Input.GetKeyDown("left"))
+        {
+            if (menu_2_affirmative) return;
+
+            menu_2_affirmative = true;
+            ToggleButton(menu_2_yes, true);
+            ToggleButton(menu_2_no, false);
+        }
+        if (Input.GetKeyDown("right"))
+        {
+            if (!menu_2_affirmative) return;
+
+            menu_2_affirmative = false;
+            ToggleButton(menu_2_yes, false);
+            ToggleButton(menu_2_no, true);
+        }
+        if (Input.GetKeyDown("escape"))
+        {
+            Debug.Log("EXIT");
+            focusStatus = focus.main;
+            saveDataExistsDialog.SetActive(false);
+        }
+    }
+
+    private void SaveDataExistsEnterKey()
+    {
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown("return"))
+        {
+            if (menu_2_affirmative)
+            {
+                focusStatus = focus.none;
+                SaveSystem.DeleteSaveFile();
+                GameManager.stage               = SaveSystem.initialStage;
+                GameManager.enabledArms         = SaveSystem.initialEnabledArms;
+                GameManager.position            = SaveSystem.initialPosition;
+                GameManager.shouldLoadSaveFile  = false;
+                loading_1.SetActive(true);
+                stageLoader.LoadStage(GameManager.stage);
+            }
+            else
+            {
+                focusStatus = focus.main;
+            }
+            saveDataExistsDialog.SetActive(false);
+        }
+    }
+
+    private void SettingsControl()
+    {
+        if (Input.GetKeyDown("up"))
+        {
+            Debug.Log("UP");
+        }
+        if (Input.GetKeyDown("down"))
+        {
+            Debug.Log("DOWN");
+        }
+        if (Input.GetKeyDown("escape"))
+        {
+            Debug.Log("EXIT");
+            focusStatus = focus.main;
+            settingsDialog.SetActive(false);
+        }
+    }
+
+    private void QuitControl()
+    {
+        if (Input.GetKeyDown("left"))
+        {
+            if (menu_4_affirmative) return;
+
+            menu_4_affirmative = true;
+            ToggleButton(menu_4_yes, true);
+            ToggleButton(menu_4_no, false);
+        }
+        if (Input.GetKeyDown("right"))
+        {
+            if (!menu_4_affirmative) return;
+
+            menu_4_affirmative = false;
+            ToggleButton(menu_4_yes, false);
+            ToggleButton(menu_4_no, true);
+        }
+        if (Input.GetKeyDown("escape"))
+        {
+            focusStatus = focus.main;
+            quitDialog.SetActive(false);
+        }
+    }
+
+    private void QuitEnterKey()
+    {
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown("return"))
+        {
+            if (menu_4_affirmative)
+            {
+                UnityEditor.EditorApplication.isPlaying = false;
+                Application.Quit();
+            }
+            else
+            {
+                focusStatus = focus.main;
+                quitDialog.SetActive(false);
+            }
+        }
+    }
+
+    private void ToggleButton(GameObject button, bool on)
+    {
+        if (on)
+        { button.transform.localScale = new Vector3(0.5f, 0.5f, 1.0f); }
+        else
+        { button.transform.localScale = new Vector3(0.3f, 0.3f, 1.0f); }
     }
 }

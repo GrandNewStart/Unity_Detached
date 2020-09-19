@@ -4,12 +4,15 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 public static class SaveSystem
 {
-    public static void SaveGame(int stage, PlayerController player)
+    public static int       initialStage = 1;
+    public static int       initialEnabledArms = 0;
+    public static Vector3   initialPosition = new Vector3(-16.5f, -54, 0);
+
+    public static void SaveGame(SaveData data)
     {
         BinaryFormatter formatter   = new BinaryFormatter();
         string path                 = Application.persistentDataPath + "/save.detached";
         FileStream stream           = new FileStream(path, FileMode.Create);
-        SaveData data               = new SaveData(stage, player);
 
         formatter.Serialize(stream, data);
         stream.Close();
@@ -32,5 +35,11 @@ public static class SaveSystem
             Debug.Log("Save file not found in " + path);
             return null;
         }
+    }
+
+    public static void DeleteSaveFile()
+    {
+        string path = Application.persistentDataPath + "/save.detached";
+        File.Delete(path);
     }
 }
