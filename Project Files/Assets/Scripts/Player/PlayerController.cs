@@ -20,6 +20,7 @@ public class PlayerController : PhysicalObject
     [Header("Shoot Attributes")]
     public ArmController    firstArm;
     public ArmController    secondArm;
+    public GameObject[] gauges;
     public float            powerLimit;
     public float            powerIncrement;
     private float           power;
@@ -200,6 +201,24 @@ public class PlayerController : PhysicalObject
                 isMovable = false;
                 // Increase power until limit;
                 if (power < powerLimit) power += powerIncrement;
+
+                for (int i = 0; i < 5; i++)
+                {
+                    if (power / powerLimit >= 0.2f * (i + 1))
+                    {
+                        if (lastDir == 1) gauges[i].transform.localPosition = (new Vector2(-18.0f, 0.8f + 2.4f * i));
+                        else if (lastDir == -1) gauges[i].transform.localPosition = (new Vector2(18.0f, 0.8f + 2.4f * i));
+                        gauges[i].SetActive(true);
+                    }
+                }
+            }
+            else
+            {
+                gauges[0].SetActive(false);
+                gauges[1].SetActive(false);
+                gauges[2].SetActive(false);
+                gauges[3].SetActive(false);
+                gauges[4].SetActive(false);
             }
 
             // Fire
@@ -230,7 +249,7 @@ public class PlayerController : PhysicalObject
                 power = 0.0f;
             }
         }
-    }
+    }   
 
     private void MakeShoot()
     {
