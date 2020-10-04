@@ -89,11 +89,11 @@ public class HomeController : MonoBehaviour
 
     private void MainControl()
     {
-        if (Input.GetKeyDown("down") || Input.GetKeyDown("s"))
+        if (Input.GetKeyDown("down") || Input.GetKeyDown(KeyCode.S))
         {
             MoveIndicator(-1);
         }
-        if (Input.GetKeyDown("up") || Input.GetKeyDown("w"))
+        if (Input.GetKeyDown("up") || Input.GetKeyDown(KeyCode.W))
         {
             MoveIndicator(1);
         }
@@ -237,7 +237,7 @@ public class HomeController : MonoBehaviour
 
     private void NoSaveDataControl()
     {
-        if (Input.GetKeyDown("left"))
+        if (Input.GetKeyDown("left") || Input.GetKeyDown(KeyCode.A))
         {
             if (menu_1_affirmative) return;
 
@@ -245,7 +245,7 @@ public class HomeController : MonoBehaviour
             ToggleButton(menu_1_yes, true);
             ToggleButton(menu_1_no, false);
         }
-        if (Input.GetKeyDown("right"))
+        if (Input.GetKeyDown("right") || Input.GetKeyDown(KeyCode.D))
         {
             if (!menu_1_affirmative) return;
 
@@ -280,7 +280,7 @@ public class HomeController : MonoBehaviour
 
     private void SaveDataExistsControl()
     {
-        if (Input.GetKeyDown("left"))
+        if (Input.GetKeyDown("left") || Input.GetKeyDown(KeyCode.A))
         {
             if (menu_2_affirmative) return;
 
@@ -288,7 +288,7 @@ public class HomeController : MonoBehaviour
             ToggleButton(menu_2_yes, true);
             ToggleButton(menu_2_no, false);
         }
-        if (Input.GetKeyDown("right"))
+        if (Input.GetKeyDown("right") || Input.GetKeyDown(KeyCode.D))
         {
             if (!menu_2_affirmative) return;
 
@@ -329,11 +329,11 @@ public class HomeController : MonoBehaviour
 
     private void SettingsControl()
     {
-        if (Input.GetKeyDown("up"))
+        if (Input.GetKeyDown("up") || Input.GetKeyDown(KeyCode.W))
         {
             Debug.Log("UP");
         }
-        if (Input.GetKeyDown("down"))
+        if (Input.GetKeyDown("down") || Input.GetKeyDown(KeyCode.S))
         {
             Debug.Log("DOWN");
         }
@@ -347,7 +347,7 @@ public class HomeController : MonoBehaviour
 
     private void QuitControl()
     {
-        if (Input.GetKeyDown("left"))
+        if (Input.GetKeyDown("left") || Input.GetKeyDown(KeyCode.A))
         {
             if (menu_4_affirmative) return;
 
@@ -355,7 +355,7 @@ public class HomeController : MonoBehaviour
             ToggleButton(menu_4_yes, true);
             ToggleButton(menu_4_no, false);
         }
-        if (Input.GetKeyDown("right"))
+        if (Input.GetKeyDown("right") || Input.GetKeyDown(KeyCode.D))
         {
             if (!menu_4_affirmative) return;
 

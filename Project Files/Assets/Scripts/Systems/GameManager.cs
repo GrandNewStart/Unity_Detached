@@ -4,20 +4,28 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public static bool      shouldLoadSaveFile = false;
-    public static int       stage;
-    public static int       enabledArms;
-    public static Vector3   position;
-    public GameObject       player;
-    public GameObject       background;
-    public GameObject       cube;
-    public ArmController    leftArm;
-    public ArmController    rightArm;
-    public new Camera       camera;
-    
+    public static bool shouldLoadSaveFile = false;
+    public bool isPaused;
+    public static int stage;
+    public static int enabledArms;
+    public static Vector3 position;
+    public GameObject player;
+    public GameObject background;
+    public GameObject cube;
+    public ArmController leftArm;
+    public ArmController rightArm;
+    public new Camera camera;
+
+    [Header("Pause Menu")]
+    public GameObject pauseMenu;
+    public List<GameObject> indicators;
+    private int menuState = 0;
 
     protected void Start()
     {
+        indicators[0].SetActive(true);
+        indicators[1].SetActive(false);
+        indicators[2].SetActive(false);
         cube.SetActive(false);
         OnStageStarted();
     }
@@ -25,6 +33,7 @@ public class GameManager : MonoBehaviour
     protected void Update()
     {
         RotateCube();
+        PauseMenuControl();
     }
 
     private void OnStageStarted()
@@ -93,7 +102,7 @@ public class GameManager : MonoBehaviour
         switch (playerController.GetArms())
         {
             case 1:
-                switch(playerController.GetEnabledArms())
+                switch (playerController.GetEnabledArms())
                 {
                     case 1:
                         break;
@@ -131,6 +140,85 @@ public class GameManager : MonoBehaviour
                 }
                 break;
         }
+    }
+
+    private void PauseMenuControl()
+    {
+        if (Input.GetButtonDown("Cancel"))
+        {
+            if (!isPaused)
+            {
+                isPaused = true;
+                pauseMenu.SetActive(true);
+                //playerController.SetControlling(false);
+
+                Time.timeScale = 0f;
+            }
+            else
+            {
+                isPaused = false;
+                pauseMenu.SetActive(false);
+                //playerController.SetControlling(true);
+
+                Time.timeScale = 1f;
+            }
+        }
+
+        SelectMenu();
+        GoMenu();
+    }
+
+    private void SelectMenu()
+    {
+        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            int preState = menuState;
+
+            menuState = (menuState + 2) % 3;
+            indicators[preState].SetActive(false);
+            indicators[menuState].SetActive(true);
+        }
+        else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            int preState = menuState;
+            menuState = (menuState + 1) % 3;
+            indicators[preState].SetActive(false);
+            indicators[menuState].SetActive(true);
+        }
+    }
+
+    private void GoMenu()
+    {
+        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space))
+        {
+            switch (menuState)
+            {
+                case 0:
+                    ResumeGame();
+                    break;
+                case 1:
+                    ShowSettings();
+                    break;
+                case 2:
+                    QuitGame();
+                    break;
+            }
+        }
+    }
+
+    private void ResumeGame()
+    {
+        Debug.Log("다시 시작");
+    }
+
+    private void ShowSettings()
+    {
+        Debug.Log("설정");
+    }
+
+    private void QuitGame()
+    {
+        Debug.Log("게임 종료");
     }
 
 }
