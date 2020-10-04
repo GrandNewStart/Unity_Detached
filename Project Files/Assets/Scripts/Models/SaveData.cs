@@ -9,8 +9,8 @@ public class SaveData
 
     private int     stage;
     private int     enabledArms;
-    private float x;
-    private float y;
+    private float   x;
+    private float   y;
 
     public SaveData(int stage, int enabledArms, Vector3 position)
     {
