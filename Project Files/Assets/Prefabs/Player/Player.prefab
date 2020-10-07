@@ -793,12 +793,57 @@ MonoBehaviour:
   - {fileID: 4690470376427979515}
   powerLimit: 20
   powerIncrement: 0.15
+  enabledArms: 0
   groundCheck: {fileID: 4200882710150230876}
   groundCheckWidth: 0.61
   head: {fileID: 217572153747566742}
   body: {fileID: 8494617191472200783}
   left_arm: {fileID: 676597475124804034}
   right_arm: {fileID: 6420234171398646050}
+  footStepSounds:
+  - name: 
+    clip: {fileID: 8300000, guid: 2b02743757e8ea44c8585661416eaea5, type: 3}
+    source: {fileID: 0}
+    volume: 0.1
+    pitch: 3
+  - name: 
+    clip: {fileID: 8300000, guid: 2919e3f4818ce784386815f86b4007a1, type: 3}
+    source: {fileID: 0}
+    volume: 0.1
+    pitch: 3
+  - name: 
+    clip: {fileID: 8300000, guid: 8270676de520bb9448c41af0a37dde7b, type: 3}
+    source: {fileID: 0}
+    volume: 0.1
+    pitch: 3
+  - name: 
+    clip: {fileID: 8300000, guid: 9bac4f2c93ae9b9459d7fd06a7f01f7a, type: 3}
+    source: {fileID: 0}
+    volume: 0.1
+    pitch: 3
+  - name: 
+    clip: {fileID: 8300000, guid: a375d003db86c444fb3ac59cc6100dba, type: 3}
+    source: {fileID: 0}
+    volume: 0.1
+    pitch: 3
+  jumpSound:
+    name: 
+    clip: {fileID: 0}
+    source: {fileID: 0}
+    volume: 0
+    pitch: 0
+  chargeSound:
+    name: 
+    clip: {fileID: 0}
+    source: {fileID: 0}
+    volume: 0
+    pitch: 0
+  fireSound:
+    name: 
+    clip: {fileID: 0}
+    source: {fileID: 0}
+    volume: 0
+    pitch: 0
 --- !u!1 &4690470376427979515
 GameObject:
   m_ObjectHideFlags: 0

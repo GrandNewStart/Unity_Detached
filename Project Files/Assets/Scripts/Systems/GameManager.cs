@@ -4,28 +4,29 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public static bool shouldLoadSaveFile = false;
-    public bool isPaused;
-    public static int stage;
-    public static int enabledArms;
-    public static Vector3 position;
-    public GameObject player;
-    public GameObject background;
-    public GameObject cube;
-    public ArmController leftArm;
-    public ArmController rightArm;
-    public new Camera camera;
+    public static bool      shouldLoadSaveFile = false;
+    public bool             isPaused;
+    public static int       stage;
+    public static int       enabledArms;
+    public static Vector3   position;
+    public GameObject       background;
+    public GameObject       cube;
+    public PlayerController player;
+    public ArmController    leftArm;
+    public ArmController    rightArm;
+    public new Camera       camera;
 
     [Header("Pause Menu")]
-    public GameObject pauseMenu;
-    public List<GameObject> indicators;
-    private int menuState = 0;
+    public GameObject       pauseMenu;
+    public GameObject       indicator;
+    public GameObject       resumeMenu;
+    public GameObject       settingsMenu;
+    public GameObject       quitMenu;
+    private int             menuIndex = 0;
+    private int             controlIndex = 0;
 
     protected void Start()
     {
-        indicators[0].SetActive(true);
-        indicators[1].SetActive(false);
-        indicators[2].SetActive(false);
         cube.SetActive(false);
         OnStageStarted();
     }
@@ -40,9 +41,8 @@ public class GameManager : MonoBehaviour
     {
         if (shouldLoadSaveFile)
         {
-            PlayerController playerController = player.GetComponent<PlayerController>();
             player.transform.position = position;
-            playerController.EnableArms(enabledArms);
+            player.EnableArms(enabledArms);
         }
     }
 
@@ -98,42 +98,41 @@ public class GameManager : MonoBehaviour
 
     public void RetrieveHands()
     {
-        PlayerController playerController = player.GetComponent<PlayerController>();
-        switch (playerController.GetArms())
+        switch (player.GetArms())
         {
             case 1:
-                switch (playerController.GetEnabledArms())
+                switch (player.GetEnabledArms())
                 {
                     case 1:
                         break;
                     case 2:
-                        if (!playerController.GetLeftRetrieving())
+                        if (!player.GetLeftRetrieving())
                         {
-                            playerController.SetLeftRetrieving(true);
+                            player.SetLeftRetrieving(true);
                             leftArm.StartRetrieve();
                         }
                         break;
                 }
                 break;
             case 0:
-                switch (playerController.GetEnabledArms())
+                switch (player.GetEnabledArms())
                 {
                     case 1:
-                        if (!playerController.GetLeftRetrieving())
+                        if (!player.GetLeftRetrieving())
                         {
-                            playerController.SetLeftRetrieving(true);
+                            player.SetLeftRetrieving(true);
                             leftArm.StartRetrieve();
                         }
                         break;
                     case 2:
-                        if (!playerController.GetLeftRetrieving())
+                        if (!player.GetLeftRetrieving())
                         {
-                            playerController.SetLeftRetrieving(true);
+                            player.SetLeftRetrieving(true);
                             leftArm.StartRetrieve();
                         }
-                        if (!playerController.GetRightRetrieving())
+                        if (!player.GetRightRetrieving())
                         {
-                            playerController.SetRightRetrieving(true);
+                            player.SetRightRetrieving(true);
                             rightArm.StartRetrieve();
                         }
                         break;
@@ -150,7 +149,7 @@ public class GameManager : MonoBehaviour
             {
                 isPaused = true;
                 pauseMenu.SetActive(true);
-                //playerController.SetControlling(false);
+                DisableControl();
 
                 Time.timeScale = 0f;
             }
@@ -158,40 +157,114 @@ public class GameManager : MonoBehaviour
             {
                 isPaused = false;
                 pauseMenu.SetActive(false);
-                //playerController.SetControlling(true);
+                EnableControl();
 
                 Time.timeScale = 1f;
             }
         }
 
-        SelectMenu();
-        GoMenu();
+        if (isPaused)
+        {
+            SelectMenu();
+            GoMenu();
+        }
+    }
+
+    private void DisableControl()
+    {
+        bool playerControl = player.GetControlling();
+        bool leftArmControl = leftArm.GetControl();
+        bool rightArmControl = rightArm.GetControl();
+
+        if (playerControl)
+        {
+            controlIndex = 0;
+            player.ResetPower();
+        }
+        else if (leftArmControl)
+        {
+            controlIndex = 1;
+        }
+        else if (rightArmControl)
+        {
+            controlIndex = 2;
+        }
+
+        player.SetControlling(false);
+        leftArm.SetControl(false);
+        rightArm.SetControl(false);
+    }
+
+    private void EnableControl()
+    {
+        switch(controlIndex)
+        {
+            case 0:
+                player.SetControlling(true);
+                break;
+            case 1:
+                leftArm.SetControl(true);
+                break;
+            case 2:
+                rightArm.SetControl(true);
+                break;
+        }
     }
 
     private void SelectMenu()
     {
         if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
         {
-            int preState = menuState;
-
-            menuState = (menuState + 2) % 3;
-            indicators[preState].SetActive(false);
-            indicators[menuState].SetActive(true);
+           switch(menuIndex)
+            {
+                case 0:
+                    menuIndex = 2;
+                    MoveIndicatorTo(quitMenu);
+                    break;
+                case 1:
+                    menuIndex = 0;
+                    MoveIndicatorTo(resumeMenu);
+                    break;
+                case 2:
+                    menuIndex = 1;
+                    MoveIndicatorTo(settingsMenu);
+                    break;
+            }
         }
         else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
         {
-            int preState = menuState;
-            menuState = (menuState + 1) % 3;
-            indicators[preState].SetActive(false);
-            indicators[menuState].SetActive(true);
+            switch (menuIndex)
+            {
+                case 0:
+                    menuIndex = 1;
+                    MoveIndicatorTo(settingsMenu);
+                    break;
+                case 1:
+                    menuIndex = 2;
+                    MoveIndicatorTo(quitMenu);
+                    break;
+                case 2:
+                    menuIndex = 0;
+                    MoveIndicatorTo(resumeMenu);
+                    break;
+            }
         }
+    }
+
+    private void MoveIndicatorTo(GameObject menu)
+    {
+        float newY          = menu.transform.position.y;
+        Vector3 newPosition = indicator.transform.position;
+        newPosition.y       = newY;
+
+        indicator.transform.position = newPosition;
     }
 
     private void GoMenu()
     {
         if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space))
         {
-            switch (menuState)
+            switch (menuIndex)
             {
                 case 0:
                     ResumeGame();
@@ -208,7 +281,11 @@ public class GameManager : MonoBehaviour
 
     private void ResumeGame()
     {
-        Debug.Log("다시 시작");
+        isPaused = false;
+        pauseMenu.SetActive(false);
+        EnableControl();
+
+        Time.timeScale = 1f;
     }
 
     private void ShowSettings()

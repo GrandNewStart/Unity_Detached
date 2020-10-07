@@ -70,8 +70,11 @@ public class ArmController : PhysicalObject
         {
             Retrieve();
         }
-        Move();
-        AnimationControl();
+        else
+        {
+            Move();
+            AnimationControl();
+        }
     }
 
     // This function is called by PlayerController

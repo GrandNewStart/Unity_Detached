@@ -20,12 +20,13 @@ public class PlayerController : PhysicalObject
     [Header("Shoot Attributes")]
     public ArmController    firstArm;
     public ArmController    secondArm;
-    public GameObject[] gauges;
+    public GameObject[]     gauges;
     public float            powerLimit;
     public float            powerIncrement;
     private float           power;
     private int             arms;
-    private int             enabledArms;
+    public int              enabledArms;
+    private bool            chargeStart;
     private bool            isLeftRetrieving;
     private bool            isRightRetrieving;
 
@@ -48,6 +49,24 @@ public class PlayerController : PhysicalObject
     public GameObject   right_arm;
     private bool isDead;
 
+    [Header("Sound Attributes")]
+    public List<Sound> footStepSounds;
+    private int footStepSoundIndex = 0;
+    public Sound jumpSound;
+    public Sound chargeSound;
+    public Sound fireSound;
+
+    private void Awake()
+    {
+        foreach (Sound sound in footStepSounds)
+        {
+            sound.source        = gameObject.AddComponent<AudioSource>();
+            sound.source.clip   = sound.clip;
+            sound.source.volume = sound.volume;
+            sound.source.pitch  = sound.pitch;
+        }
+    }
+
     private new void Start()
     {
         base.Start();
@@ -61,6 +80,7 @@ public class PlayerController : PhysicalObject
         // Shoot attributes
         power               = 0.0f;
         arms                = enabledArms;
+        chargeStart         = false;
         isLeftRetrieving    = false;
         isRightRetrieving   = false;
 
@@ -171,19 +191,39 @@ public class PlayerController : PhysicalObject
                     rigidBody.velocity = new Vector3(horizontal, vertical, 0.0f);
                 }
             }
+
+            if (state == State.walk)
+            {
+                PlayFootStepSounds();
+            }
+        }
+
+    }
+
+    private void PlayFootStepSounds()
+    {
+        Sound footStep = footStepSounds[footStepSoundIndex];
+        if (!footStep.source.isPlaying)
+        {
+            footStep.source.Play();
+            footStepSoundIndex = Random.Range(0, 10) % 5;
         }
 
     }
 
     private void Jump()
     {
+        // Jump only when player is on ground and movable
         if (isGrounded && isMovable)
         {
             if (Input.GetButtonDown("Jump"))
             {
+                // Do jump by adjusting the rigidbody's velocity
                 float horizontal = rigidBody.velocity.x * Time.deltaTime;
                 float vertical = rigidBody.velocity.y + jumpHeight;
                 rigidBody.velocity = new Vector3(horizontal, vertical, 0.0f);
+                // Play jump sound
+                //jumpSound.source.Play();
             }
         }
     }
@@ -197,6 +237,12 @@ public class PlayerController : PhysicalObject
             {
                 // Charging start.
                 state = State.charge;
+                // Play charge sound
+                if (!chargeStart)
+                {
+                    chargeStart = true;
+                    StartCoroutine(PlayChargeSound());
+                }
                 // Player can't move while charging.
                 isMovable = false;
                 // Increase power until limit;
@@ -246,14 +292,37 @@ public class PlayerController : PhysicalObject
                         secondArm.Fire(power);
                     }
                 }
+                // Play Fire sound 
+                Debug.Log("FIRE SOUND");
+                //fireSound.source.Play();
                 power = 0.0f;
             }
         }
     }   
 
+    private IEnumerator PlayChargeSound()
+    {
+        chargeSound.source.Play();
+        chargeSound.source.loop = true;
+
+        while (state == State.charge)
+        {
+            if (chargeSound.pitch < 3f)
+            {
+                chargeSound.pitch *= 1.01f;
+                Debug.Log("CHARGE PITCH: " + chargeSound.pitch);
+                //chargeSound.source.pitch = chargeSound.pitch;
+            }
+            yield return null;
+        }
+
+        chargeSound.source.Stop();
+    }
+
     private void MakeShoot()
     {
         // Once firing is done, player is able to move, change state and an arm is reduced.
+        chargeStart     = false;
         isMovable       = true;
         isStateFixed    = false;
         state           = State.idle;
@@ -478,4 +547,7 @@ public class PlayerController : PhysicalObject
 
     public int GetArms()
     { return arms; }
+
+    public void ResetPower() 
+    { power = 0.0f; }
 }
