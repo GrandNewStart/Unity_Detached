@@ -2029,6 +2029,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   indicator: {fileID: 1255020486}
+  bgm:
+    name: 
+    clip: {fileID: 8300000, guid: 3c62d95b453caf446a6dda904d8fce73, type: 3}
+    source: {fileID: 0}
+    volume: 0.6
+    pitch: 1
   noSaveDataDialog: {fileID: 1078680831}
   menu_1: {fileID: 2089265283}
   menu_1_yes: {fileID: 1743633091}
@@ -2200,6 +2206,11 @@ PrefabInstance:
     - target: {fileID: 4025760363193266096, guid: dbd71957d34c47042bb5c899ad117ae6,
         type: 3}
       propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4025760363193266096, guid: dbd71957d34c47042bb5c899ad117ae6,
+        type: 3}
+      propertyPath: m_Color.a
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5931877074823663009, guid: dbd71957d34c47042bb5c899ad117ae6,

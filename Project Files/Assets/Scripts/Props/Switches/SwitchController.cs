@@ -4,22 +4,66 @@ using UnityEngine;
 
 public class SwitchController : MonoBehaviour
 {
+    [Header("Target")]
     public GameObject       target;
-    public GameObject       unpluggedSprite, pluggedSpriteRed, pluggedSpriteGreen;
-    public ArmController    leftArm, rightArm;
+
+    [Header("Sprites")]
+    public GameObject       unpluggedSprite;
+    public GameObject       pluggedSpriteRed;
+    public GameObject       pluggedSpriteGreen;
+    protected bool          isLeftArmAround;
+    protected bool          isRightArmAround;
+    protected bool          isLeftPlugged;
+    protected bool          isRightPlugged;
+
+    [Header("Player")]
+    public ArmController    leftArm;
+    public ArmController    rightArm;
     public PlayerController player;
+
+    [Header("Sound")]
+    public Sound            plugInSound;
+    public Sound            plugOutSound;
+    public Sound            activationSound;
+    public Sound            deactivationSound;
+
+    [Header("Others")]
     public int              waitToPlugOut;
     protected int           counter;
-    protected bool          isLeftArmAround, isRightArmAround;
-    protected bool          isLeftPlugged, isRightPlugged;
-    protected bool          isPlugOutEnabled;
+    protected bool          isPlugOutEnabled = false;
+
+    virtual protected void Awake()
+    {
+        plugInSound.source          = gameObject.AddComponent<AudioSource>();
+        plugInSound.source.clip     = plugInSound.clip;
+        plugInSound.source.volume   = plugInSound.volume;
+        plugInSound.source.pitch    = plugInSound.pitch;
+        plugInSound.source.playOnAwake = false;
+
+        plugOutSound.source         = gameObject.AddComponent<AudioSource>();
+        plugOutSound.source.clip    = plugOutSound.clip;
+        plugOutSound.source.volume  = plugOutSound.volume;
+        plugOutSound.source.pitch   = plugOutSound.pitch;
+        plugOutSound.source.playOnAwake = false;
+
+        activationSound.source          = gameObject.AddComponent<AudioSource>();
+        activationSound.source.clip     = activationSound.clip;
+        activationSound.source.volume   = activationSound.volume;
+        activationSound.source.pitch    = activationSound.pitch;
+        activationSound.source.playOnAwake = false;
+
+        deactivationSound.source        = gameObject.AddComponent<AudioSource>();
+        deactivationSound.source.clip   = deactivationSound.clip;
+        deactivationSound.source.volume = deactivationSound.volume;
+        deactivationSound.source.pitch  = deactivationSound.pitch;
+        deactivationSound.source.playOnAwake = false;
+    }
 
     virtual protected void Start()
     {
         unpluggedSprite     .SetActive(true);
         pluggedSpriteGreen  .SetActive(false);
         pluggedSpriteRed    .SetActive(false);
-        isPlugOutEnabled    = false;
         counter             = waitToPlugOut;
     }
 
@@ -69,10 +113,13 @@ public class SwitchController : MonoBehaviour
             }
             if (Input.GetKeyDown(KeyCode.R) && player.GetControlling())
             {
-                OnDeactivation();
-                isLeftArmAround     = false;
-                isRightArmAround    = false;
-                isPlugOutEnabled    = true;
+                if(isLeftPlugged || isRightPlugged)
+                {
+                    OnDeactivation();
+                    isLeftArmAround = false;
+                    isRightArmAround = false;
+                    isPlugOutEnabled = true;
+                }
             }
         }
         // Start plugging out
@@ -108,6 +155,8 @@ public class SwitchController : MonoBehaviour
     }
 
     virtual protected void OnActivation() {
+        PlayPlugInSound();
+
         if (isLeftArmAround)
         {
             isLeftPlugged = true;
@@ -121,9 +170,11 @@ public class SwitchController : MonoBehaviour
             return;
         }
     }
+
     virtual protected void OnDeactivation() 
     {
         counter = 0;
+        PlayPlugOutSound();
 
         if (isLeftPlugged)
         {
@@ -141,6 +192,28 @@ public class SwitchController : MonoBehaviour
         }
     }
 
+    protected void PlayPlugInSound()
+    {
+        plugInSound.source.Play();
+        Debug.Log("PLUG IN");
+    }
+
+    protected void PlayPlugOutSound()
+    {
+        plugOutSound.source.Play();
+        Debug.Log("PLUG OUT");
+    }
+
+    protected void PlayActivationSound()
+    {
+        activationSound.source.Play();
+    }
+
+    protected void PlayDeactivationSound()
+    {
+        deactivationSound.source.Play();
+    }
+
     virtual protected void SpriteControl()
     {
         if (isLeftPlugged || isRightPlugged)
@@ -154,48 +227,6 @@ public class SwitchController : MonoBehaviour
             unpluggedSprite     .SetActive(true);
         }
     }
-
-    //private void OnTriggerEnter2D(Collider2D collision)
-    //{
-    //    if (collision.CompareTag("Hand"))
-    //    {
-    //        // 11: Left Hand
-    //        if (collision.gameObject.layer == 11)
-    //        {
-    //            isLeftArmAround = true;
-    //        }
-    //        // 12: Right Hand
-    //        if (collision.gameObject.layer == 12)
-    //        {
-    //            isRightArmAround = true;
-    //        }
-    //    }
-    //}
-
-    //private void OnTriggerExit2D(Collider2D collision)
-    //{
-    //    if (collision.CompareTag("Hand"))
-    //    {
-    //        // 11: Left Hand
-    //        if (collision.gameObject.layer == 11)
-    //        {
-    //            isLeftArmAround = false;
-    //            if (isLeftPlugged)
-    //            {
-    //                OnDeactivation();
-    //            }
-    //        }
-    //        // 12: Right Hand
-    //        if (collision.gameObject.layer == 12)
-    //        {
-    //            isRightArmAround = false;
-    //            if (isRightPlugged)
-    //            {
-    //                OnDeactivation();
-    //            }
-    //        }
-    //    }
-    //}
 
     private void OnDrawGizmos()
     {

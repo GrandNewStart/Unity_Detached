@@ -7,24 +7,52 @@ using System.Threading.Tasks;
 public class StageLoader : MonoBehaviour
 {
     public GameObject       background;
-    public GameObject       artWork;
     public GameObject       cube;
     public SpriteRenderer   pressAnyKeyText;
-    private bool            isBackgroundLoaded = false;
-    private bool            isArtworkLoaded = false;
-    private bool            isLoadReady = false;
+    public SpriteRenderer   artWork;
+    private bool            isBackgroundLoaded  = false;
+    private bool            isArtworkLoaded     = false;
+    private bool            isLoadReady         = false;
     private int             sceneIndex;
 
     private void Start()
     {
-        Color color = pressAnyKeyText.color;
+        Color color;
+
+        color = pressAnyKeyText.color;
         color.a = 0;
         pressAnyKeyText.color = color;
 
-        SpriteRenderer image = artWork.GetComponent<SpriteRenderer>();
-        color = image.color;
+        color = artWork.color;
         color.a = 0;
-        image.color = color;
+        artWork.color = color;
+    }
+
+    private void Update()
+    {
+        RotateCube();
+        if (isBackgroundLoaded)
+        {
+            if (isArtworkLoaded)
+            {   
+                if (isLoadReady)
+                {
+                    LoadLevel();
+                }
+                else
+                {
+                    LoadPressAnyKey();
+                }
+            }
+            else
+            {
+                LoadArtWork();
+            }
+        }
+        else
+        {
+            LoadBackground();
+        }
     }
 
     public void LoadStage(int sceneIndex)
@@ -50,15 +78,13 @@ public class StageLoader : MonoBehaviour
 
     private void LoadArtWork()
     {
-        SpriteRenderer image = artWork.GetComponent<SpriteRenderer>();
-        float currentAlpha  = image.color.a;
+        float currentAlpha  = artWork.color.a;
         float targetAlpha   = 1;
-
         if (currentAlpha < targetAlpha)
         {
-            Color color = image.color;
+            Color color = artWork.color;
             color.a += Time.deltaTime;
-            image.color = color;
+            artWork.color = color;
         }
         else
         {
@@ -68,15 +94,14 @@ public class StageLoader : MonoBehaviour
 
     private void LoadPressAnyKey()
     {
-        SpriteRenderer image = pressAnyKeyText.GetComponent<SpriteRenderer>();
-        float currentAlpha = image.color.a;
+        float currentAlpha = pressAnyKeyText.color.a;
         float targetAlpha = 1;
 
         if (currentAlpha < targetAlpha)
         {
-            Color color = image.color;
+            Color color = pressAnyKeyText.color;
             color.a += Time.deltaTime * 5;
-            image.color = color;
+            pressAnyKeyText.color = color;
         }
         else
         {
@@ -89,24 +114,6 @@ public class StageLoader : MonoBehaviour
         if (Input.anyKeyDown)
         {
             SceneManager.LoadScene(sceneIndex);
-        }
-    }
-
-    private void Update()
-    {
-        RotateCube();
-        LoadBackground();
-        if (isBackgroundLoaded)
-        {
-            LoadArtWork();
-            if (isArtworkLoaded)
-            {
-                LoadPressAnyKey();
-                if (isLoadReady)
-                {
-                    LoadLevel();
-                }
-            }
         }
     }
 

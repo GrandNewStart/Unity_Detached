@@ -800,50 +800,42 @@ MonoBehaviour:
   body: {fileID: 8494617191472200783}
   left_arm: {fileID: 676597475124804034}
   right_arm: {fileID: 6420234171398646050}
-  footStepSounds:
-  - name: 
-    clip: {fileID: 8300000, guid: 2b02743757e8ea44c8585661416eaea5, type: 3}
+  footStepSound:
+    name: 
+    clip: {fileID: 8300000, guid: f4df3d5c17d0e28419c1001a8c3a43fb, type: 3}
     source: {fileID: 0}
-    volume: 0.1
-    pitch: 3
-  - name: 
-    clip: {fileID: 8300000, guid: 2919e3f4818ce784386815f86b4007a1, type: 3}
-    source: {fileID: 0}
-    volume: 0.1
-    pitch: 3
-  - name: 
-    clip: {fileID: 8300000, guid: 8270676de520bb9448c41af0a37dde7b, type: 3}
-    source: {fileID: 0}
-    volume: 0.1
-    pitch: 3
-  - name: 
-    clip: {fileID: 8300000, guid: 9bac4f2c93ae9b9459d7fd06a7f01f7a, type: 3}
-    source: {fileID: 0}
-    volume: 0.1
-    pitch: 3
-  - name: 
-    clip: {fileID: 8300000, guid: a375d003db86c444fb3ac59cc6100dba, type: 3}
-    source: {fileID: 0}
-    volume: 0.1
+    volume: 0.2
     pitch: 3
   jumpSound:
     name: 
-    clip: {fileID: 0}
+    clip: {fileID: 8300000, guid: 5a59e1ba7cf26934590064b00aa34c2a, type: 3}
     source: {fileID: 0}
-    volume: 0
-    pitch: 0
+    volume: 0.8
+    pitch: 1
   chargeSound:
     name: 
-    clip: {fileID: 0}
+    clip: {fileID: 8300000, guid: 3c81fcc335e3dd34e928c1be06fefee1, type: 3}
     source: {fileID: 0}
-    volume: 0
-    pitch: 0
+    volume: 0.3
+    pitch: 0.5
   fireSound:
     name: 
-    clip: {fileID: 0}
+    clip: {fileID: 8300000, guid: 7bd2ca1a204d1e1459c231d6040ebcd6, type: 3}
     source: {fileID: 0}
-    volume: 0
-    pitch: 0
+    volume: 1
+    pitch: 1
+  retrieveSound:
+    name: 
+    clip: {fileID: 8300000, guid: 079596bbedf36b240b8a767ef819a1c6, type: 3}
+    source: {fileID: 0}
+    volume: 0.08
+    pitch: 1
+  retrieveCompleteSound:
+    name: 
+    clip: {fileID: 8300000, guid: 0769d500b95b79348b1dcd18f07ae441, type: 3}
+    source: {fileID: 0}
+    volume: 0.4
+    pitch: 1
 --- !u!1 &4690470376427979515
 GameObject:
   m_ObjectHideFlags: 0

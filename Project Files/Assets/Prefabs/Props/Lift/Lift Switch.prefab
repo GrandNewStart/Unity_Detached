@@ -77,11 +77,42 @@ MonoBehaviour:
   unpluggedSprite: {fileID: 3473322853332916506}
   pluggedSpriteRed: {fileID: 3473322853547513630}
   pluggedSpriteGreen: {fileID: 3473322855206660545}
-  leftHand: {fileID: 0}
-  rightHand: {fileID: 0}
+  leftArm: {fileID: 0}
+  rightArm: {fileID: 0}
   player: {fileID: 0}
+  plugInSound:
+    name: 
+    clip: {fileID: 8300000, guid: 9b67484c39e682a45a4287efd311e5ff, type: 3}
+    source: {fileID: 0}
+    volume: 0.5
+    pitch: 1
+  plugOutSound:
+    name: 
+    clip: {fileID: 8300000, guid: dc5752d4416c5434689216e36471bd17, type: 3}
+    source: {fileID: 0}
+    volume: 0.5
+    pitch: 1
+  activationSound:
+    name: 
+    clip: {fileID: 8300000, guid: 9caaec2b9df127d4db8ba81a49c136d3, type: 3}
+    source: {fileID: 0}
+    volume: 0.5
+    pitch: 1
+  deactivationSound:
+    name: 
+    clip: {fileID: 8300000, guid: d3f274843701d1945803682ed8ada8fd, type: 3}
+    source: {fileID: 0}
+    volume: 0.5
+    pitch: 1
   waitToPlugOut: 50
   maxHeightCheck: {fileID: 0}
+  minHeightCheck: {fileID: 0}
+  operationSound:
+    name: 
+    clip: {fileID: 8300000, guid: 3c81fcc335e3dd34e928c1be06fefee1, type: 3}
+    source: {fileID: 0}
+    volume: 0.2
+    pitch: 1
   speed: 0.1
 --- !u!1 &3473322853332916506
 GameObject:

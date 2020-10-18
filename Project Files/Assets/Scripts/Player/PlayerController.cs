@@ -26,7 +26,6 @@ public class PlayerController : PhysicalObject
     private float           power;
     private int             arms;
     public int              enabledArms;
-    private bool            chargeStart;
     private bool            isLeftRetrieving;
     private bool            isRightRetrieving;
 
@@ -47,24 +46,57 @@ public class PlayerController : PhysicalObject
     public GameObject   body;
     public GameObject   left_arm;
     public GameObject   right_arm;
-    private bool isDead;
+    private bool        isDead;
 
     [Header("Sound Attributes")]
-    public List<Sound> footStepSounds;
-    private int footStepSoundIndex = 0;
-    public Sound jumpSound;
-    public Sound chargeSound;
-    public Sound fireSound;
+    public Sound        footStepSound;
+    public Sound        jumpSound;
+    public Sound        chargeSound;
+    public Sound        fireSound;
+    public Sound        retrieveSound;
+    public Sound        retrieveCompleteSound;
+    private int         footStepDelay = 0;
+    private float       chargeSoundOriginalPitch;
+    private bool        isChargeSoundPlaying = false;
 
     private void Awake()
     {
-        foreach (Sound sound in footStepSounds)
-        {
-            sound.source        = gameObject.AddComponent<AudioSource>();
-            sound.source.clip   = sound.clip;
-            sound.source.volume = sound.volume;
-            sound.source.pitch  = sound.pitch;
-        }
+        footStepSound.source        = gameObject.AddComponent<AudioSource>();
+        footStepSound.source.clip   = footStepSound.clip;
+        footStepSound.source.volume = footStepSound.volume;
+        footStepSound.source.pitch  = footStepSound.pitch;
+        footStepSound.source.playOnAwake = false;
+
+        jumpSound.source        = gameObject.AddComponent<AudioSource>();
+        jumpSound.source.clip   = jumpSound.clip;
+        jumpSound.source.volume = jumpSound.volume;
+        jumpSound.source.pitch  = jumpSound.pitch;
+        jumpSound.source.playOnAwake = false;
+
+        chargeSound.source          = gameObject.AddComponent<AudioSource>();
+        chargeSound.source.clip     = chargeSound.clip;
+        chargeSound.source.volume   = chargeSound.volume;
+        chargeSound.source.pitch    = chargeSound.pitch;
+        chargeSoundOriginalPitch    = chargeSound.pitch;
+        chargeSound.source.playOnAwake = false;
+
+        fireSound.source        = gameObject.AddComponent<AudioSource>();
+        fireSound.source.clip   = fireSound.clip;
+        fireSound.source.volume = fireSound.volume;
+        fireSound.source.pitch  = fireSound.pitch;
+        fireSound.source.playOnAwake = false;
+
+        retrieveSound.source        = gameObject.AddComponent<AudioSource>();
+        retrieveSound.source.clip   = retrieveSound.clip;
+        retrieveSound.source.volume = retrieveSound.volume;
+        retrieveSound.source.pitch  = retrieveSound.pitch;
+        retrieveSound.source.playOnAwake = false;
+
+        retrieveCompleteSound.source        = gameObject.AddComponent<AudioSource>();
+        retrieveCompleteSound.source.clip   = retrieveCompleteSound.clip;
+        retrieveCompleteSound.source.volume = retrieveCompleteSound.volume;
+        retrieveCompleteSound.source.pitch  = retrieveCompleteSound.pitch;
+        retrieveCompleteSound.source.playOnAwake = false;
     }
 
     private new void Start()
@@ -80,7 +112,6 @@ public class PlayerController : PhysicalObject
         // Shoot attributes
         power               = 0.0f;
         arms                = enabledArms;
-        chargeStart         = false;
         isLeftRetrieving    = false;
         isRightRetrieving   = false;
 
@@ -127,7 +158,8 @@ public class PlayerController : PhysicalObject
                      Physics2D.OverlapBox(groundCheck.transform.position, new Vector2(2.2f * groundCheckWidth, 0.5f), 0.0f, LayerMask.GetMask("Physical Object"));
         if (!isGrounded)
         {
-            state = State.jump;
+            state           = State.jump;
+            footStepDelay   = 10;
         }
     }
 
@@ -194,21 +226,19 @@ public class PlayerController : PhysicalObject
 
             if (state == State.walk)
             {
-                PlayFootStepSounds();
+                PlayFootStepSound();
             }
         }
 
     }
 
-    private void PlayFootStepSounds()
+    private void PlayFootStepSound()
     {
-        Sound footStep = footStepSounds[footStepSoundIndex];
-        if (!footStep.source.isPlaying)
+        if (footStepDelay++ > 20)
         {
-            footStep.source.Play();
-            footStepSoundIndex = Random.Range(0, 10) % 5;
+            footStepSound.source.Play();
+            footStepDelay = 0;
         }
-
     }
 
     private void Jump()
@@ -223,7 +253,7 @@ public class PlayerController : PhysicalObject
                 float vertical = rigidBody.velocity.y + jumpHeight;
                 rigidBody.velocity = new Vector3(horizontal, vertical, 0.0f);
                 // Play jump sound
-                //jumpSound.source.Play();
+                jumpSound.source.Play();
             }
         }
     }
@@ -238,9 +268,9 @@ public class PlayerController : PhysicalObject
                 // Charging start.
                 state = State.charge;
                 // Play charge sound
-                if (!chargeStart)
+                if (!isChargeSoundPlaying)
                 {
-                    chargeStart = true;
+                    isChargeSoundPlaying = true;
                     StartCoroutine(PlayChargeSound());
                 }
                 // Player can't move while charging.
@@ -252,7 +282,7 @@ public class PlayerController : PhysicalObject
                 {
                     if (power / powerLimit >= 0.2f * (i + 1))
                     {
-                        if (lastDir == 1) gauges[i].transform.localPosition = (new Vector2(-18.0f, 0.8f + 2.4f * i));
+                        if (lastDir == 1)       gauges[i].transform.localPosition = (new Vector2(-18.0f, 0.8f + 2.4f * i));
                         else if (lastDir == -1) gauges[i].transform.localPosition = (new Vector2(18.0f, 0.8f + 2.4f * i));
                         gauges[i].SetActive(true);
                     }
@@ -293,8 +323,7 @@ public class PlayerController : PhysicalObject
                     }
                 }
                 // Play Fire sound 
-                Debug.Log("FIRE SOUND");
-                //fireSound.source.Play();
+                fireSound.source.Play();
                 power = 0.0f;
             }
         }
@@ -307,22 +336,27 @@ public class PlayerController : PhysicalObject
 
         while (state == State.charge)
         {
-            if (chargeSound.pitch < 3f)
+            if (chargeSound.pitch < Sound.maxPitch)
             {
                 chargeSound.pitch *= 1.01f;
-                Debug.Log("CHARGE PITCH: " + chargeSound.pitch);
-                //chargeSound.source.pitch = chargeSound.pitch;
             }
+            else
+            {
+                chargeSound.pitch = Sound.maxPitch;
+            }
+            chargeSound.source.pitch = chargeSound.pitch;
             yield return null;
         }
 
         chargeSound.source.Stop();
+        chargeSound.pitch           = chargeSoundOriginalPitch;
+        chargeSound.source.pitch    = chargeSoundOriginalPitch;
+        isChargeSoundPlaying        = false;
     }
 
     private void MakeShoot()
     {
         // Once firing is done, player is able to move, change state and an arm is reduced.
-        chargeStart     = false;
         isMovable       = true;
         isStateFixed    = false;
         state           = State.idle;
@@ -338,6 +372,7 @@ public class PlayerController : PhysicalObject
             {
                 isLeftRetrieving = true;
                 firstArm.StartRetrieve();
+                PlayRetrieveSound();
             }
             else if (arms == enabledArms - 2 && enabledArms == 2)
             {
@@ -345,6 +380,7 @@ public class PlayerController : PhysicalObject
                 isRightRetrieving = true;
                 firstArm.StartRetrieve();
                 secondArm.StartRetrieve();
+                PlayRetrieveSound();
             }
         }
 
@@ -352,14 +388,32 @@ public class PlayerController : PhysicalObject
         if (isLeftRetrieving)
         {
             isLeftRetrieving = !firstArm.GetRetrieveComplete();
-            if (!isLeftRetrieving) arms++;
+            if (!isLeftRetrieving)
+            {
+                arms++;
+                PlayRetrieveCompleteSound();
+            }
         }
         if (isRightRetrieving)
         {
             isRightRetrieving = !secondArm.GetRetrieveComplete();
-            if (!isRightRetrieving) arms++;
+            if (!isRightRetrieving)
+            {
+                arms++;
+                PlayRetrieveCompleteSound();
+            }
         }
 
+    }
+
+    public void PlayRetrieveSound()
+    {
+        retrieveSound.source.Play();
+    }
+
+    public void PlayRetrieveCompleteSound()
+    {
+        retrieveCompleteSound.source.Play();
     }
 
     private void ChangeControl()

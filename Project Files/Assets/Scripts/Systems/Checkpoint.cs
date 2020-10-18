@@ -5,11 +5,17 @@ using UnityEngine;
 
 public class Checkpoint : MonoBehaviour
 {
+    public GameManager  gameManager;
     public float        checkpointRadius;
     public int          stage;
     public int          enabledArms;
-    public GameManager  gameManager;
     private bool        isPlayerAround = false;
+    private Vector3     origin;
+
+    private void Start()
+    {
+        origin = gameObject.transform.position;
+    }
 
     void Update()
     {
@@ -19,7 +25,6 @@ public class Checkpoint : MonoBehaviour
 
     private void PlayerCheck()
     {
-        Vector3 origin = gameObject.transform.position;
         isPlayerAround = Physics2D.OverlapCircle(origin, checkpointRadius, LayerMask.GetMask("Player"));
     }
 
@@ -35,13 +40,8 @@ public class Checkpoint : MonoBehaviour
         }
     }
 
-    private void Invoke(string v)
-    {
-        throw new NotImplementedException();
-    }
-
     private void OnDrawGizmos()
     {
-        Gizmos.DrawWireSphere(gameObject.transform.position, checkpointRadius);
+        Gizmos.DrawWireSphere(origin, checkpointRadius);
     }
 }

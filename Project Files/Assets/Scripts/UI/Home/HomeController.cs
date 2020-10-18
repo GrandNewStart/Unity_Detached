@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class HomeController : MonoBehaviour
 {
     public GameObject   indicator;
+    public Sound        bgm;
     private int         selectedMenu = 1;
     private enum        focus { main, noSaveData, saveDataExists, settings, quit, none };
     private focus       focusStatus = focus.main;
@@ -38,8 +39,16 @@ public class HomeController : MonoBehaviour
     private bool        menu_4_affirmative = false;
 
     [Header("Loading Screens")]
-    public GameObject loading_1;
+    public GameObject   loading_1;
     private StageLoader stageLoader;
+
+    private void Awake()
+    {
+        bgm.source          = gameObject.AddComponent<AudioSource>();
+        bgm.source.clip     = bgm.clip;
+        bgm.source.volume   = bgm.volume;
+        bgm.source.pitch    = bgm.pitch;
+    }
 
     void Start()
     {
@@ -58,6 +67,8 @@ public class HomeController : MonoBehaviour
         indicator.transform.position = origin;
 
         stageLoader = loading_1.GetComponent<StageLoader>();
+
+        PlayBgm();
     }
 
     void Update()
@@ -186,8 +197,7 @@ public class HomeController : MonoBehaviour
         SaveData data = SaveSystem.LoadGame();
         if (data == null)
         {
-            loading_1.SetActive(true);
-            stageLoader.LoadStage(1);
+            StartNewGame();
         }
         else
         {
@@ -211,12 +221,7 @@ public class HomeController : MonoBehaviour
         }
         else
         {
-            GameManager.stage               = data.GetStage();
-            GameManager.enabledArms         = data.GetEnabledArms();
-            GameManager.position            = data.GetPosition();
-            GameManager.shouldLoadSaveFile  = true;
-            loading_1.SetActive(true);
-            stageLoader.LoadStage(GameManager.stage);
+            ContinueGame(data);
         }
     }
 
@@ -266,9 +271,7 @@ public class HomeController : MonoBehaviour
         {
             if (menu_1_affirmative)
             {
-                focusStatus = focus.none;
-                loading_1.SetActive(true);
-                stageLoader.LoadStage(SaveSystem.initialStage);
+                StartNewGame();
             }
             else
             {
@@ -298,7 +301,6 @@ public class HomeController : MonoBehaviour
         }
         if (Input.GetKeyDown("escape"))
         {
-            Debug.Log("EXIT");
             focusStatus = focus.main;
             saveDataExistsDialog.SetActive(false);
         }
@@ -310,14 +312,7 @@ public class HomeController : MonoBehaviour
         {
             if (menu_2_affirmative)
             {
-                focusStatus = focus.none;
-                SaveSystem.DeleteSaveFile();
-                GameManager.stage               = SaveSystem.initialStage;
-                GameManager.enabledArms         = SaveSystem.initialEnabledArms;
-                GameManager.position            = SaveSystem.initialPosition;
-                GameManager.shouldLoadSaveFile  = false;
-                loading_1.SetActive(true);
-                stageLoader.LoadStage(GameManager.stage);
+                StartNewGame();
             }
             else
             {
@@ -376,8 +371,7 @@ public class HomeController : MonoBehaviour
         {
             if (menu_4_affirmative)
             {
-                UnityEditor.EditorApplication.isPlaying = false;
-                Application.Quit();
+                ExitGame();
             }
             else
             {
@@ -393,5 +387,47 @@ public class HomeController : MonoBehaviour
         { button.transform.localScale = new Vector3(0.5f, 0.5f, 1.0f); }
         else
         { button.transform.localScale = new Vector3(0.3f, 0.3f, 1.0f); }
+    }
+
+    private void StartNewGame()
+    {
+        StopBgm();
+        focusStatus = focus.none;
+        SaveSystem.DeleteSaveFile();
+        GameManager.stage               = SaveSystem.initialStage;
+        GameManager.enabledArms         = SaveSystem.initialEnabledArms;
+        GameManager.position            = SaveSystem.initialPosition;
+        GameManager.shouldLoadSaveFile  = false;
+        loading_1.SetActive(true);
+        stageLoader.LoadStage(GameManager.stage);
+    }
+
+    private void ContinueGame(SaveData data)
+    {
+        StopBgm();
+        GameManager.stage               = data.GetStage();
+        GameManager.enabledArms         = data.GetEnabledArms();
+        GameManager.position            = data.GetPosition();
+        GameManager.shouldLoadSaveFile  = true;
+        loading_1.SetActive(true);
+        stageLoader.LoadStage(GameManager.stage);
+    }
+
+    private void ExitGame()
+    {
+        StopBgm();
+        UnityEditor.EditorApplication.isPlaying = false;
+        Application.Quit();
+    }
+
+    private void PlayBgm()
+    {
+        bgm.source.Play();
+        bgm.source.loop = true;
+    }
+
+    private void StopBgm()
+    {
+        bgm.source.Stop();
     }
 }

@@ -262,3 +262,9 @@ MonoBehaviour:
   circleCollider_1: {fileID: 8360396672505168371}
   circleCollider_2: {fileID: 7529748488775216866}
   retreiveRadius: 3
+  moveSound:
+    name: 
+    clip: {fileID: 8300000, guid: 854671cfca833bf4ab2dee150c134e33, type: 3}
+    source: {fileID: 0}
+    volume: 0.05
+    pitch: 1

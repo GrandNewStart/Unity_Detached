@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -9,12 +10,15 @@ public class GameManager : MonoBehaviour
     public static int       stage;
     public static int       enabledArms;
     public static Vector3   position;
-    public GameObject       background;
     public GameObject       cube;
     public PlayerController player;
     public ArmController    leftArm;
     public ArmController    rightArm;
     public new Camera       camera;
+
+    [Header("Transition")]
+    public GameObject   background;
+    private bool        isTransitionComplete = false;
 
     [Header("Pause Menu")]
     public GameObject       pauseMenu;
@@ -48,10 +52,11 @@ public class GameManager : MonoBehaviour
 
     protected IEnumerator TransitionIn()
     {
+        isTransitionComplete = false;
         background.SetActive(true);
         background.transform.localScale = new Vector3(.1f, .1f, .1f);
         float currentScale = background.transform.localScale.x;
-        float targetScale = 5;
+        float targetScale = 20;
 
         while (currentScale < targetScale)
         {
@@ -60,15 +65,16 @@ public class GameManager : MonoBehaviour
             yield return null;
         }
 
-        background.SetActive(false);
+        isTransitionComplete = true;
     }
 
     protected IEnumerator TransitionOut()
     {
+        isTransitionComplete = false;
         background.SetActive(true);
         background.transform.localScale = new Vector3(20, 20, 20);
         float currentScale = background.transform.localScale.x;
-        float targetScale = 0;
+        float targetScale = .1f;
 
         while (currentScale >= targetScale)
         {
@@ -77,24 +83,10 @@ public class GameManager : MonoBehaviour
             yield return null;
         }
 
+        isTransitionComplete = true;
         background.SetActive(false);
     }
 
-    private void RotateCube()
-    {
-        cube.transform.Rotate(new Vector3(1, 1, 1));
-    }
-
-    public void ShowCube()
-    {
-        cube.SetActive(true);
-        Invoke("HideCube", 2f);
-    }
-
-    private void HideCube()
-    {
-        cube.SetActive(false);
-    }
 
     public void RetrieveHands()
     {
@@ -108,8 +100,8 @@ public class GameManager : MonoBehaviour
                     case 2:
                         if (!player.GetLeftRetrieving())
                         {
-                            player.SetLeftRetrieving(true);
-                            leftArm.StartRetrieve();
+                            player.PlayRetrieveSound();
+                            RetrieveLeftHand();
                         }
                         break;
                 }
@@ -120,20 +112,20 @@ public class GameManager : MonoBehaviour
                     case 1:
                         if (!player.GetLeftRetrieving())
                         {
-                            player.SetLeftRetrieving(true);
-                            leftArm.StartRetrieve();
+                            player.PlayRetrieveSound();
+                            RetrieveLeftHand();
                         }
                         break;
                     case 2:
                         if (!player.GetLeftRetrieving())
                         {
-                            player.SetLeftRetrieving(true);
-                            leftArm.StartRetrieve();
+                            player.PlayRetrieveSound();
+                            RetrieveLeftHand();
                         }
                         if (!player.GetRightRetrieving())
                         {
-                            player.SetRightRetrieving(true);
-                            rightArm.StartRetrieve();
+                            player.PlayRetrieveSound();
+                            RetrieveRightHand();
                         }
                         break;
                 }
@@ -147,19 +139,11 @@ public class GameManager : MonoBehaviour
         {
             if (!isPaused)
             {
-                isPaused = true;
-                pauseMenu.SetActive(true);
-                DisableControl();
-
-                Time.timeScale = 0f;
+                PauseGame();
             }
             else
             {
-                isPaused = false;
-                pauseMenu.SetActive(false);
-                EnableControl();
-
-                Time.timeScale = 1f;
+                ResumeGame();
             }
         }
 
@@ -172,9 +156,9 @@ public class GameManager : MonoBehaviour
 
     private void DisableControl()
     {
-        bool playerControl = player.GetControlling();
-        bool leftArmControl = leftArm.GetControl();
-        bool rightArmControl = rightArm.GetControl();
+        bool playerControl      = player.GetControlling();
+        bool leftArmControl     = leftArm.GetControl();
+        bool rightArmControl    = rightArm.GetControl();
 
         if (playerControl)
         {
@@ -190,8 +174,8 @@ public class GameManager : MonoBehaviour
             controlIndex = 2;
         }
 
-        player.SetControlling(false);
-        leftArm.SetControl(false);
+        player  .SetControlling(false);
+        leftArm .SetControl(false);
         rightArm.SetControl(false);
     }
 
@@ -279,6 +263,43 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void RotateCube()
+    {
+        cube.transform.Rotate(new Vector3(1, 1, 1));
+    }
+
+    public void ShowCube()
+    {
+        cube.SetActive(true);
+        Invoke("HideCube", 2f);
+    }
+
+    private void HideCube()
+    {
+        cube.SetActive(false);
+    }
+
+    private void RetrieveLeftHand()
+    {
+        player.SetLeftRetrieving(true);
+        leftArm.StartRetrieve();
+    }
+
+    private void RetrieveRightHand()
+    {
+        player.SetRightRetrieving(true);
+        rightArm.StartRetrieve();
+    }
+
+    private void PauseGame()
+    {
+        isPaused = true;
+        pauseMenu.SetActive(true);
+        DisableControl();
+
+        Time.timeScale = 0f;
+    }
+
     private void ResumeGame()
     {
         isPaused = false;
@@ -295,7 +316,18 @@ public class GameManager : MonoBehaviour
 
     private void QuitGame()
     {
-        Debug.Log("게임 종료");
+        StartCoroutine(TransitionIn());
+        StartCoroutine(LoadHome());
+    }
+
+    private IEnumerator LoadHome()
+    {
+        while(!isTransitionComplete)
+        {
+            yield return null;
+        }
+        SceneManager.LoadScene(0);
+        Time.timeScale = 1f;
     }
 
 }

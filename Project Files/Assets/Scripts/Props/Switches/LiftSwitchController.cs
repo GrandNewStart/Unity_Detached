@@ -6,10 +6,21 @@ public class LiftSwitchController : SwitchController
 {
     public GameObject   maxHeightCheck;
     public GameObject   minHeightCheck;
+    public Sound        operationSound;
     private Vector3     targetPosition;
     public float        speed;
     private float       maxHeight;
     private float       minHeight;
+
+    protected override void Awake()
+    {
+        base.Awake();
+        operationSound.source           = gameObject.AddComponent<AudioSource>();
+        operationSound.source.clip      = operationSound.clip;
+        operationSound.source.volume    = operationSound.volume;
+        operationSound.source.pitch     = operationSound.pitch;
+        operationSound.source.playOnAwake = false;
+    }
 
     protected override void Start()
     {
@@ -45,14 +56,40 @@ public class LiftSwitchController : SwitchController
         if (targetPosition.y <= maxHeight)
         {
             Move(1);
+            PlayOperationSound();
+        }
+        else
+        {
+            StopOperationSound();
         }
     }
 
     private void MoveDown()
     {
-        if (targetPosition.y >= minHeight)
+        if (targetPosition.y > minHeight)
         {
             Move(-2);
+            PlayOperationSound();
+        }
+        else
+        {
+            StopOperationSound();
+        }
+    }
+
+    private void PlayOperationSound()
+    {
+        if (!operationSound.source.isPlaying)
+        {
+            operationSound.source.Play();
+        }
+    }
+
+    private void StopOperationSound()
+    {
+        if (!operationSound.source.isPlaying)
+        {
+            operationSound.source.Stop();
         }
     }
 

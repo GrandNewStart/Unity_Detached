@@ -19,10 +19,10 @@ public class ArmController : PhysicalObject
     public float                treadmillVelocity;
     private short               dir;
     private short               lastDir;
-    private bool                isFireComplete;
-    private bool                isControlling;
-    private bool                isMovable;
-    private bool                isOnTreadmill;
+    private bool                isFireComplete  = false;
+    private bool                isControlling   = false;
+    private bool                isMovable       = true;
+    private bool                isOnTreadmill   = false;
 
     [Header("Retrieve Attributes")]
     private SpriteRenderer      sprite;
@@ -32,8 +32,22 @@ public class ArmController : PhysicalObject
     public float                retreiveRadius;
     private float               gravityScale;
     private float               mass;
-    private bool                isRetrieving;
-    private bool                isRetrieveComplete;
+    private bool                isRetrieving        = false;
+    private bool                isRetrieveComplete  = true;
+
+    [Header("Sound Attributes")]
+    
+    public Sound                moveSound;
+    private int                 moveSoundDelay = 0;
+
+    private void Awake()
+    {
+        moveSound.source        = gameObject.AddComponent<AudioSource>();
+        moveSound.source.clip   = moveSound.clip;
+        moveSound.source.volume = moveSound.volume;
+        moveSound.source.pitch  = moveSound.pitch;
+        moveSound.source.playOnAwake = false;
+    }
 
     private new void Start()
     {
@@ -48,18 +62,12 @@ public class ArmController : PhysicalObject
         dir                 = 1;
         lastDir             = 1;
         treadmillVelocity   = 0f;
-        isFireComplete      = false;
-        isControlling       = false;
-        isMovable           = true;
-        isOnTreadmill       = false;
 
         // Retreive Attributes
         sprite              = normal.GetComponent<SpriteRenderer>();
         playerPosition      = player.transform.position;
         gravityScale        = rigidbody.gravityScale;
         mass                = rigidbody.mass;
-        isRetrieving        = false;        
-        isRetrieveComplete  = true;
     }
 
     private new void Update()
@@ -179,15 +187,18 @@ public class ArmController : PhysicalObject
             {
                 dir = 1;
                 lastDir = 1;
+                PlayMoveSound();
             }
             else if (horizontal < 0)
             {
                 dir = -1;
                 lastDir = -1;
+                PlayMoveSound();
             }
             else if (horizontal == 0)
             {
                 dir = 0;
+                StopMoveSound();
             }
 
             // Move
@@ -217,6 +228,20 @@ public class ArmController : PhysicalObject
         }
     }
 
+    private void PlayMoveSound()
+    {
+        if (moveSoundDelay++ > 20 && isMovable)
+        {
+            moveSoundDelay = 0;
+            moveSound.source.Play();
+        }
+    }
+
+    private void StopMoveSound()
+    {
+        moveSound.source.Stop();
+    }
+
     private void GroundCheck()
      {
         // If the hand didn't touch ground after it was initially fired, it can't move
@@ -240,10 +265,8 @@ public class ArmController : PhysicalObject
                 anim.Play("move_left");
                 break;
             case 0:
-                if (lastDir == 1)
-                    anim.Play("idle_right");
-                if (lastDir == -1)
-                    anim.Play("idle_left");
+                if (lastDir == 1) { anim.Play("idle_right"); }
+                if (lastDir == -1) { anim.Play("idle_left"); }
                 break;
         }
     }

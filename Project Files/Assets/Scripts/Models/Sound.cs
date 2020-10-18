@@ -5,11 +5,12 @@ using UnityEngine;
 [System.Serializable]
 public class Sound
 {
-    public string name;
+    public static float maxVolume   = 3f;
+    public static float maxPitch    = 1f;
 
-    public AudioClip clip;
-
-    public AudioSource source;
+    public string       name;
+    public AudioClip    clip;
+    public AudioSource  source;
 
     [Range(0f, 1f)]
     public float volume;
