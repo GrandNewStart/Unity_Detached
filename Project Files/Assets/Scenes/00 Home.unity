@@ -2033,7 +2033,7 @@ MonoBehaviour:
     name: 
     clip: {fileID: 8300000, guid: 3c62d95b453caf446a6dda904d8fce73, type: 3}
     source: {fileID: 0}
-    volume: 0.6
+    volume: 0.3
     pitch: 1
   noSaveDataDialog: {fileID: 1078680831}
   menu_1: {fileID: 2089265283}

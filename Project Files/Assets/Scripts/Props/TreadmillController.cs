@@ -20,21 +20,24 @@ public class TreadmillController : MonoBehaviour
 
     private void Awake()
     {
-        operationSound.source           = gameObject.AddComponent<AudioSource>();
-        operationSound.source.clip      = operationSound.clip;
-        operationSound.source.volume    = operationSound.volume;
-        operationSound.source.pitch     = operationSound.pitch;
-        operationSound.source.playOnAwake = false;
+        initSounds();
+    }
+
+    private void initSounds()
+    {
+        operationSound.source               = gameObject.AddComponent<AudioSource>();
+        operationSound.source.clip          = operationSound.clip;
+        operationSound.source.volume        = operationSound.volume;
+        operationSound.source.pitch         = operationSound.pitch;
+        operationSound.source.playOnAwake   = false;
+        maxVolume                           = operationSound.volume;
     }
 
     private void Start()
     {
         treadmillStartPosition  = treadmillStart.transform.position;
         treadmillEndPosition    = treadmillEnd.transform.position;
-
-        maxVolume = operationSound.volume;
-        operationSound.source.loop = true;
-        operationSound.source.Play();
+        PlayOperationSound();
     }
 
     private void Update()
@@ -54,6 +57,17 @@ public class TreadmillController : MonoBehaviour
             distance = playerPosition.x - treadmillEndPosition.x;
         }
         AdjustVolume();
+    }
+
+    private void PlayOperationSound()
+    {
+        operationSound.source.loop = true;
+        operationSound.source.Play();
+    }
+
+    private void StopOperationSound()
+    {
+        operationSound.source.Stop();
     }
 
     private void AdjustVolume()

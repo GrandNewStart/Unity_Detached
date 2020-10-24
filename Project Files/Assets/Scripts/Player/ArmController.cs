@@ -6,17 +6,17 @@ using UnityEngine;
 public class ArmController : PhysicalObject
 {
     [Header("Movement Attributes")]
-    public GameObject           player;
-    public GameObject           normal;
+    public  GameObject          player;
+    public  GameObject          normal;
     private PlayerController    playerController;
-    public Camera               mainCamera;
+    public  Camera              mainCamera;
     private Animator            anim;
     private Vector3             origin;
-    public float                retrieveSpeed;
-    public float                moveSpeed;
-    public float                checkRectX;
-    public float                checkRectY;
-    public float                treadmillVelocity;
+    public  float               retrieveSpeed;
+    public  float               moveSpeed;
+    public  float               checkRectX;
+    public  float               checkRectY;
+    public  float               treadmillVelocity;
     private short               dir;
     private short               lastDir;
     private bool                isFireComplete  = false;
@@ -26,30 +26,36 @@ public class ArmController : PhysicalObject
 
     [Header("Retrieve Attributes")]
     private SpriteRenderer      sprite;
-    public CapsuleCollider2D    capsuleCollider;
-    public CircleCollider2D     circleCollider_1, circleCollider_2;
+    public  CapsuleCollider2D   capsuleCollider;
+    public  CircleCollider2D    circleCollider_1;
+    public  CircleCollider2D    circleCollider_2;
     private Vector3             playerPosition;
-    public float                retreiveRadius;
-    private float               gravityScale;
-    private float               mass;
+    public  float               retreiveRadius;
+    private float               normalScale;
+    private float               normalMass;
     private bool                isRetrieving        = false;
     private bool                isRetrieveComplete  = true;
 
     [Header("Sound Attributes")]
     
-    public Sound                moveSound;
-    private int                 moveSoundDelay = 0;
+    public  Sound   moveSound;
+    private int     moveSoundDelay = 0;
 
     private void Awake()
     {
-        moveSound.source        = gameObject.AddComponent<AudioSource>();
-        moveSound.source.clip   = moveSound.clip;
+        InitSounds();
+    }
+
+    private void InitSounds()
+    {
+        moveSound.source = gameObject.AddComponent<AudioSource>();
+        moveSound.source.clip = moveSound.clip;
         moveSound.source.volume = moveSound.volume;
-        moveSound.source.pitch  = moveSound.pitch;
+        moveSound.source.pitch = moveSound.pitch;
         moveSound.source.playOnAwake = false;
     }
 
-    private new void Start()
+    protected override void Start()
     {
         base.Start();
         // Inactive in default
@@ -66,19 +72,15 @@ public class ArmController : PhysicalObject
         // Retreive Attributes
         sprite              = normal.GetComponent<SpriteRenderer>();
         playerPosition      = player.transform.position;
-        gravityScale        = rigidbody.gravityScale;
-        mass                = rigidbody.mass;
+        normalScale         = rigidbody.gravityScale;
+        normalMass          = rigidbody.mass;
     }
 
-    private new void Update()
+    protected override void Update()
     {
         base.Update();
         GroundCheck();
-        if (!isControlling)
-        {
-            Retrieve();
-        }
-        else
+        if (!isDestroyed)
         {
             Move();
             AnimationControl();
@@ -89,36 +91,38 @@ public class ArmController : PhysicalObject
     public void Fire(float power)
     {
         // Set every property to default
-        rigidbody.gravityScale  = gravityScale;
-        rigidbody.mass          = mass;
+        rigidbody.gravityScale  = normalScale;
+        rigidbody.mass          = normalMass;
         isRetrieveComplete      = false;
         Vector3 fireVector      = Vector3.zero;
         playerPosition          = player.transform.position;
-        gameObject              .SetActive(true);
 
         // Fire vector is calculated.
-        // Initial position is set to a little front of the player.
+        // Initial position is set a little ahead of the player.
         switch (playerController.GetDir())
         {
             case 1:
-                playerPosition.x                += 2;
-                gameObject.transform.position   = playerPosition;
-                fireVector                      = new Vector3(5 + power, 15 + power, 0);
+                lastDir = 1;
+                playerPosition.x += 2;
+                fireVector = new Vector3(5 + power, 15 + power, 0);
                 break;
             case -1:
-                playerPosition.x                -= 2;
-                gameObject.transform.position   = playerPosition;
-                fireVector                      = new Vector3(-5 - power, 15 + power, 0);
+                lastDir = -1;
+                playerPosition.x -= 2;
+                fireVector = new Vector3(-5 - power, 15 + power, 0);
                 break;
         }
+        dir                             = 0;
+        playerPosition.z                = gameObject.transform.position.z;
+        gameObject.transform.position   = playerPosition;
 
         // Fire
+        gameObject.SetActive(true);
         rigidbody.AddForce(fireVector, ForceMode2D.Impulse);
     }
 
     public void StartRetrieve()
     {
-        // Trigger 'Retrieve()'. Properties are changed so that the hand can move freely.
         sprite.enabled              = true;
         capsuleCollider.isTrigger   = true;
         circleCollider_1.isTrigger  = true;
@@ -129,19 +133,21 @@ public class ArmController : PhysicalObject
         isMovable                   = false;
         isRetrieving                = true;
         OnPlugOut();
+
+        StartCoroutine(Retrieve());
     }
 
-    private void Retrieve()
+    private IEnumerator Retrieve()
     {
-        // Player's position is the target position.
-        playerPosition = player.transform.position;
-
-        if (isRetrieving)
+        while (isRetrieving)
         {
-            Vector3 temp        = new Vector3(transform.position.x, transform.position.y, 0);
-            Vector3 diff        = playerPosition - temp;
-            Vector3 direction   = diff.normalized;
-            Vector3 movement    = direction * retrieveSpeed * Time.deltaTime;
+            // Player's position is the target position.
+            playerPosition = player.transform.position;
+
+            Vector3 temp = new Vector3(transform.position.x, transform.position.y, 0);
+            Vector3 diff = playerPosition - temp;
+            Vector3 direction = diff.normalized;
+            Vector3 movement = direction * retrieveSpeed * Time.deltaTime;
 
             // Move towards the player
             transform.Translate(movement, Space.World);
@@ -149,17 +155,18 @@ public class ArmController : PhysicalObject
             // Retrieve complete
             if (diff.magnitude < retreiveRadius)
             {
+                gameObject.SetActive(false);
                 transform.position          = origin;
-                rigidbody.gravityScale      = gravityScale;
-                rigidbody.mass              = mass;
+                rigidbody.gravityScale      = normalScale;
+                rigidbody.mass              = normalMass;
                 capsuleCollider.isTrigger   = false;
                 circleCollider_1.isTrigger  = false;
                 circleCollider_2.isTrigger  = false;
                 isFireComplete              = false;
                 isRetrieving                = false;
-                isRetrieveComplete          = true;
-                gameObject.SetActive(false);
+                isRetrieveComplete          = true;   
             }
+            yield return null;
         }
     }
 
@@ -207,23 +214,24 @@ public class ArmController : PhysicalObject
                 if (isOnTreadmill)
                 {
                     horizontal += treadmillVelocity * Time.deltaTime;
-                    rigidbody.velocity = new Vector3(horizontal, vertical, 0.0f);
+                    rigidbody.velocity = new Vector3(horizontal, vertical, 0);
                 }
                 else
                 {
                     if (horizontal != 0)
                     {
-                        rigidbody.velocity = new Vector3(horizontal, vertical, 0.0f);
+                        rigidbody.velocity = new Vector3(horizontal, vertical, 0);
                     }
                 }
             }
         }
         else
         {
+            dir = 0;
             if (isOnTreadmill)
             {
                 horizontal = treadmillVelocity * Time.deltaTime;
-                rigidbody.velocity = new Vector3(horizontal, vertical, 0.0f);
+                rigidbody.velocity = new Vector3(horizontal, vertical, 0);
             }
         }
     }
@@ -265,8 +273,14 @@ public class ArmController : PhysicalObject
                 anim.Play("move_left");
                 break;
             case 0:
-                if (lastDir == 1) { anim.Play("idle_right"); }
-                if (lastDir == -1) { anim.Play("idle_left"); }
+                if (lastDir == 1) 
+                { 
+                    anim.Play("idle_right");
+                }
+                if (lastDir == -1) 
+                { 
+                    anim.Play("idle_left");
+                }
                 break;
         }
     }
@@ -289,19 +303,30 @@ public class ArmController : PhysicalObject
         capsuleCollider.isTrigger   = false;
         circleCollider_1.isTrigger  = false;
         circleCollider_2.isTrigger  = false;
-        rigidbody.gravityScale      = gravityScale;
-        rigidbody.mass              = mass;
+        rigidbody.gravityScale      = normalScale;
+        rigidbody.mass              = normalMass;
         isMovable                   = true;
     }
 
-    private new void OnCollisionEnter2D(Collision2D collision)
+    protected override void OnDestruction()
     {
+        base.OnDestruction();
+    }
+
+    protected override void OnCollisionEnter2D(Collision2D collision)
+    {
+        base.OnCollisionEnter2D(collision);
+
         // Ignore collision detection when retrieving
         if (collision.collider.CompareTag("Platform"))
         {
             if (!isRetrieving)
             {
                 transform.parent = collision.transform;
+            }
+            else
+            {
+                transform.parent = null;
             }
         }
     }

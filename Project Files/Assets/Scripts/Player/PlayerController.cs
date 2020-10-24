@@ -6,11 +6,11 @@ using UnityEngine;
 public class PlayerController : PhysicalObject
 {
     [Header("Movement Attributes")]
-    public Camera       mainCamera;
+    public  Camera      mainCamera;
     private Rigidbody2D rigidBody;
-    public GameObject   normal;
-    public float        moveSpeed;
-    public float        jumpHeight;
+    public  GameObject  normal;
+    public  float       moveSpeed;
+    public  float       jumpHeight;
     private float       treadmillVelocity;
     private bool        isOnTreadmill;
     private bool        isGrounded;
@@ -18,14 +18,14 @@ public class PlayerController : PhysicalObject
     private bool        isControlling;
 
     [Header("Shoot Attributes")]
-    public ArmController    firstArm;
-    public ArmController    secondArm;
-    public GameObject[]     gauges;
-    public float            powerLimit;
-    public float            powerIncrement;
+    public  ArmController   firstArm;
+    public  ArmController   secondArm;
+    public  GameObject[]    gauges;
+    public  float           powerLimit;
+    public  float           powerIncrement;
     private float           power;
     private int             arms;
-    public int              enabledArms;
+    public  int             enabledArms;
     private bool            isLeftRetrieving;
     private bool            isRightRetrieving;
 
@@ -42,64 +42,68 @@ public class PlayerController : PhysicalObject
     private bool        isStateFixed;
 
     [Header("Destruction Attributes")]
-    public GameObject   head;
-    public GameObject   body;
-    public GameObject   left_arm;
-    public GameObject   right_arm;
-    private bool        isDead;
+    public  GameObject  head;
+    public  GameObject  body;
+    public  GameObject  left_arm;
+    public  GameObject  right_arm;
 
     [Header("Sound Attributes")]
-    public Sound        footStepSound;
-    public Sound        jumpSound;
-    public Sound        chargeSound;
-    public Sound        fireSound;
-    public Sound        retrieveSound;
-    public Sound        retrieveCompleteSound;
+    public  Sound       footStepSound;
+    public  Sound       jumpSound;
+    public  Sound       chargeSound;
+    public  Sound       fireSound;
+    public  Sound       retrieveSound;
+    public  Sound       retrieveCompleteSound;
     private int         footStepDelay = 0;
     private float       chargeSoundOriginalPitch;
     private bool        isChargeSoundPlaying = false;
 
     private void Awake()
     {
-        footStepSound.source        = gameObject.AddComponent<AudioSource>();
-        footStepSound.source.clip   = footStepSound.clip;
-        footStepSound.source.volume = footStepSound.volume;
-        footStepSound.source.pitch  = footStepSound.pitch;
-        footStepSound.source.playOnAwake = false;
-
-        jumpSound.source        = gameObject.AddComponent<AudioSource>();
-        jumpSound.source.clip   = jumpSound.clip;
-        jumpSound.source.volume = jumpSound.volume;
-        jumpSound.source.pitch  = jumpSound.pitch;
-        jumpSound.source.playOnAwake = false;
-
-        chargeSound.source          = gameObject.AddComponent<AudioSource>();
-        chargeSound.source.clip     = chargeSound.clip;
-        chargeSound.source.volume   = chargeSound.volume;
-        chargeSound.source.pitch    = chargeSound.pitch;
-        chargeSoundOriginalPitch    = chargeSound.pitch;
-        chargeSound.source.playOnAwake = false;
-
-        fireSound.source        = gameObject.AddComponent<AudioSource>();
-        fireSound.source.clip   = fireSound.clip;
-        fireSound.source.volume = fireSound.volume;
-        fireSound.source.pitch  = fireSound.pitch;
-        fireSound.source.playOnAwake = false;
-
-        retrieveSound.source        = gameObject.AddComponent<AudioSource>();
-        retrieveSound.source.clip   = retrieveSound.clip;
-        retrieveSound.source.volume = retrieveSound.volume;
-        retrieveSound.source.pitch  = retrieveSound.pitch;
-        retrieveSound.source.playOnAwake = false;
-
-        retrieveCompleteSound.source        = gameObject.AddComponent<AudioSource>();
-        retrieveCompleteSound.source.clip   = retrieveCompleteSound.clip;
-        retrieveCompleteSound.source.volume = retrieveCompleteSound.volume;
-        retrieveCompleteSound.source.pitch  = retrieveCompleteSound.pitch;
-        retrieveCompleteSound.source.playOnAwake = false;
+        InitSounds();
     }
 
-    private new void Start()
+    private void InitSounds()
+    {
+        footStepSound.source                = gameObject.AddComponent<AudioSource>();
+        footStepSound.source.clip           = footStepSound.clip;
+        footStepSound.source.volume         = footStepSound.volume;
+        footStepSound.source.pitch          = footStepSound.pitch;
+        footStepSound.source.playOnAwake    = false;
+
+        jumpSound.source                = gameObject.AddComponent<AudioSource>();
+        jumpSound.source.clip           = jumpSound.clip;
+        jumpSound.source.volume         = jumpSound.volume;
+        jumpSound.source.pitch          = jumpSound.pitch;
+        jumpSound.source.playOnAwake    = false;
+
+        chargeSound.source              = gameObject.AddComponent<AudioSource>();
+        chargeSound.source.clip         = chargeSound.clip;
+        chargeSound.source.volume       = chargeSound.volume;
+        chargeSound.source.pitch        = chargeSound.pitch;
+        chargeSoundOriginalPitch        = chargeSound.pitch;
+        chargeSound.source.playOnAwake  = false;
+
+        fireSound.source                = gameObject.AddComponent<AudioSource>();
+        fireSound.source.clip           = fireSound.clip;
+        fireSound.source.volume         = fireSound.volume;
+        fireSound.source.pitch          = fireSound.pitch;
+        fireSound.source.playOnAwake    = false;
+
+        retrieveSound.source                = gameObject.AddComponent<AudioSource>();
+        retrieveSound.source.clip           = retrieveSound.clip;
+        retrieveSound.source.volume         = retrieveSound.volume;
+        retrieveSound.source.pitch          = retrieveSound.pitch;
+        retrieveSound.source.playOnAwake    = false;
+
+        retrieveCompleteSound.source                = gameObject.AddComponent<AudioSource>();
+        retrieveCompleteSound.source.clip           = retrieveCompleteSound.clip;
+        retrieveCompleteSound.source.volume         = retrieveCompleteSound.volume;
+        retrieveCompleteSound.source.pitch          = retrieveCompleteSound.pitch;
+        retrieveCompleteSound.source.playOnAwake    = false;
+    }
+
+    protected override void Start()
     {
         base.Start();
         // Movement attributes
@@ -121,22 +125,12 @@ public class PlayerController : PhysicalObject
         lastDir         = 1;
         state           = State.idle;
         isStateFixed    = false;
-
-        // Destruction attributes
-        isDead = false;
     }
 
-    private new void Update()
+    protected override void Update()
     {
         base.Update();
-        if (GetDestroyed())
-        {
-            if (!isDead)
-            {
-                OnDestruction();
-            }
-        }
-        else
+        if (!isDestroyed)
         {
             GroundCheck();
             ChangeControl();
@@ -154,7 +148,6 @@ public class PlayerController : PhysicalObject
     private void GroundCheck()
     {
         isGrounded = Physics2D.OverlapBox(groundCheck.transform.position, new Vector2(2.2f * groundCheckWidth, 0.5f), 0.0f, LayerMask.GetMask("Ground")) ||
-                     Physics2D.OverlapBox(groundCheck.transform.position, new Vector2(2.2f * groundCheckWidth, 0.5f), 0.0f, LayerMask.GetMask("Wall")) ||
                      Physics2D.OverlapBox(groundCheck.transform.position, new Vector2(2.2f * groundCheckWidth, 0.5f), 0.0f, LayerMask.GetMask("Physical Object"));
         if (!isGrounded)
         {
@@ -260,74 +253,82 @@ public class PlayerController : PhysicalObject
 
     private void Shoot()
     {
-        if (isGrounded && !isStateFixed)
+        if (isLeftRetrieving || isRightRetrieving || !isGrounded || isStateFixed)
         {
-            // Charge
-            if (Input.GetKey(KeyCode.L) && arms != 0)
-            {
-                // Charging start.
-                state = State.charge;
-                // Play charge sound
-                if (!isChargeSoundPlaying)
-                {
-                    isChargeSoundPlaying = true;
-                    StartCoroutine(PlayChargeSound());
-                }
-                // Player can't move while charging.
-                isMovable = false;
-                // Increase power until limit;
-                if (power < powerLimit) power += powerIncrement;
+            return;
+        }
 
-                for (int i = 0; i < 5; i++)
+        // Charge
+        if ((Input.GetKey(KeyCode.L) || Input.GetKey(KeyCode.F)) && arms != 0)
+        {
+            // Charging start.
+            state = State.charge;
+            // Play charge sound
+            if (!isChargeSoundPlaying)
+            {
+                isChargeSoundPlaying = true;
+                StartCoroutine(PlayChargeSound());
+            }
+            // Player can't move while charging.
+            isMovable = false;
+            // Increase power until limit;
+            if (power < powerLimit) power += powerIncrement;
+
+            for (int i = 0; i < 5; i++)
+            {
+                if (power / powerLimit >= 0.2f * (i + 1))
                 {
-                    if (power / powerLimit >= 0.2f * (i + 1))
+                    if (lastDir == 1)
                     {
-                        if (lastDir == 1)       gauges[i].transform.localPosition = (new Vector2(-18.0f, 0.8f + 2.4f * i));
-                        else if (lastDir == -1) gauges[i].transform.localPosition = (new Vector2(18.0f, 0.8f + 2.4f * i));
-                        gauges[i].SetActive(true);
+                        gauges[i].transform.localPosition = (new Vector2(-18.0f, 0.8f + 2.4f * i));
                     }
+                    else if (lastDir == -1)
+                    {
+                        gauges[i].transform.localPosition = (new Vector2(18.0f, 0.8f + 2.4f * i));
+                    }
+                    gauges[i].SetActive(true);
                 }
             }
-            else
-            {
-                gauges[0].SetActive(false);
-                gauges[1].SetActive(false);
-                gauges[2].SetActive(false);
-                gauges[3].SetActive(false);
-                gauges[4].SetActive(false);
-            }
+        }
+        else
+        {
+            gauges[0].SetActive(false);
+            gauges[1].SetActive(false);
+            gauges[2].SetActive(false);
+            gauges[3].SetActive(false);
+            gauges[4].SetActive(false);
+        }
 
-            // Fire
-            if (Input.GetKeyUp(KeyCode.L) && arms != 0)
+        // Fire
+        if ((Input.GetKeyUp(KeyCode.L) || Input.GetKeyUp(KeyCode.F)) && arms != 0)
+        {
+            // Firing start.
+            state = State.fire;
+            // Wait for the fire animation to finish.
+            Invoke("FinishFire", 0.3f);
+            // Player's state is fixed while the animation is playing
+            isStateFixed = true;
+            // Call HandController class's function to actually fire
+            if (arms == 2)
             {
-                // Firing start.
-                state = State.fire;
-                // Wait for the fire animation to finish.
-                Invoke("MakeShoot", 0.3f);
-                // Player's state is fixed while the animation is playing
-                isStateFixed = true;
-                // Call HandController class's function to actually fire
-                if (arms == 2)
+                firstArm.Fire(power);
+            }
+            if (arms == 1)
+            {
+                if (enabledArms == 1)
                 {
                     firstArm.Fire(power);
                 }
-                if (arms == 1)
+                else
                 {
-                    if (enabledArms == 1)
-                    {
-                        firstArm.Fire(power);
-                    }
-                    else
-                    {
-                        secondArm.Fire(power);
-                    }
+                    secondArm.Fire(power);
                 }
-                // Play Fire sound 
-                fireSound.source.Play();
-                power = 0.0f;
             }
+            // Play Fire sound 
+            fireSound.source.Play();
+            power = 0.0f;
         }
-    }   
+    }
 
     private IEnumerator PlayChargeSound()
     {
@@ -354,8 +355,9 @@ public class PlayerController : PhysicalObject
         isChargeSoundPlaying        = false;
     }
 
-    private void MakeShoot()
+    private void FinishFire()
     {
+        Debug.Log("FIRED");
         // Once firing is done, player is able to move, change state and an arm is reduced.
         isMovable       = true;
         isStateFixed    = false;
@@ -366,16 +368,21 @@ public class PlayerController : PhysicalObject
     private void Retrieve()
     {
         // Retrieve
-        if (Input.GetKeyDown(KeyCode.R) && isMovable)
+        if (Input.GetKeyDown(KeyCode.R) 
+            && isMovable
+            && !isLeftRetrieving
+            && !isRightRetrieving)
         {
             if (arms == enabledArms - 1 && enabledArms != 0)
             {
+                Debug.Log("RETRIEVE");
                 isLeftRetrieving = true;
                 firstArm.StartRetrieve();
                 PlayRetrieveSound();
             }
             else if (arms == enabledArms - 2 && enabledArms == 2)
             {
+                Debug.Log("RETRIEVE");
                 isLeftRetrieving = true;
                 isRightRetrieving = true;
                 firstArm.StartRetrieve();
@@ -392,6 +399,7 @@ public class PlayerController : PhysicalObject
             {
                 arms++;
                 PlayRetrieveCompleteSound();
+                Debug.Log("LEFT RETRIEVED");
             }
         }
         if (isRightRetrieving)
@@ -401,10 +409,27 @@ public class PlayerController : PhysicalObject
             {
                 arms++;
                 PlayRetrieveCompleteSound();
+                Debug.Log("RIGHT RETRIEVED");
             }
         }
 
     }
+
+
+    public void OnArmRetrieved(int armNumber)
+    {
+        switch (armNumber)
+        {
+            case 1:
+                isLeftRetrieving = false;
+                break;
+            case 2:
+                isRightRetrieving = false;
+                break;
+        }
+        arms++;
+    }
+
 
     public void PlayRetrieveSound()
     {
@@ -540,8 +565,10 @@ public class PlayerController : PhysicalObject
         }
     }
 
-    private void OnDestruction()
+    protected override void OnDestruction()
     {
+        base.OnDestruction();
+
         head        .transform.parent = null;
         body        .transform.parent = null;
         left_arm    .transform.parent = null;
@@ -552,12 +579,10 @@ public class PlayerController : PhysicalObject
         Rigidbody2D leftArmRB   = left_arm.GetComponent<Rigidbody2D>();
         Rigidbody2D rightArmRB  = right_arm.GetComponent<Rigidbody2D>();
 
-        headRB      .AddForce(new Vector2(0.0f, 2.0f), ForceMode2D.Impulse);
-        bodyRB      .AddForce(new Vector2(0.0f, 1.0f), ForceMode2D.Impulse);
-        leftArmRB   .AddForce(new Vector2(1.0f, 1.0f), ForceMode2D.Impulse);
-        rightArmRB  .AddForce(new Vector2(-1.0f, 1.0f), ForceMode2D.Impulse);
-
-        isDead = true;
+        headRB      .AddForce(new Vector2(0.0f, 4.0f), ForceMode2D.Impulse);
+        bodyRB      .AddForce(new Vector2(0.0f, 4.0f), ForceMode2D.Impulse);
+        leftArmRB   .AddForce(new Vector2(2.0f, 4.0f), ForceMode2D.Impulse);
+        rightArmRB  .AddForce(new Vector2(-2.0f, 4.0f), ForceMode2D.Impulse);
     }
 
     private void OnDrawGizmos()
@@ -581,10 +606,10 @@ public class PlayerController : PhysicalObject
     public short GetDir()
     { return lastDir; }
 
-    public bool GetControlling()
+    public bool GetControl()
     { return isControlling; }
 
-    public void SetControlling(bool input)
+    public void SetControl(bool input)
     { isControlling = input; }
 
     public bool GetLeftRetrieving()

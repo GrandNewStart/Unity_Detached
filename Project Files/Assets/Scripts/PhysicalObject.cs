@@ -5,12 +5,12 @@ using UnityEngine;
 
 public class PhysicalObject : MonoBehaviour
 {
-    private Boolean         isDestroyed;
+    public Boolean          isDestroyed;
     public GameObject       normalSprite;
     public GameObject       destroyedSprite;
     public new Rigidbody2D  rigidbody;
     
-    protected void Start()
+    protected virtual void Start()
     {
         isDestroyed = false;
         rigidbody   = GetComponent<Rigidbody2D>();
@@ -18,7 +18,7 @@ public class PhysicalObject : MonoBehaviour
         destroyedSprite .SetActive(false);
     }
 
-    protected void Update()
+    protected virtual void Update()
     {
         SpriteControl();
     }
@@ -39,22 +39,27 @@ public class PhysicalObject : MonoBehaviour
 
     public void MoveObject(int dir, float speed)
     {
-        Vector2 newPosition = transform.position;
-        newPosition.x += dir * speed * Time.deltaTime;
+        Vector2 newPosition     = transform.position;
+        newPosition.x           += dir * speed * Time.deltaTime;
         transform.localPosition = newPosition;
     }
 
     public void ApplyInertia(short dir, float speed)
     {
-        float horizontal = dir * speed * Time.deltaTime;
-        float vertical = rigidbody.velocity.y * Time.deltaTime;
-        rigidbody.velocity = new Vector3(horizontal, vertical, 0.0f);
+        float horizontal    = dir * speed * Time.deltaTime;
+        float vertical      = rigidbody.velocity.y * Time.deltaTime;
+        rigidbody.velocity  = new Vector3(horizontal, vertical, 0.0f);
     }
 
-    public Boolean GetDestroyed() { return isDestroyed; }
-    public void SetDestroyed(Boolean isDestroyed) { this.isDestroyed = isDestroyed; }
+    protected virtual void OnDestruction() 
+    {
+        if (!isDestroyed)
+        {
+            isDestroyed = true;
+        }
+    }
 
-    protected void OnCollisionEnter2D(Collision2D collision)
+    protected virtual void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.collider.CompareTag("Platform"))
         {
@@ -62,11 +67,11 @@ public class PhysicalObject : MonoBehaviour
         }
         if (collision.collider.CompareTag("Crusher"))
         {
-            SetDestroyed(true);
+            OnDestruction();
         }
     }
 
-    protected void OnCollisionExit2D(Collision2D collision)
+    protected virtual void OnCollisionExit2D(Collision2D collision)
     {
         if (collision.collider.CompareTag("Platform"))
         {

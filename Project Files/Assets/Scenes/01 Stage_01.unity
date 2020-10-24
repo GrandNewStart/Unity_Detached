@@ -2710,6 +2710,21 @@ PrefabInstance:
       propertyPath: mainCamera
       value: 
       objectReference: {fileID: 999202561}
+    - target: {fileID: 5273450387345957550, guid: 4c12b56efab5f1a419b0f75ea2d01ca4,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 0.84313726
+      objectReference: {fileID: 0}
+    - target: {fileID: 5273450387345957550, guid: 4c12b56efab5f1a419b0f75ea2d01ca4,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 0.9372549
+      objectReference: {fileID: 0}
+    - target: {fileID: 5273450387345957550, guid: 4c12b56efab5f1a419b0f75ea2d01ca4,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 0.85490197
+      objectReference: {fileID: 0}
     - target: {fileID: 9166269583827860130, guid: 4c12b56efab5f1a419b0f75ea2d01ca4,
         type: 3}
       propertyPath: m_Name
@@ -2733,7 +2748,7 @@ PrefabInstance:
     - target: {fileID: 9166269583827860140, guid: 4c12b56efab5f1a419b0f75ea2d01ca4,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -5
       objectReference: {fileID: 0}
     - target: {fileID: 9166269583827860140, guid: 4c12b56efab5f1a419b0f75ea2d01ca4,
         type: 3}
@@ -31758,6 +31773,21 @@ PrefabInstance:
       propertyPath: mainCamera
       value: 
       objectReference: {fileID: 999202561}
+    - target: {fileID: 4653000857986903245, guid: ed67b45d120ed284faa321c7e917e77d,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 0.84313726
+      objectReference: {fileID: 0}
+    - target: {fileID: 4653000857986903245, guid: ed67b45d120ed284faa321c7e917e77d,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 0.9372549
+      objectReference: {fileID: 0}
+    - target: {fileID: 4653000857986903245, guid: ed67b45d120ed284faa321c7e917e77d,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 0.85490197
+      objectReference: {fileID: 0}
     - target: {fileID: 8597598662017446268, guid: ed67b45d120ed284faa321c7e917e77d,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -31771,7 +31801,7 @@ PrefabInstance:
     - target: {fileID: 8597598662017446268, guid: ed67b45d120ed284faa321c7e917e77d,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -10
       objectReference: {fileID: 0}
     - target: {fileID: 8597598662017446268, guid: ed67b45d120ed284faa321c7e917e77d,
         type: 3}
