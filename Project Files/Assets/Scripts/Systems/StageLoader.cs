@@ -15,6 +15,12 @@ public class StageLoader : MonoBehaviour
     private bool            isLoadReady = false;
     private int             sceneIndex;
 
+    private bool showScene;
+    private bool isSceneEnd = false;
+    private int currentScene = -1;
+    private int maxIndex;
+    [SerializeField] GameObject[] cutScene;
+
     private void Start()
     {
         Color color = pressAnyKeyText.color;
@@ -25,11 +31,14 @@ public class StageLoader : MonoBehaviour
         color = image.color;
         color.a = 0;
         image.color = color;
+
+        maxIndex = cutScene.Length - 1;
     }
 
-    public void LoadStage(int sceneIndex)
+    public void LoadStage(int sceneIndex, bool showScene)
     {
         this.sceneIndex = sceneIndex;
+        this.showScene = showScene;
     }
 
     private void LoadBackground()
@@ -84,6 +93,29 @@ public class StageLoader : MonoBehaviour
         }
     }
 
+    private void LoadScene()
+    { 
+        if(currentScene == -1)
+        {
+            cutScene[0].SetActive(true);
+            currentScene++;
+        }
+        else if(currentScene == maxIndex)
+        {
+            isSceneEnd = true;
+        }
+        else if (Input.anyKeyDown)
+        {
+            if (currentScene < maxIndex)
+            {
+                print(currentScene);
+                currentScene++;
+                cutScene[currentScene].SetActive(true);
+                if(currentScene != 0)cutScene[currentScene - 1].SetActive(false);
+            }
+        }
+    }
+
     private void LoadLevel()
     {
         if (Input.anyKeyDown)
@@ -98,13 +130,30 @@ public class StageLoader : MonoBehaviour
         LoadBackground();
         if (isBackgroundLoaded)
         {
-            LoadArtWork();
-            if (isArtworkLoaded)
+            if (showScene)
             {
-                LoadPressAnyKey();
-                if (isLoadReady)
+                cube.SetActive(false);
+                LoadScene();
+                if (isSceneEnd)
                 {
-                    LoadLevel();
+                    LoadPressAnyKey();
+                    cube.SetActive(true);
+                    if (isLoadReady)
+                    {
+                        LoadLevel();
+                    }
+                }
+            }
+            else
+            {
+                LoadArtWork();
+                if (isArtworkLoaded)
+                {
+                    LoadPressAnyKey();
+                    if (isLoadReady)
+                    {
+                        LoadLevel();
+                    }
                 }
             }
         }

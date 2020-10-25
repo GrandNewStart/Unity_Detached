@@ -39,7 +39,7 @@ public class HomeController : MonoBehaviour
 
     [Header("Loading Screens")]
     public GameObject loading_1;
-    private StageLoader stageLoader;
+    private StageLoader stageLoader1;
 
     void Start()
     {
@@ -57,7 +57,7 @@ public class HomeController : MonoBehaviour
         origin.x += 2.5f;
         indicator.transform.position = origin;
 
-        stageLoader = loading_1.GetComponent<StageLoader>();
+        stageLoader1 = loading_1.GetComponent<StageLoader>();
     }
 
     void Update()
@@ -187,7 +187,7 @@ public class HomeController : MonoBehaviour
         if (data == null)
         {
             loading_1.SetActive(true);
-            stageLoader.LoadStage(1);
+            stageLoader1.LoadStage(1, true);
         }
         else
         {
@@ -216,7 +216,7 @@ public class HomeController : MonoBehaviour
             GameManager.position            = data.GetPosition();
             GameManager.shouldLoadSaveFile  = true;
             loading_1.SetActive(true);
-            stageLoader.LoadStage(GameManager.stage);
+            stageLoader1.LoadStage(GameManager.stage, false);
         }
     }
 
@@ -268,7 +268,7 @@ public class HomeController : MonoBehaviour
             {
                 focusStatus = focus.none;
                 loading_1.SetActive(true);
-                stageLoader.LoadStage(SaveSystem.initialStage);
+                stageLoader1.LoadStage(SaveSystem.initialStage, true);
             }
             else
             {
@@ -317,7 +317,7 @@ public class HomeController : MonoBehaviour
                 GameManager.position            = SaveSystem.initialPosition;
                 GameManager.shouldLoadSaveFile  = false;
                 loading_1.SetActive(true);
-                stageLoader.LoadStage(GameManager.stage);
+                stageLoader1.LoadStage(GameManager.stage, false);
             }
             else
             {
