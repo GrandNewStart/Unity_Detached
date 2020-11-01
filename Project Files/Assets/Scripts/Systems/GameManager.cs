@@ -15,6 +15,8 @@ public class GameManager : MonoBehaviour
     public ArmController    leftArm;
     public ArmController    rightArm;
     public new Camera       camera;
+    public Sound            pageSound;
+    public Sound            clickSound;
 
     [Header("Transition")]
     public GameObject   background;
@@ -26,16 +28,34 @@ public class GameManager : MonoBehaviour
     public GameObject       resumeMenu;
     public GameObject       settingsMenu;
     public GameObject       quitMenu;
-    private int             menuIndex = 0;
-    private int             controlIndex = 0;
+    private int             menuIndex       = 0;
+    private int             controlIndex    = 0;
 
-    protected void Start()
+    protected virtual void Awake()
+    {
+        initSounds();
+    }
+
+    private void initSounds()
+    {
+        pageSound.source        = gameObject.AddComponent<AudioSource>();
+        pageSound.source.clip   = pageSound.clip;
+        pageSound.source.volume = pageSound.volume;
+        pageSound.source.pitch  = pageSound.pitch;
+
+        clickSound.source           = gameObject.AddComponent<AudioSource>();
+        clickSound.source.clip      = clickSound.clip;
+        clickSound.source.volume    = clickSound.volume;
+        clickSound.source.pitch     = clickSound.pitch;
+    }
+
+    protected virtual void Start()
     {
         cube.SetActive(false);
         OnStageStarted();
     }
 
-    protected void Update()
+    protected virtual void Update()
     {
         RotateCube();
         PauseMenuControl();
@@ -145,6 +165,7 @@ public class GameManager : MonoBehaviour
             {
                 ResumeGame();
             }
+            PlayPageSound();
         }
 
         if (isPaused)
@@ -214,6 +235,7 @@ public class GameManager : MonoBehaviour
                     MoveIndicatorTo(settingsMenu);
                     break;
             }
+            PlayClickSound();
         }
         else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
         {
@@ -232,6 +254,7 @@ public class GameManager : MonoBehaviour
                     MoveIndicatorTo(resumeMenu);
                     break;
             }
+            PlayClickSound();
         }
     }
 
@@ -260,6 +283,7 @@ public class GameManager : MonoBehaviour
                     QuitGame();
                     break;
             }
+            PlayPageSound();
         }
     }
 
@@ -328,6 +352,16 @@ public class GameManager : MonoBehaviour
         }
         SceneManager.LoadScene(0);
         Time.timeScale = 1f;
+    }
+
+    public void PlayClickSound()
+    {
+        clickSound.source.Play();
+    }
+
+    public void PlayPageSound()
+    {
+        pageSound.source.Play();
     }
 
 }

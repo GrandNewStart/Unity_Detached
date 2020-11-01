@@ -7,10 +7,12 @@ using UnityEngine.UI;
 public class HomeController : MonoBehaviour
 {
     public GameObject   indicator;
-    public Sound        bgm;
     private int         selectedMenu = 1;
     private enum        focus { main, noSaveData, saveDataExists, settings, quit, none };
     private focus       focusStatus = focus.main;
+    public Sound        bgm;
+    public Sound        click;
+    public Sound        page;
 
     [Header("No Save Data")]
     public GameObject   noSaveDataDialog;
@@ -44,10 +46,25 @@ public class HomeController : MonoBehaviour
 
     private void Awake()
     {
+        initSounds();
+    }
+
+    private void initSounds()
+    {
         bgm.source          = gameObject.AddComponent<AudioSource>();
         bgm.source.clip     = bgm.clip;
         bgm.source.volume   = bgm.volume;
         bgm.source.pitch    = bgm.pitch;
+
+        click.source        = gameObject.AddComponent<AudioSource>();
+        click.source.clip   = click.clip;
+        click.source.volume = click.volume;
+        click.source.pitch  = click.pitch;
+
+        page.source         = gameObject.AddComponent<AudioSource>();
+        page.source.clip    = page.clip;
+        page.source.volume  = page.volume;
+        page.source.pitch   = page.pitch;
     }
 
     void Start()
@@ -124,18 +141,21 @@ public class HomeController : MonoBehaviour
                     position.x += 2.5f;
                     indicator.transform.position = position;
                     selectedMenu = 1;
+                    PlayClickSound();
                     break;
                 case 3:
                     position = menu_2.transform.position;
                     position.x += 2.5f;
                     indicator.transform.position = position;
                     selectedMenu = 2;
+                    PlayClickSound();
                     break;
                 case 4:
                     position = menu_3.transform.position;
                     position.x += 2.5f;
                     indicator.transform.position = position;
                     selectedMenu = 3;
+                    PlayClickSound();
                     break;
             }
         }
@@ -150,18 +170,21 @@ public class HomeController : MonoBehaviour
                         position.x += 2.5f;
                         indicator.transform.position = position;
                         selectedMenu = 2;
+                        PlayClickSound();
                         break;
                     case 2:
                         position = menu_3.transform.position;
                         position.x += 2.5f;
                         indicator.transform.position = position;
                         selectedMenu = 3;
+                        PlayClickSound();
                         break;
                     case 3:
                         position = menu_4.transform.position;
                         position.x += 2.5f;
                         indicator.transform.position = position;
                         selectedMenu = 4;
+                        PlayClickSound();
                         break;
                     case 4:
                         break;
@@ -189,6 +212,7 @@ public class HomeController : MonoBehaviour
                     Quit();
                     break;
             }
+            PlayPageSound();
         }
     }
 
@@ -249,6 +273,7 @@ public class HomeController : MonoBehaviour
             menu_1_affirmative = true;
             ToggleButton(menu_1_yes, true);
             ToggleButton(menu_1_no, false);
+            PlayClickSound();
         }
         if (Input.GetKeyDown("right") || Input.GetKeyDown(KeyCode.D))
         {
@@ -257,11 +282,13 @@ public class HomeController : MonoBehaviour
             menu_1_affirmative = false;
             ToggleButton(menu_1_yes, false);
             ToggleButton(menu_1_no, true);
+            PlayClickSound();
         }
         if (Input.GetKeyDown("escape"))
         {
             focusStatus = focus.main;
             noSaveDataDialog.SetActive(false);
+            PlayPageSound();
         }
     }
 
@@ -277,6 +304,7 @@ public class HomeController : MonoBehaviour
             {
                 focusStatus = focus.main;
             }
+            PlayPageSound();
             noSaveDataDialog.SetActive(false);
         }
     }
@@ -290,6 +318,7 @@ public class HomeController : MonoBehaviour
             menu_2_affirmative = true;
             ToggleButton(menu_2_yes, true);
             ToggleButton(menu_2_no, false);
+            PlayClickSound();
         }
         if (Input.GetKeyDown("right") || Input.GetKeyDown(KeyCode.D))
         {
@@ -298,11 +327,13 @@ public class HomeController : MonoBehaviour
             menu_2_affirmative = false;
             ToggleButton(menu_2_yes, false);
             ToggleButton(menu_2_no, true);
+            PlayClickSound();
         }
         if (Input.GetKeyDown("escape"))
         {
             focusStatus = focus.main;
             saveDataExistsDialog.SetActive(false);
+            PlayPageSound();
         }
     }
 
@@ -318,6 +349,7 @@ public class HomeController : MonoBehaviour
             {
                 focusStatus = focus.main;
             }
+            PlayPageSound();
             saveDataExistsDialog.SetActive(false);
         }
     }
@@ -336,6 +368,7 @@ public class HomeController : MonoBehaviour
         {
             Debug.Log("EXIT");
             focusStatus = focus.main;
+            PlayPageSound();
             settingsDialog.SetActive(false);
         }
     }
@@ -349,6 +382,7 @@ public class HomeController : MonoBehaviour
             menu_4_affirmative = true;
             ToggleButton(menu_4_yes, true);
             ToggleButton(menu_4_no, false);
+            PlayClickSound();
         }
         if (Input.GetKeyDown("right") || Input.GetKeyDown(KeyCode.D))
         {
@@ -357,11 +391,13 @@ public class HomeController : MonoBehaviour
             menu_4_affirmative = false;
             ToggleButton(menu_4_yes, false);
             ToggleButton(menu_4_no, true);
+            PlayClickSound();
         }
         if (Input.GetKeyDown("escape"))
         {
             focusStatus = focus.main;
             quitDialog.SetActive(false);
+            PlayPageSound();
         }
     }
 
@@ -372,10 +408,12 @@ public class HomeController : MonoBehaviour
             if (menu_4_affirmative)
             {
                 ExitGame();
+                PlayPageSound();
             }
             else
             {
                 focusStatus = focus.main;
+                PlayPageSound();
                 quitDialog.SetActive(false);
             }
         }
@@ -405,6 +443,7 @@ public class HomeController : MonoBehaviour
     private void ContinueGame(SaveData data)
     {
         StopBgm();
+        focusStatus = focus.none;
         GameManager.stage               = data.GetStage();
         GameManager.enabledArms         = data.GetEnabledArms();
         GameManager.position            = data.GetPosition();
@@ -429,5 +468,15 @@ public class HomeController : MonoBehaviour
     private void StopBgm()
     {
         bgm.source.Stop();
+    }
+
+    private void PlayPageSound()
+    {
+        page.source.Play();
+    }
+
+    private void PlayClickSound()
+    {
+        click.source.Play();
     }
 }

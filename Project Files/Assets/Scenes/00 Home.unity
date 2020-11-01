@@ -2035,6 +2035,18 @@ MonoBehaviour:
     source: {fileID: 0}
     volume: 0.3
     pitch: 1
+  click:
+    name: 
+    clip: {fileID: 8300000, guid: 28d7c96629fedae44bb3455a50250944, type: 3}
+    source: {fileID: 0}
+    volume: 0.2
+    pitch: 1
+  page:
+    name: 
+    clip: {fileID: 8300000, guid: 2f0f70f5dc08d3049adb2a999c74628e, type: 3}
+    source: {fileID: 0}
+    volume: 0.4
+    pitch: 1
   noSaveDataDialog: {fileID: 1078680831}
   menu_1: {fileID: 2089265283}
   menu_1_yes: {fileID: 1743633091}

@@ -9,7 +9,7 @@ public class TreadmillController : MonoBehaviour
     public Sound            operationSound;
     public float            maxAudioDistance;
     private float           maxVolume;
-    public PlayerController player;
+    public GameObject       player;
     public GameObject       treadmillStart;
     public GameObject       treadmillEnd;
     private Vector3         treadmillStartPosition;
@@ -29,7 +29,6 @@ public class TreadmillController : MonoBehaviour
         operationSound.source.clip          = operationSound.clip;
         operationSound.source.volume        = operationSound.volume;
         operationSound.source.pitch         = operationSound.pitch;
-        operationSound.source.playOnAwake   = false;
         maxVolume                           = operationSound.volume;
     }
 
@@ -68,6 +67,11 @@ public class TreadmillController : MonoBehaviour
     private void StopOperationSound()
     {
         operationSound.source.Stop();
+    }
+
+    public void MuteSound(bool mute)
+    {
+        operationSound.source.mute = mute;
     }
 
     private void AdjustVolume()
@@ -125,12 +129,6 @@ public class TreadmillController : MonoBehaviour
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if (collision.collider.CompareTag("Physical Object"))
-        {
-            GameObject objectOffTreadmill = collision.gameObject;
-            PhysicalObject physicalObject = objectOffTreadmill.GetComponent<PhysicalObject>();
-            physicalObject.ApplyInertia(dir, speed);
-        }
         if (collision.collider.CompareTag("Player"))
         {
             PlayerController player = collision.gameObject.GetComponent<PlayerController>();

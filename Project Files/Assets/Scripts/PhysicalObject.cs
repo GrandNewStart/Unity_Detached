@@ -44,13 +44,6 @@ public class PhysicalObject : MonoBehaviour
         transform.localPosition = newPosition;
     }
 
-    public void ApplyInertia(short dir, float speed)
-    {
-        float horizontal    = dir * speed * Time.deltaTime;
-        float vertical      = rigidbody.velocity.y * Time.deltaTime;
-        rigidbody.velocity  = new Vector3(horizontal, vertical, 0.0f);
-    }
-
     protected virtual void OnDestruction() 
     {
         if (!isDestroyed)

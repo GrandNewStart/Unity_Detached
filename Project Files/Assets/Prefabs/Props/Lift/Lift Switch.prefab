@@ -109,7 +109,7 @@ MonoBehaviour:
   minHeightCheck: {fileID: 0}
   operationSound:
     name: 
-    clip: {fileID: 8300000, guid: 3c81fcc335e3dd34e928c1be06fefee1, type: 3}
+    clip: {fileID: 8300000, guid: 34868db31466d7540aa42fcc47687c97, type: 3}
     source: {fileID: 0}
     volume: 0.2
     pitch: 1

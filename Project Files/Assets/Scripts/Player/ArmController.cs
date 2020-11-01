@@ -48,10 +48,10 @@ public class ArmController : PhysicalObject
 
     private void InitSounds()
     {
-        moveSound.source = gameObject.AddComponent<AudioSource>();
-        moveSound.source.clip = moveSound.clip;
+        moveSound.source        = gameObject.AddComponent<AudioSource>();
+        moveSound.source.clip   = moveSound.clip;
         moveSound.source.volume = moveSound.volume;
-        moveSound.source.pitch = moveSound.pitch;
+        moveSound.source.pitch  = moveSound.pitch;
         moveSound.source.playOnAwake = false;
     }
 

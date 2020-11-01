@@ -179,9 +179,9 @@ GameObject:
   - component: {fileID: 5496419127686253133}
   - component: {fileID: 1450619187810693835}
   - component: {fileID: 6749724969796266610}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: head
-  m_TagString: Untagged
+  m_TagString: Physical Object
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -332,9 +332,9 @@ GameObject:
   - component: {fileID: 3184727550316934136}
   - component: {fileID: 5053114050491329043}
   - component: {fileID: 8754885247796271697}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: left_arm
-  m_TagString: Untagged
+  m_TagString: Physical Object
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -776,6 +776,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02ffb66acb27cce4a8f0b302415d5dc8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isDestroyed: 0
   normalSprite: {fileID: 510559145}
   destroyedSprite: {fileID: 1801738212}
   rigidbody: {fileID: 4200882710565440737}
@@ -927,9 +928,9 @@ GameObject:
   - component: {fileID: 4314954089008527046}
   - component: {fileID: 5591514974325527807}
   - component: {fileID: 2940249202156881832}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: right_arm
-  m_TagString: Untagged
+  m_TagString: Physical Object
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1126,9 +1127,9 @@ GameObject:
   - component: {fileID: 8986137043146667482}
   - component: {fileID: 4201249816788138880}
   - component: {fileID: 6426838543754068189}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: body
-  m_TagString: Untagged
+  m_TagString: Physical Object
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

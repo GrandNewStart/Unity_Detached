@@ -87,7 +87,7 @@ public class LiftSwitchController : SwitchController
 
     private void StopOperationSound()
     {
-        if (!operationSound.source.isPlaying)
+        if (operationSound.source.isPlaying)
         {
             operationSound.source.Stop();
         }
