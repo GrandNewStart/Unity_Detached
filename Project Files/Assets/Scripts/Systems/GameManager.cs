@@ -175,7 +175,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void DisableControl()
+    protected void DisableControl()
     {
         bool playerControl      = player.GetControl();
         bool leftArmControl     = leftArm.GetControl();
@@ -200,7 +200,7 @@ public class GameManager : MonoBehaviour
         rightArm.SetControl(false);
     }
 
-    private void EnableControl()
+    protected void EnableControl()
     {
         switch(controlIndex)
         {

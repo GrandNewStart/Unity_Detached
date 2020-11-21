@@ -11,8 +11,10 @@ public class FirstStageManager : GameManager
     public List<GameObject>     cutScenes_1;
     public Sound                bgm;
     private bool                isFadeInComplete;
-
     public TreadmillController  treadmill;
+
+    public List<GameObject> scenePoints;
+    private List<bool> isSceneComplete;
 
     protected override void Awake()
     {
@@ -33,11 +35,13 @@ public class FirstStageManager : GameManager
         base.Start();
         CheckStartPosition();
         DisablePastCheckpoints();
+        InitCutScene();
     }
 
     protected override void Update()
     {
         base.Update();
+        ActiveScenePoints();
     }
 
     private void CheckStartPosition()
@@ -81,12 +85,68 @@ public class FirstStageManager : GameManager
         }
     }
 
+    private void InitCutScene()
+    {
+        int len = scenePoints.Count;
+        isSceneComplete = new List<bool>();
+        for (int i = 0; i < len; i++)
+        {
+            scenePoints[i].SetActive(false);
+        }
+
+        // After first arm achieved
+        if (position == checkpoints[3].transform.position)
+        {
+            isSceneComplete.Add(true);
+        }
+        else isSceneComplete.Add(false);
+        // After second arm archieved
+        if (position == checkpoints[10].transform.position)
+        {
+            isSceneComplete.Add(true);
+        }
+        else isSceneComplete.Add(false);
+    }
+
     private void PlayCutScene1()
     {
         Time.timeScale = 0f;
         treadmill.MuteSound(true);
         cutScenes_1_Background.SetActive(true);
         StartCoroutine(ShowCutScenes(cutScenes_1, cutScenes_1_Background));
+    }
+
+    public void PlayCutScene(int sceneNum, List<GameObject> scenes, GameObject background)
+    {
+        Time.timeScale = 0f;
+        StopBGM();
+        DisableControl();
+        background.SetActive(true);
+        isSceneComplete[sceneNum] = true;
+        StartCoroutine(ShowCutScenes(sceneNum, scenes, background));
+        scenePoints[sceneNum].SetActive(false);
+    }
+
+    private void ActiveScenePoints()
+    {
+        int len = scenePoints.Count;
+        for(int i=0; i<len; i++)
+        {
+            if (!isSceneComplete[i])
+            {
+                switch (i)
+                {
+                    case 0:
+                        if (player.GetEnabledArms() == 1)
+                            scenePoints[0].SetActive(true);
+                        break;
+                    case 1:
+                        if (player.GetEnabledArms() == 2)
+                            scenePoints[1].SetActive(true);
+                        break;
+                }
+            }
+        }
     }
 
     private void PlayBGM()
@@ -131,6 +191,37 @@ public class FirstStageManager : GameManager
         StartCoroutine(TransitionOut());
     }
 
+    private IEnumerator ShowCutScenes(int sceneNum, List<GameObject> scenes, GameObject background)
+    {
+        foreach (GameObject scene in scenes)
+        {
+            isFadeInComplete = false;
+            bool startedRoutine = false;
+            while (!isFadeInComplete)
+            {
+                if (!startedRoutine)
+                {
+                    StartCoroutine(ShowFadeIn(scene));
+                   
+                    startedRoutine = true;
+                }
+                yield return null;
+            }
+            while (!Input.GetKeyDown(KeyCode.Space))
+            {
+                yield return null;
+            }
+            PlayPageSound();
+            scene.SetActive(false);
+        }
+
+        background.SetActive(false);
+        PlayBGM();
+        EnableControl();
+        Time.timeScale = 1f;
+        StartCoroutine(TransitionOut());
+    }
+
     private IEnumerator ShowFadeIn(GameObject target)
     {
         SpriteRenderer sprite   = target.GetComponent<SpriteRenderer>();
@@ -167,4 +258,7 @@ public class FirstStageManager : GameManager
 
         isFadeInComplete = true;
     }
+
+    
+    
 }
