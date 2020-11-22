@@ -5,35 +5,35 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    public static bool isLoadingSaveData = false;
-    public bool isPaused;
-    public static int stage;
-    public static int enabledArms;
-    public static Vector3 position;
-    public GameObject cube;
+    public static bool      isLoadingSaveData = false;
+    public bool             isPaused;
+    public static int       stage;
+    public static int       enabledArms;
+    public static Vector3   position;
+    public GameObject       cube;
     public PlayerController player;
-    public ArmController leftArm;
-    public ArmController rightArm;
-    public new Camera camera;
-    public Sound pageSound;
-    public Sound clickSound;
-    public Sound bgm;
+    public ArmController    leftArm;
+    public ArmController    rightArm;
+    public new Camera       camera;
+    public Sound            pageSound;
+    public Sound            clickSound;
+    public Sound            bgm;
 
     [Header("Transition")]
-    public GameObject background;
-    private bool isTransitionComplete = false;
+    public GameObject   background;
+    private bool        isTransitionComplete = false;
 
     [Header("Cut Scenes")]
     private bool isFadeInComplete = false;
 
     [Header("Pause Menu")]
-    public GameObject pauseMenu;
-    public GameObject indicator;
-    public GameObject resumeMenu;
-    public GameObject settingsMenu;
-    public GameObject quitMenu;
-    private int menuIndex = 0;
-    private int controlIndex = 0;
+    public GameObject   pauseMenu;
+    public GameObject   indicator;
+    public GameObject   resumeMenu;
+    public GameObject   settingsMenu;
+    public GameObject   quitMenu;
+    private int         menuIndex = 0;
+    private int         controlIndex = 0;
 
     protected virtual void Awake()
     {
@@ -172,11 +172,29 @@ public class GameManager : MonoBehaviour
             color = sprite.color;
             color.a += 0.02f;
             sprite.color = color;
-
             yield return null;
         }
 
         isFadeInComplete = true;
+    }
+
+    protected IEnumerator HideFadeOut(GameObject target)
+    {
+        SpriteRenderer sprite = target.GetComponent<SpriteRenderer>();
+        Color color = sprite.color;
+        color.a = 1f;
+        sprite.color = color;
+        target.SetActive(true);
+
+        while(sprite.color.a > 0)
+        {
+            color = sprite.color;
+            color.a -= 0.02f;
+            sprite.color = color;
+            yield return null;
+        }
+
+        target.SetActive(false);
     }
 
     protected IEnumerator ShowNextPage(GameObject target)
@@ -461,6 +479,24 @@ public class GameManager : MonoBehaviour
     public void PlayPageSound()
     {
         pageSound.source.Play();
+    }
+
+    protected void ShowObject(GameObject obj, Vector3 position, int seconds)
+    {
+        obj.transform.position = position;
+        StartCoroutine(ShowFadeIn(obj));
+        StartCoroutine(HideRoutine(obj, seconds));
+    }
+
+    private IEnumerator HideRoutine(GameObject obj, int seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+        HideObject(obj);
+    }
+
+    protected void HideObject(GameObject obj)
+    {
+        StartCoroutine(HideFadeOut(obj));
     }
 
 }
