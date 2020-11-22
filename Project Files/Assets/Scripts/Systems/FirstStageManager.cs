@@ -8,24 +8,19 @@ public class FirstStageManager : GameManager
     public GameObject           arm_1;
     public GameObject           arm_2;
     public GameObject           cutScenes_1_Background;
+    public GameObject           cutScenes_2_Background;
+    public GameObject           cutScenes_3_Background;
+    public GameObject           cutScenes_4_Background;
     public List<GameObject>     cutScenes_1;
-    public Sound                bgm;
-    private bool                isFadeInComplete;
+    public List<GameObject>     cutScenes_2;
+    public List<GameObject>     cutScenes_3;
+    public List<GameObject>     cutScenes_4;
 
     public TreadmillController  treadmill;
 
     protected override void Awake()
     {
         base.Awake();
-        initSounds();
-    }
-
-    private void initSounds()
-    {
-        bgm.source          = gameObject.AddComponent<AudioSource>();
-        bgm.source.clip     = bgm.clip;
-        bgm.source.volume   = bgm.volume;
-        bgm.source.pitch    = bgm.pitch;
     }
 
     protected override void Start()
@@ -38,18 +33,19 @@ public class FirstStageManager : GameManager
     protected override void Update()
     {
         base.Update();
+        DetectArms();
     }
 
     private void CheckStartPosition()
     {
+        PlayBGM();
         // New game -> Play cut scene
-        if (!shouldLoadSaveFile)
+        if (!isLoadingSaveData)
         {
             PlayCutScene1();
         }
         else
         {
-            PlayBGM();
             StartCoroutine(TransitionOut());
         }
         // After first arm achievement
@@ -62,6 +58,27 @@ public class FirstStageManager : GameManager
         {
             arm_1.SetActive(false);
             arm_2.SetActive(false);
+        }
+    }
+    
+
+    private void DetectArms()
+    {
+        bool arm_1_acheived = Physics2D.OverlapCircle(arm_1.transform.position, 2, LayerMask.GetMask("Player"));
+        bool arm_2_acheived = Physics2D.OverlapCircle(arm_2.transform.position, 2, LayerMask.GetMask("Player"));
+
+        if (arm_1_acheived && arm_1.activeSelf)
+        {
+            player.EnableArms(1);
+            arm_1.SetActive(false);
+            PlayCutScene2();
+        }
+
+        if (arm_2_acheived && arm_2.activeSelf)
+        {
+            player.EnableArms(2);
+            arm_2.SetActive(false);
+            PlayCutScene3();
         }
     }
 
@@ -83,88 +100,40 @@ public class FirstStageManager : GameManager
 
     private void PlayCutScene1()
     {
-        Time.timeScale = 0f;
-        treadmill.MuteSound(true);
-        cutScenes_1_Background.SetActive(true);
-        StartCoroutine(ShowCutScenes(cutScenes_1, cutScenes_1_Background));
+        StartCoroutine(ShowCutScenes(cutScenes_1, cutScenes_1_Background, 1));
     }
 
-    private void PlayBGM()
+    private void PlayCutScene2()
     {
-        bgm.source.loop = true;
-        bgm.source.Play();
+        StartCoroutine(ShowCutScenes(cutScenes_2, cutScenes_2_Background, 2));
     }
 
-    private void StopBGM()
+    private void PlayCutScene3()
     {
-        bgm.source.Stop();
+        //StartCoroutine(ShowCutScenes(cutScenes_3, cutScenes_3_Background, 3));
     }
 
-    private IEnumerator ShowCutScenes(List<GameObject> scenes, GameObject background)
+    private void PlayCutScene4()
     {
-        foreach (GameObject scene in scenes)
+        //StartCoroutine(ShowCutScenes(cutScenes_4, cutScenes_4_Background, 4));
+    }
+
+    protected override void OnCutSceneStart(int index)
+    {
+        if (index == 1)
         {
-            isFadeInComplete    = false;
-            bool startedRoutine = false;
-            while(!isFadeInComplete)
-            {
-                if (!startedRoutine)
-                {
-                    StartCoroutine(ShowFadeIn(scene));
-                    //StartCoroutine(ShowNextPage(scene));
-                    startedRoutine = true;
-                }
-                yield return null;
-            }
-            while(!Input.GetKeyDown(KeyCode.Space))
-            {
-                yield return null;
-            }
-            PlayPageSound();
-            scene.SetActive(false);
+            StopBGM();
+            treadmill.MuteSound(true);
         }
-
-        background.SetActive(false);
-        treadmill.MuteSound(false);
-        PlayBGM();
-        Time.timeScale = 1f;
-        StartCoroutine(TransitionOut());
     }
 
-    private IEnumerator ShowFadeIn(GameObject target)
+    protected override void OnCutSceneEnd(int index)
     {
-        SpriteRenderer sprite   = target.GetComponent<SpriteRenderer>();
-        Color color             = sprite.color;
-        color.a                 = 0f;
-        sprite.color            = color;
-        target.SetActive(true);
-
-        while(sprite.color.a < 1)
+        if (index == 1)
         {
-            color           = sprite.color;
-            color.a         += 0.02f;
-            sprite.color    = color;
-            
-            yield return null;
+            PlayBGM();
+            treadmill.MuteSound(false);
         }
-
-        isFadeInComplete = true;
     }
 
-    private IEnumerator ShowNextPage(GameObject target)
-    {
-        SpriteRenderer sprite       = target.GetComponent<SpriteRenderer>();
-        float length                = sprite.bounds.size.x;
-        float origin                = target.transform.position.x;
-        target.transform.position   += new Vector3(length * 1.2f, 0, 0);
-        target.SetActive(true);
-
-        while (target.transform.position.x > origin)
-        {
-            target.transform.position -= new Vector3(1f, 0, 0);
-            yield return null;
-        }
-
-        isFadeInComplete = true;
-    }
 }
