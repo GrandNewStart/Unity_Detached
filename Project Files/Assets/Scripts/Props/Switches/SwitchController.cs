@@ -228,6 +228,11 @@ public class SwitchController : MonoBehaviour
         }
     }
 
+    public bool isPluggedIn()
+    {
+        return (isLeftPlugged || isRightPlugged);
+    }
+
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireCube(transform.position, new Vector3(2.3f, 3.2f, 0));

@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     public static bool      isLoadingSaveData = false;
+    public static int       INFINITE = 0;
     public bool             isPaused;
     public static int       stage;
     public static int       enabledArms;
@@ -186,7 +187,7 @@ public class GameManager : MonoBehaviour
         sprite.color = color;
         target.SetActive(true);
 
-        while(sprite.color.a > 0)
+        while(sprite.color.a > 0.05)
         {
             color = sprite.color;
             color.a -= 0.02f;
@@ -485,7 +486,10 @@ public class GameManager : MonoBehaviour
     {
         obj.transform.position = position;
         StartCoroutine(ShowFadeIn(obj));
-        StartCoroutine(HideRoutine(obj, seconds));
+        if (seconds != INFINITE)
+        {
+            StartCoroutine(HideRoutine(obj, seconds));
+        }
     }
 
     private IEnumerator HideRoutine(GameObject obj, int seconds)
