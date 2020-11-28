@@ -111,7 +111,7 @@ public class SwitchController : MonoBehaviour
                     return;
                 }
             }
-            if (Input.GetKeyDown(KeyCode.R) && player.GetControl())
+            if (Input.GetKeyDown(KeyCode.R) && player.HasControl())
             {
                 if(isLeftPlugged || isRightPlugged)
                 {
@@ -228,7 +228,7 @@ public class SwitchController : MonoBehaviour
         }
     }
 
-    public bool isPluggedIn()
+    public bool IsPluggedIn()
     {
         return (isLeftPlugged || isRightPlugged);
     }

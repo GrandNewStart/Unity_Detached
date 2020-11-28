@@ -40,6 +40,11 @@ public class Checkpoint : MonoBehaviour
         }
     }
 
+    public bool IsActive()
+    {
+        return gameObject.activeSelf;
+    }
+
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireSphere(origin, checkpointRadius);

@@ -23,8 +23,17 @@ public class GameManager : MonoBehaviour
     [Header("Transition")]
     public GameObject   background;
     private bool        isTransitionComplete = false;
+    public static int   DEFAULT = 999;
+    private int         STAGE_OVER = -999;
+
+    [Header("Loading Screen")]
+    public GameObject   loading_background;
+    public GameObject   loading_art;
+    public GameObject   loading_text;
+    private bool        isLoadingReady = false;
 
     [Header("Cut Scenes")]
+    public GameObject text_continue;
     private bool isFadeInComplete = false;
 
     [Header("Pause Menu")]
@@ -33,6 +42,7 @@ public class GameManager : MonoBehaviour
     public GameObject   resumeMenu;
     public GameObject   settingsMenu;
     public GameObject   quitMenu;
+    private bool        pauseDisabled = false;
     private int         menuIndex = 0;
     private int         controlIndex = 0;
 
@@ -69,6 +79,7 @@ public class GameManager : MonoBehaviour
     {
         RotateCube();
         PauseMenuControl();
+        ManageLoading();
     }
 
     private void OnStageStarted()
@@ -80,7 +91,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    protected IEnumerator TransitionIn()
+    protected IEnumerator TransitionIn(int id)
     {
         isTransitionComplete = false;
         background.SetActive(true);
@@ -95,10 +106,23 @@ public class GameManager : MonoBehaviour
             yield return null;
         }
 
+        OnTransitionInDone(id);
         isTransitionComplete = true;
     }
 
-    protected IEnumerator TransitionOut()
+    protected virtual void OnTransitionInDone(int id)
+    {
+        if (id == DEFAULT)
+        {
+            return;
+        }
+        if (id == STAGE_OVER)
+        {
+            StartCoroutine(LoadingRoutine());
+        }
+    }
+
+    protected IEnumerator TransitionOut(int id)
     {
         isTransitionComplete = false;
         background.SetActive(true);
@@ -113,15 +137,26 @@ public class GameManager : MonoBehaviour
             yield return null;
         }
 
+        OnTransitionOutDone(id);
         isTransitionComplete = true;
         background.SetActive(false);
+    }
+
+    protected virtual void OnTransitionOutDone(int id)
+    {
+        if (id == DEFAULT)
+        {
+            return;
+        }
     }
 
     protected IEnumerator ShowCutScenes(List<GameObject> scenes, GameObject background, int index)
     {
         background.SetActive(true);
+        ShowObject(text_continue, text_continue.transform.position, INFINITE);
         DisableControl();
         Time.timeScale = 0f;
+        pauseDisabled = true;
         OnCutSceneStart(index);
 
         foreach (GameObject scene in scenes)
@@ -142,7 +177,6 @@ public class GameManager : MonoBehaviour
                 yield return null;
             }
             PlayPageSound();
-            //scene.SetActive(false);
         }
 
         background.SetActive(false);
@@ -152,8 +186,10 @@ public class GameManager : MonoBehaviour
         }
         EnableControl();
         Time.timeScale = 1f;
+        pauseDisabled = false;
         OnCutSceneEnd(index);
-        StartCoroutine(TransitionOut());
+        HideObject(text_continue);
+        StartCoroutine(TransitionOut(DEFAULT));
     }
 
     protected virtual void OnCutSceneStart(int index) { }
@@ -225,7 +261,7 @@ public class GameManager : MonoBehaviour
                     case 1:
                         break;
                     case 2:
-                        if (!player.GetLeftRetrieving())
+                        if (!player.IsLeftRetrieving())
                         {
                             player.PlayRetrieveSound();
                             RetrieveLeftHand();
@@ -237,19 +273,19 @@ public class GameManager : MonoBehaviour
                 switch (player.GetEnabledArms())
                 {
                     case 1:
-                        if (!player.GetLeftRetrieving())
+                        if (!player.IsLeftRetrieving())
                         {
                             player.PlayRetrieveSound();
                             RetrieveLeftHand();
                         }
                         break;
                     case 2:
-                        if (!player.GetLeftRetrieving())
+                        if (!player.IsLeftRetrieving())
                         {
                             player.PlayRetrieveSound();
                             RetrieveLeftHand();
                         }
-                        if (!player.GetRightRetrieving())
+                        if (!player.IsRightRetrieving())
                         {
                             player.PlayRetrieveSound();
                             RetrieveRightHand();
@@ -262,7 +298,7 @@ public class GameManager : MonoBehaviour
 
     private void PauseMenuControl()
     {
-        if (Input.GetButtonDown("Cancel"))
+        if (Input.GetButtonDown("Cancel") && !pauseDisabled)
         {
             if (!isPaused)
             {
@@ -284,7 +320,7 @@ public class GameManager : MonoBehaviour
 
     protected void DisableControl()
     {
-        bool playerControl = player.GetControl();
+        bool playerControl = player.HasControl();
         bool leftArmControl = leftArm.GetControl();
         bool rightArmControl = rightArm.GetControl();
 
@@ -402,7 +438,10 @@ public class GameManager : MonoBehaviour
     public void ShowCube(float seconds)
     {
         cube.SetActive(true);
-        Invoke("HideCube", seconds);
+        if (seconds != INFINITE)
+        {
+            Invoke("HideCube", seconds);
+        }
     }
 
     private void HideCube()
@@ -447,7 +486,7 @@ public class GameManager : MonoBehaviour
 
     private void QuitGame()
     {
-        StartCoroutine(TransitionIn());
+        StartCoroutine(TransitionIn(DEFAULT));
         StartCoroutine(LoadHome());
     }
 
@@ -484,6 +523,7 @@ public class GameManager : MonoBehaviour
 
     protected void ShowObject(GameObject obj, Vector3 position, int seconds)
     {
+        obj.SetActive(true);
         obj.transform.position = position;
         StartCoroutine(ShowFadeIn(obj));
         if (seconds != INFINITE)
@@ -501,6 +541,38 @@ public class GameManager : MonoBehaviour
     protected void HideObject(GameObject obj)
     {
         StartCoroutine(HideFadeOut(obj));
+    }
+
+    private void ManageLoading()
+    {
+        if (isLoadingReady)
+        {
+            if (Input.anyKeyDown)
+            {
+                SceneManager.LoadScene(stage + 1);
+            }
+        }
+    }
+
+    protected void ShowLoadingScreen()
+    {
+        isLoadingReady  = false;
+        pauseDisabled   = true;
+        DisableControl();
+        StopBGM();
+        ShowCube(INFINITE);
+        StartCoroutine(TransitionIn(STAGE_OVER));
+    }
+
+    private IEnumerator LoadingRoutine()
+    {
+        ShowObject(loading_background, loading_background.transform.position, INFINITE);
+        yield return new WaitForSeconds(1);
+        ShowObject(loading_art, loading_art.transform.position, INFINITE);
+        yield return new WaitForSeconds(1);
+        ShowObject(loading_text, loading_text.transform.position, INFINITE);
+        yield return new WaitForSeconds(0.5f);
+        isLoadingReady = true;
     }
 
 }

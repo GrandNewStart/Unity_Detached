@@ -45,19 +45,19 @@ public class StageClear : MonoBehaviour
         switch (player.GetArms())
                 {
                     case 1:
-                        if (!player.GetLeftRetrieving())
+                        if (!player.IsLeftRetrieving())
                         {
                             player.SetLeftRetrieving(true);
                             leftHand.StartRetrieve();
                         }
                         break;
                     case 0:
-                        if (!player.GetLeftRetrieving())
+                        if (!player.IsLeftRetrieving())
                         {
                             player.SetLeftRetrieving(true);
                             leftHand.StartRetrieve();
                         }
-                        if (!player.GetRightRetrieving())
+                        if (!player.IsRightRetrieving())
                         {
                             player.SetRightRetrieving(true);
                             rightHand.StartRetrieve();

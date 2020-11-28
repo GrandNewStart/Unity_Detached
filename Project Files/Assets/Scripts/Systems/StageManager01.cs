@@ -7,9 +7,10 @@ public class StageManager01 : GameManager
     [Header("Checkpoints")]
     public List<Checkpoint>     checkpoints;
 
-    [Header("Arm Achievement")]
+    [Header("Event Triggers")]
     public GameObject           arm_1;
     public GameObject           arm_2;
+    public GameObject           truck;
 
     [Header("Cut Scenes")]
     public GameObject           cutScenes_1_Background;
@@ -20,27 +21,31 @@ public class StageManager01 : GameManager
     public List<GameObject>     cutScenes_2;
     public List<GameObject>     cutScenes_3;
     public List<GameObject>     cutScenes_4;
-    private bool cutScene_1_done = false;
-    private bool cutScene_2_done = false;
-    private bool cutScene_3_done = false;
-    private bool cutScene_4_done = false;
+    private bool cutScene_1_done    = false;
+    private bool cutScene_2_done    = false;
+    private bool cutScene_3_done    = false;
+    private bool cutScene_4_started = false;
+    private bool cutScene_4_done    = false;
 
     [Header("Tutorial Texts")]
     public GameObject text_jump;
     public GameObject jump_end_point;
     public GameObject text_fire;
+    public GameObject text_switch_control;
     public GameObject text_retrieve;
     public GameObject text_plug_in;
     public GameObject text_plug_out;
-    private bool jump_done = false;
-    private bool fire_done = false;
-    private bool retrieve_done = false;
-    private bool plug_in_done = false;
-    private bool plug_out_done = false;
-    private bool fired = false;
-    private bool retrieved = false;
-    private bool pluggedIn = false;
-    private bool pluggedOut = false;
+    private bool jump_done      = false;
+    private bool fire_done      = false;
+    private bool switch_done    = false;
+    private bool retrieve_done  = false;
+    private bool plug_in_done   = false;
+    private bool plug_out_done  = false;
+    private bool fired          = false;
+    private bool switched       = false;
+    private bool retrieved      = false;
+    private bool pluggedIn      = false;
+    private bool pluggedOut     = false;
     
 
     [Header("ETC")]
@@ -63,7 +68,7 @@ public class StageManager01 : GameManager
     protected override void Update()
     {
         base.Update();
-        DetectArms();
+        DetectEventTriggers();
         ManageTexts();
     }
 
@@ -71,6 +76,7 @@ public class StageManager01 : GameManager
     {
         text_jump.SetActive(false);
         text_fire.SetActive(false);
+        text_switch_control.SetActive(false);
         text_retrieve.SetActive(false);
         text_plug_in.SetActive(false);
         text_plug_out.SetActive(false);
@@ -86,7 +92,7 @@ public class StageManager01 : GameManager
         }
         else
         {
-            StartCoroutine(TransitionOut());
+            StartCoroutine(TransitionOut(GameManager.DEFAULT));
         }
         // After first arm achievement
         if (position == checkpoints[3].transform.position)
@@ -102,10 +108,11 @@ public class StageManager01 : GameManager
     }
     
 
-    private void DetectArms()
+    private void DetectEventTriggers()
     {
         bool arm_1_achieved = Physics2D.OverlapCircle(arm_1.transform.position, 2, LayerMask.GetMask("Player"));
         bool arm_2_achieved = Physics2D.OverlapCircle(arm_2.transform.position, 2, LayerMask.GetMask("Player"));
+        bool truck_reached = Physics2D.OverlapBox(truck.transform.position, new Vector2(15, 6), 0, LayerMask.GetMask("Player"));
 
         if (arm_1_achieved && arm_1.activeSelf)
         {
@@ -120,10 +127,20 @@ public class StageManager01 : GameManager
             arm_2.SetActive(false);
             PlayCutScene3();
         }
+        if (truck_reached && !cutScene_4_started)
+        {
+            PlayCutScene4();
+        }
     }
 
     private void ManageTexts()
     {
+        Checkpoint checkpoint4 = checkpoints[3];
+        if (!checkpoint4.IsActive())
+        {
+            return;
+        }
+
         // Jump text
         if (cutScene_1_done && !jump_done)
         {
@@ -148,11 +165,25 @@ public class StageManager01 : GameManager
                 HideObject(text_fire);
                 fired = true;
             }
+            return;
+        }
+
+        if (fired && !switch_done)
+        {
+            ShowObject(text_switch_control, text_switch_control.transform.position, GameManager.INFINITE);
+            switch_done = true;
+        }
+        if (!switched)
+        {
+            if (Input.GetKeyDown(KeyCode.Tab))
+            {
+                HideObject(text_switch_control);
+                switched = true;
+            }
+            return;
         }
 
         // Retrieve text
-        // 플레이어가 R을 누르지 않고 바로 스위치 플러그인 하는 경우에 대한 분기 처리 필요
-        // Tab 눌러 시점 전환 텍스트도 필요
         if (fired && !retrieve_done)
         {
             ShowObject(text_retrieve, text_retrieve.transform.position, GameManager.INFINITE);
@@ -160,11 +191,12 @@ public class StageManager01 : GameManager
         }
         if (!retrieved)
         {
-            if (Input.GetKeyDown(KeyCode.R))
+            if (player.HasControl() && Input.GetKeyDown(KeyCode.R))
             {
                 HideObject(text_retrieve);
                 retrieved = true;
             }
+            return;
         }
 
         // Plug in text
@@ -175,11 +207,12 @@ public class StageManager01 : GameManager
         }
         if (!pluggedIn)
         {
-            if (firstSwitch.isPluggedIn())
+            if (firstSwitch.IsPluggedIn())
             {
                 HideObject(text_plug_in);
                 pluggedIn = true;
             }
+            return;
         }
 
         // Plug out text
@@ -190,7 +223,7 @@ public class StageManager01 : GameManager
         }
         if (!pluggedOut)
         {
-            if (!firstSwitch.isPluggedIn())
+            if (!firstSwitch.IsPluggedIn())
             {
                 HideObject(text_plug_out);
                 pluggedOut = true;
@@ -226,12 +259,12 @@ public class StageManager01 : GameManager
 
     private void PlayCutScene3()
     {
-        //StartCoroutine(ShowCutScenes(cutScenes_3, cutScenes_3_Background, 3));
+        StartCoroutine(ShowCutScenes(cutScenes_3, cutScenes_3_Background, 3));
     }
 
     private void PlayCutScene4()
     {
-        //StartCoroutine(ShowCutScenes(cutScenes_4, cutScenes_4_Background, 4));
+        StartCoroutine(ShowCutScenes(cutScenes_4, cutScenes_4_Background, 4));
     }
 
     protected override void OnCutSceneStart(int index)
@@ -240,6 +273,10 @@ public class StageManager01 : GameManager
         {
             StopBGM();
             treadmill.MuteSound(true);
+        }
+        if (index == 4)
+        {
+            cutScene_4_started = true;
         }
     }
 
@@ -262,12 +299,16 @@ public class StageManager01 : GameManager
         if (index == 4)
         {
             cutScene_4_done = true;
+            ShowLoadingScreen();
         }
     }
 
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireSphere(jump_end_point.transform.position, 4);
+        Gizmos.DrawWireSphere(arm_1.transform.position, 2);
+        Gizmos.DrawWireSphere(arm_2.transform.position, 2);
+        Gizmos.DrawWireCube(truck.transform.position, new Vector2(15, 6));
     }
 
 }

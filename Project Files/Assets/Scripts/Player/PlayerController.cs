@@ -606,16 +606,16 @@ public class PlayerController : PhysicalObject
     public short GetDir()
     { return lastDir; }
 
-    public bool GetControl()
+    public bool HasControl()
     { return isControlling; }
 
     public void SetControl(bool input)
     { isControlling = input; }
 
-    public bool GetLeftRetrieving()
+    public bool IsLeftRetrieving()
     { return isLeftRetrieving; }
 
-    public bool GetRightRetrieving()
+    public bool IsRightRetrieving()
     { return isRightRetrieving; }
 
     public void SetLeftRetrieving(bool input)
