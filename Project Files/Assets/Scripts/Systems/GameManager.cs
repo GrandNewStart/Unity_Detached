@@ -5,7 +5,8 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    public static bool      shouldLoadSaveFile = false;
+    public static bool      isLoadingSaveData = false;
+    public static int       INFINITE = 0;
     public bool             isPaused;
     public static int       stage;
     public static int       enabledArms;
@@ -17,19 +18,33 @@ public class GameManager : MonoBehaviour
     public new Camera       camera;
     public Sound            pageSound;
     public Sound            clickSound;
+    public Sound            bgm;
 
     [Header("Transition")]
     public GameObject   background;
     private bool        isTransitionComplete = false;
+    public static int   DEFAULT = 999;
+    private int         STAGE_OVER = -999;
+
+    [Header("Loading Screen")]
+    public GameObject   loading_background;
+    public GameObject   loading_art;
+    public GameObject   loading_text;
+    private bool        isLoadingReady = false;
+
+    [Header("Cut Scenes")]
+    public GameObject text_continue;
+    private bool isFadeInComplete = false;
 
     [Header("Pause Menu")]
-    public GameObject       pauseMenu;
-    public GameObject       indicator;
-    public GameObject       resumeMenu;
-    public GameObject       settingsMenu;
-    public GameObject       quitMenu;
-    private int             menuIndex       = 0;
-    private int             controlIndex    = 0;
+    public GameObject   pauseMenu;
+    public GameObject   indicator;
+    public GameObject   resumeMenu;
+    public GameObject   settingsMenu;
+    public GameObject   quitMenu;
+    private bool        pauseDisabled = false;
+    private int         menuIndex = 0;
+    private int         controlIndex = 0;
 
     protected virtual void Awake()
     {
@@ -38,15 +53,20 @@ public class GameManager : MonoBehaviour
 
     private void initSounds()
     {
-        pageSound.source        = gameObject.AddComponent<AudioSource>();
-        pageSound.source.clip   = pageSound.clip;
+        pageSound.source = gameObject.AddComponent<AudioSource>();
+        pageSound.source.clip = pageSound.clip;
         pageSound.source.volume = pageSound.volume;
-        pageSound.source.pitch  = pageSound.pitch;
+        pageSound.source.pitch = pageSound.pitch;
 
-        clickSound.source           = gameObject.AddComponent<AudioSource>();
-        clickSound.source.clip      = clickSound.clip;
-        clickSound.source.volume    = clickSound.volume;
-        clickSound.source.pitch     = clickSound.pitch;
+        clickSound.source = gameObject.AddComponent<AudioSource>();
+        clickSound.source.clip = clickSound.clip;
+        clickSound.source.volume = clickSound.volume;
+        clickSound.source.pitch = clickSound.pitch;
+
+        bgm.source = gameObject.AddComponent<AudioSource>();
+        bgm.source.clip = bgm.clip;
+        bgm.source.volume = bgm.volume;
+        bgm.source.pitch = bgm.pitch;
     }
 
     protected virtual void Start()
@@ -59,18 +79,19 @@ public class GameManager : MonoBehaviour
     {
         RotateCube();
         PauseMenuControl();
+        ManageLoading();
     }
 
     private void OnStageStarted()
     {
-        if (shouldLoadSaveFile)
+        if (isLoadingSaveData)
         {
             player.transform.position = position;
             player.EnableArms(enabledArms);
         }
     }
 
-    protected IEnumerator TransitionIn()
+    protected IEnumerator TransitionIn(int id)
     {
         isTransitionComplete = false;
         background.SetActive(true);
@@ -85,10 +106,23 @@ public class GameManager : MonoBehaviour
             yield return null;
         }
 
+        OnTransitionInDone(id);
         isTransitionComplete = true;
     }
 
-    protected IEnumerator TransitionOut()
+    protected virtual void OnTransitionInDone(int id)
+    {
+        if (id == DEFAULT)
+        {
+            return;
+        }
+        if (id == STAGE_OVER)
+        {
+            StartCoroutine(LoadingRoutine());
+        }
+    }
+
+    protected IEnumerator TransitionOut(int id)
     {
         isTransitionComplete = false;
         background.SetActive(true);
@@ -103,10 +137,119 @@ public class GameManager : MonoBehaviour
             yield return null;
         }
 
+        OnTransitionOutDone(id);
         isTransitionComplete = true;
         background.SetActive(false);
     }
 
+    protected virtual void OnTransitionOutDone(int id)
+    {
+        if (id == DEFAULT)
+        {
+            return;
+        }
+    }
+
+    protected IEnumerator ShowCutScenes(List<GameObject> scenes, GameObject background, int index)
+    {
+        background.SetActive(true);
+        ShowObject(text_continue, text_continue.transform.position, INFINITE);
+        DisableControl();
+        Time.timeScale = 0f;
+        pauseDisabled = true;
+        OnCutSceneStart(index);
+
+        foreach (GameObject scene in scenes)
+        {
+            isFadeInComplete = false;
+            bool startedRoutine = false;
+            while (!isFadeInComplete)
+            {
+                if (!startedRoutine)
+                {
+                    StartCoroutine(ShowFadeIn(scene));
+                    startedRoutine = true;
+                }
+                yield return null;
+            }
+            while (!Input.GetKeyDown(KeyCode.Space))
+            {
+                yield return null;
+            }
+            PlayPageSound();
+        }
+
+        background.SetActive(false);
+        foreach (GameObject scene in scenes)
+        {
+            scene.SetActive(false);
+        }
+        EnableControl();
+        Time.timeScale = 1f;
+        pauseDisabled = false;
+        OnCutSceneEnd(index);
+        HideObject(text_continue);
+        StartCoroutine(TransitionOut(DEFAULT));
+    }
+
+    protected virtual void OnCutSceneStart(int index) { }
+
+    protected virtual void OnCutSceneEnd(int index) { }
+
+    protected IEnumerator ShowFadeIn(GameObject target)
+    {
+        SpriteRenderer sprite = target.GetComponent<SpriteRenderer>();
+        Color color = sprite.color;
+        color.a = 0f;
+        sprite.color = color;
+        target.SetActive(true);
+
+        while (sprite.color.a < 1)
+        {
+            color = sprite.color;
+            color.a += 0.02f;
+            sprite.color = color;
+            yield return null;
+        }
+
+        isFadeInComplete = true;
+    }
+
+    protected IEnumerator HideFadeOut(GameObject target)
+    {
+        SpriteRenderer sprite = target.GetComponent<SpriteRenderer>();
+        Color color = sprite.color;
+        color.a = 1f;
+        sprite.color = color;
+        target.SetActive(true);
+
+        while(sprite.color.a > 0.05)
+        {
+            color = sprite.color;
+            color.a -= 0.02f;
+            sprite.color = color;
+            yield return null;
+        }
+
+        target.SetActive(false);
+    }
+
+    protected IEnumerator ShowNextPage(GameObject target)
+    {
+        SpriteRenderer sprite = target.GetComponent<SpriteRenderer>();
+        float length = sprite.bounds.size.x;
+        float origin = target.transform.position.x;
+        target.transform.position += new Vector3(length * 1.2f, 0, 0);
+        target.SetActive(true);
+
+        while (target.transform.position.x > origin)
+        {
+            target.transform.position -= new Vector3(1f, 0, 0);
+            yield return null;
+        }
+
+        isFadeInComplete = true;
+    }
 
     public void RetrieveHands()
     {
@@ -118,7 +261,7 @@ public class GameManager : MonoBehaviour
                     case 1:
                         break;
                     case 2:
-                        if (!player.GetLeftRetrieving())
+                        if (!player.IsLeftRetrieving())
                         {
                             player.PlayRetrieveSound();
                             RetrieveLeftHand();
@@ -130,19 +273,19 @@ public class GameManager : MonoBehaviour
                 switch (player.GetEnabledArms())
                 {
                     case 1:
-                        if (!player.GetLeftRetrieving())
+                        if (!player.IsLeftRetrieving())
                         {
                             player.PlayRetrieveSound();
                             RetrieveLeftHand();
                         }
                         break;
                     case 2:
-                        if (!player.GetLeftRetrieving())
+                        if (!player.IsLeftRetrieving())
                         {
                             player.PlayRetrieveSound();
                             RetrieveLeftHand();
                         }
-                        if (!player.GetRightRetrieving())
+                        if (!player.IsRightRetrieving())
                         {
                             player.PlayRetrieveSound();
                             RetrieveRightHand();
@@ -155,7 +298,7 @@ public class GameManager : MonoBehaviour
 
     private void PauseMenuControl()
     {
-        if (Input.GetButtonDown("Cancel"))
+        if (Input.GetButtonDown("Cancel") && !pauseDisabled)
         {
             if (!isPaused)
             {
@@ -177,9 +320,9 @@ public class GameManager : MonoBehaviour
 
     protected void DisableControl()
     {
-        bool playerControl      = player.GetControl();
-        bool leftArmControl     = leftArm.GetControl();
-        bool rightArmControl    = rightArm.GetControl();
+        bool playerControl = player.HasControl();
+        bool leftArmControl = leftArm.GetControl();
+        bool rightArmControl = rightArm.GetControl();
 
         if (playerControl)
         {
@@ -195,14 +338,14 @@ public class GameManager : MonoBehaviour
             controlIndex = 2;
         }
 
-        player  .SetControl(false);
-        leftArm .SetControl(false);
+        player.SetControl(false);
+        leftArm.SetControl(false);
         rightArm.SetControl(false);
     }
 
     protected void EnableControl()
     {
-        switch(controlIndex)
+        switch (controlIndex)
         {
             case 0:
                 player.SetControl(true);
@@ -220,7 +363,7 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
         {
-           switch(menuIndex)
+            switch (menuIndex)
             {
                 case 0:
                     menuIndex = 2;
@@ -260,9 +403,9 @@ public class GameManager : MonoBehaviour
 
     private void MoveIndicatorTo(GameObject menu)
     {
-        float newY          = menu.transform.position.y;
+        float newY = menu.transform.position.y;
         Vector3 newPosition = indicator.transform.position;
-        newPosition.y       = newY;
+        newPosition.y = newY;
 
         indicator.transform.position = newPosition;
     }
@@ -292,10 +435,13 @@ public class GameManager : MonoBehaviour
         cube.transform.Rotate(new Vector3(1, 1, 1));
     }
 
-    public void ShowCube()
+    public void ShowCube(float seconds)
     {
         cube.SetActive(true);
-        Invoke("HideCube", 2f);
+        if (seconds != INFINITE)
+        {
+            Invoke("HideCube", seconds);
+        }
     }
 
     private void HideCube()
@@ -340,18 +486,29 @@ public class GameManager : MonoBehaviour
 
     private void QuitGame()
     {
-        StartCoroutine(TransitionIn());
+        StartCoroutine(TransitionIn(DEFAULT));
         StartCoroutine(LoadHome());
     }
 
     private IEnumerator LoadHome()
     {
-        while(!isTransitionComplete)
+        while (!isTransitionComplete)
         {
             yield return null;
         }
         SceneManager.LoadScene(0);
         Time.timeScale = 1f;
+    }
+
+    public void PlayBGM()
+    {
+        bgm.source.loop = true;
+        bgm.source.Play();
+    }
+
+    public void StopBGM()
+    {
+        bgm.source.Stop();
     }
 
     public void PlayClickSound()
@@ -362,6 +519,60 @@ public class GameManager : MonoBehaviour
     public void PlayPageSound()
     {
         pageSound.source.Play();
+    }
+
+    protected void ShowObject(GameObject obj, Vector3 position, int seconds)
+    {
+        obj.SetActive(true);
+        obj.transform.position = position;
+        StartCoroutine(ShowFadeIn(obj));
+        if (seconds != INFINITE)
+        {
+            StartCoroutine(HideRoutine(obj, seconds));
+        }
+    }
+
+    private IEnumerator HideRoutine(GameObject obj, int seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+        HideObject(obj);
+    }
+
+    protected void HideObject(GameObject obj)
+    {
+        StartCoroutine(HideFadeOut(obj));
+    }
+
+    private void ManageLoading()
+    {
+        if (isLoadingReady)
+        {
+            if (Input.anyKeyDown)
+            {
+                SceneManager.LoadScene(stage + 1);
+            }
+        }
+    }
+
+    protected void ShowLoadingScreen()
+    {
+        isLoadingReady  = false;
+        pauseDisabled   = true;
+        DisableControl();
+        StopBGM();
+        ShowCube(INFINITE);
+        StartCoroutine(TransitionIn(STAGE_OVER));
+    }
+
+    private IEnumerator LoadingRoutine()
+    {
+        ShowObject(loading_background, loading_background.transform.position, INFINITE);
+        yield return new WaitForSeconds(1);
+        ShowObject(loading_art, loading_art.transform.position, INFINITE);
+        yield return new WaitForSeconds(1);
+        ShowObject(loading_text, loading_text.transform.position, INFINITE);
+        yield return new WaitForSeconds(0.5f);
+        isLoadingReady = true;
     }
 
 }

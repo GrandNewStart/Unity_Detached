@@ -111,7 +111,7 @@ public class SwitchController : MonoBehaviour
                     return;
                 }
             }
-            if (Input.GetKeyDown(KeyCode.R) && player.GetControl())
+            if (Input.GetKeyDown(KeyCode.R) && player.HasControl())
             {
                 if(isLeftPlugged || isRightPlugged)
                 {
@@ -226,6 +226,11 @@ public class SwitchController : MonoBehaviour
             pluggedSpriteGreen  .SetActive(false);
             unpluggedSprite     .SetActive(true);
         }
+    }
+
+    public bool IsPluggedIn()
+    {
+        return (isLeftPlugged || isRightPlugged);
     }
 
     private void OnDrawGizmos()

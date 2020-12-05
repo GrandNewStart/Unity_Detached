@@ -34,10 +34,15 @@ public class Checkpoint : MonoBehaviour
         {
             SaveData data = new SaveData(stage, enabledArms, gameObject.transform.position);
             SaveSystem.SaveGame(data);
-            gameManager.ShowCube();
+            gameManager.ShowCube(2);
             gameManager.RetrieveHands();
             gameObject.SetActive(false);
         }
+    }
+
+    public bool IsActive()
+    {
+        return gameObject.activeSelf;
     }
 
     private void OnDrawGizmos()

@@ -435,7 +435,7 @@ public class HomeController : MonoBehaviour
         GameManager.stage               = SaveSystem.initialStage;
         GameManager.enabledArms         = SaveSystem.initialEnabledArms;
         GameManager.position            = SaveSystem.initialPosition;
-        GameManager.shouldLoadSaveFile  = false;
+        GameManager.isLoadingSaveData   = false;
         loading_1.SetActive(true);
         stageLoader.LoadStage(GameManager.stage);
     }
@@ -447,7 +447,7 @@ public class HomeController : MonoBehaviour
         GameManager.stage               = data.GetStage();
         GameManager.enabledArms         = data.GetEnabledArms();
         GameManager.position            = data.GetPosition();
-        GameManager.shouldLoadSaveFile  = true;
+        GameManager.isLoadingSaveData   = true;
         loading_1.SetActive(true);
         stageLoader.LoadStage(GameManager.stage);
     }
