@@ -48,60 +48,15 @@ public class PlayerController : PhysicalObject
     public  GameObject  right_arm;
 
     [Header("Sound Attributes")]
-    public  Sound       footStepSound;
-    public  Sound       jumpSound;
-    public  Sound       chargeSound;
-    public  Sound       fireSound;
-    public  Sound       retrieveSound;
-    public  Sound       retrieveCompleteSound;
+    public AudioSource  footStepSound;
+    public AudioSource  jumpSound;
+    public AudioSource  chargeSound;
+    public AudioSource  fireSound;
+    public AudioSource  retrieveSound;
+    public AudioSource  retrieveCompleteSound;
     private int         footStepDelay = 0;
     private float       chargeSoundOriginalPitch;
     private bool        isChargeSoundPlaying = false;
-
-    private void Awake()
-    {
-        InitSounds();
-    }
-
-    private void InitSounds()
-    {
-        footStepSound.source                = gameObject.AddComponent<AudioSource>();
-        footStepSound.source.clip           = footStepSound.clip;
-        footStepSound.source.volume         = footStepSound.volume;
-        footStepSound.source.pitch          = footStepSound.pitch;
-        footStepSound.source.playOnAwake    = false;
-
-        jumpSound.source                = gameObject.AddComponent<AudioSource>();
-        jumpSound.source.clip           = jumpSound.clip;
-        jumpSound.source.volume         = jumpSound.volume;
-        jumpSound.source.pitch          = jumpSound.pitch;
-        jumpSound.source.playOnAwake    = false;
-
-        chargeSound.source              = gameObject.AddComponent<AudioSource>();
-        chargeSound.source.clip         = chargeSound.clip;
-        chargeSound.source.volume       = chargeSound.volume;
-        chargeSound.source.pitch        = chargeSound.pitch;
-        chargeSoundOriginalPitch        = chargeSound.pitch;
-        chargeSound.source.playOnAwake  = false;
-
-        fireSound.source                = gameObject.AddComponent<AudioSource>();
-        fireSound.source.clip           = fireSound.clip;
-        fireSound.source.volume         = fireSound.volume;
-        fireSound.source.pitch          = fireSound.pitch;
-        fireSound.source.playOnAwake    = false;
-
-        retrieveSound.source                = gameObject.AddComponent<AudioSource>();
-        retrieveSound.source.clip           = retrieveSound.clip;
-        retrieveSound.source.volume         = retrieveSound.volume;
-        retrieveSound.source.pitch          = retrieveSound.pitch;
-        retrieveSound.source.playOnAwake    = false;
-
-        retrieveCompleteSound.source                = gameObject.AddComponent<AudioSource>();
-        retrieveCompleteSound.source.clip           = retrieveCompleteSound.clip;
-        retrieveCompleteSound.source.volume         = retrieveCompleteSound.volume;
-        retrieveCompleteSound.source.pitch          = retrieveCompleteSound.pitch;
-        retrieveCompleteSound.source.playOnAwake    = false;
-    }
 
     protected override void Start()
     {
@@ -125,6 +80,9 @@ public class PlayerController : PhysicalObject
         lastDir         = 1;
         state           = State.idle;
         isStateFixed    = false;
+
+        // Sound attributes
+        chargeSoundOriginalPitch = chargeSound.pitch;
     }
 
     protected override void Update()
@@ -160,7 +118,7 @@ public class PlayerController : PhysicalObject
     {
         // Camera position setting
         Vector3 cameraPosition = transform.position;
-        cameraPosition.z = -100;
+        cameraPosition.z = -10;
         cameraPosition.y += 7;
         mainCamera.transform.position = cameraPosition;
 
@@ -229,7 +187,7 @@ public class PlayerController : PhysicalObject
     {
         if (footStepDelay++ > 20)
         {
-            footStepSound.source.Play();
+            footStepSound.Play();
             footStepDelay = 0;
         }
     }
@@ -246,7 +204,7 @@ public class PlayerController : PhysicalObject
                 float vertical = rigidBody.velocity.y + jumpHeight;
                 rigidBody.velocity = new Vector3(horizontal, vertical, 0.0f);
                 // Play jump sound
-                jumpSound.source.Play();
+                jumpSound.Play();
             }
         }
     }
@@ -325,15 +283,15 @@ public class PlayerController : PhysicalObject
                 }
             }
             // Play Fire sound 
-            fireSound.source.Play();
+            fireSound.Play();
             power = 0.0f;
         }
     }
 
     private IEnumerator PlayChargeSound()
     {
-        chargeSound.source.Play();
-        chargeSound.source.loop = true;
+        chargeSound.Play();
+        chargeSound.loop = true;
 
         while (state == State.charge)
         {
@@ -345,19 +303,16 @@ public class PlayerController : PhysicalObject
             {
                 chargeSound.pitch = Sound.maxPitch;
             }
-            chargeSound.source.pitch = chargeSound.pitch;
             yield return null;
         }
 
-        chargeSound.source.Stop();
-        chargeSound.pitch           = chargeSoundOriginalPitch;
-        chargeSound.source.pitch    = chargeSoundOriginalPitch;
-        isChargeSoundPlaying        = false;
+        chargeSound.Stop();
+        chargeSound.pitch = chargeSoundOriginalPitch;
+        isChargeSoundPlaying = false;
     }
 
     private void FinishFire()
     {
-        Debug.Log("FIRED");
         // Once firing is done, player is able to move, change state and an arm is reduced.
         isMovable       = true;
         isStateFixed    = false;
@@ -375,14 +330,12 @@ public class PlayerController : PhysicalObject
         {
             if (arms == enabledArms - 1 && enabledArms != 0)
             {
-                Debug.Log("RETRIEVE");
                 isLeftRetrieving = true;
                 firstArm.StartRetrieve();
                 PlayRetrieveSound();
             }
             else if (arms == enabledArms - 2 && enabledArms == 2)
             {
-                Debug.Log("RETRIEVE");
                 isLeftRetrieving = true;
                 isRightRetrieving = true;
                 firstArm.StartRetrieve();
@@ -399,7 +352,6 @@ public class PlayerController : PhysicalObject
             {
                 arms++;
                 PlayRetrieveCompleteSound();
-                Debug.Log("LEFT RETRIEVED");
             }
         }
         if (isRightRetrieving)
@@ -409,7 +361,6 @@ public class PlayerController : PhysicalObject
             {
                 arms++;
                 PlayRetrieveCompleteSound();
-                Debug.Log("RIGHT RETRIEVED");
             }
         }
 
@@ -433,12 +384,12 @@ public class PlayerController : PhysicalObject
 
     public void PlayRetrieveSound()
     {
-        retrieveSound.source.Play();
+        retrieveSound.Play();
     }
 
     public void PlayRetrieveCompleteSound()
     {
-        retrieveCompleteSound.source.Play();
+        retrieveCompleteSound.Play();
     }
 
     private void ChangeControl()

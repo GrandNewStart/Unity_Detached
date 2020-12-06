@@ -47,14 +47,12 @@ public class StageManager01 : GameManager
     private bool pluggedIn      = false;
     private bool pluggedOut     = false;
     
-
     [Header("ETC")]
     public TreadmillController  treadmill;
     public DoorSwitchController firstSwitch;
 
-    protected override void Awake()
+    protected void Awake()
     {
-        base.Awake();
         initScene();
     }
 
@@ -70,6 +68,18 @@ public class StageManager01 : GameManager
         base.Update();
         DetectEventTriggers();
         ManageTexts();
+    }
+
+    protected override void OnGamePaused()
+    {
+        base.OnGamePaused();
+        treadmill.MuteSound(true);
+    }
+
+    protected override void OnGameResumed()
+    {
+        base.OnGameResumed();
+        treadmill.MuteSound(false);
     }
 
     private void initScene()

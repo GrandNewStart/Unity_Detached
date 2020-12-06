@@ -38,22 +38,8 @@ public class ArmController : PhysicalObject
 
     [Header("Sound Attributes")]
     
-    public  Sound   moveSound;
-    private int     moveSoundDelay = 0;
-
-    private void Awake()
-    {
-        InitSounds();
-    }
-
-    private void InitSounds()
-    {
-        moveSound.source        = gameObject.AddComponent<AudioSource>();
-        moveSound.source.clip   = moveSound.clip;
-        moveSound.source.volume = moveSound.volume;
-        moveSound.source.pitch  = moveSound.pitch;
-        moveSound.source.playOnAwake = false;
-    }
+    public AudioSource  moveSound;
+    private int         moveSoundDelay = 0;
 
     protected override void Start()
     {
@@ -241,13 +227,13 @@ public class ArmController : PhysicalObject
         if (moveSoundDelay++ > 20 && isMovable)
         {
             moveSoundDelay = 0;
-            moveSound.source.Play();
+            moveSound.Play();
         }
     }
 
     private void StopMoveSound()
     {
-        moveSound.source.Stop();
+        moveSound.Stop();
     }
 
     private void GroundCheck()

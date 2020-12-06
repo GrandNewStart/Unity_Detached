@@ -5,16 +5,16 @@ using UnityEngine;
 public class SwitchController : MonoBehaviour
 {
     [Header("Target")]
-    public GameObject       target;
+    public GameObject   target;
 
     [Header("Sprites")]
-    public GameObject       unpluggedSprite;
-    public GameObject       pluggedSpriteRed;
-    public GameObject       pluggedSpriteGreen;
-    protected bool          isLeftArmAround;
-    protected bool          isRightArmAround;
-    protected bool          isLeftPlugged;
-    protected bool          isRightPlugged;
+    public GameObject   unpluggedSprite;
+    public GameObject   pluggedSpriteRed;
+    public GameObject   pluggedSpriteGreen;
+    protected bool      isLeftArmAround;
+    protected bool      isRightArmAround;
+    protected bool      isLeftPlugged;
+    protected bool      isRightPlugged;
 
     [Header("Player")]
     public ArmController    leftArm;
@@ -22,42 +22,15 @@ public class SwitchController : MonoBehaviour
     public PlayerController player;
 
     [Header("Sound")]
-    public Sound            plugInSound;
-    public Sound            plugOutSound;
-    public Sound            activationSound;
-    public Sound            deactivationSound;
+    public AudioSource plugInSound;
+    public AudioSource plugOutSound;
+    public AudioSource activationSound;
+    public AudioSource deactivationSound;
 
     [Header("Others")]
-    public int              waitToPlugOut;
-    protected int           counter;
-    protected bool          isPlugOutEnabled = false;
-
-    virtual protected void Awake()
-    {
-        plugInSound.source          = gameObject.AddComponent<AudioSource>();
-        plugInSound.source.clip     = plugInSound.clip;
-        plugInSound.source.volume   = plugInSound.volume;
-        plugInSound.source.pitch    = plugInSound.pitch;
-        plugInSound.source.playOnAwake = false;
-
-        plugOutSound.source         = gameObject.AddComponent<AudioSource>();
-        plugOutSound.source.clip    = plugOutSound.clip;
-        plugOutSound.source.volume  = plugOutSound.volume;
-        plugOutSound.source.pitch   = plugOutSound.pitch;
-        plugOutSound.source.playOnAwake = false;
-
-        activationSound.source          = gameObject.AddComponent<AudioSource>();
-        activationSound.source.clip     = activationSound.clip;
-        activationSound.source.volume   = activationSound.volume;
-        activationSound.source.pitch    = activationSound.pitch;
-        activationSound.source.playOnAwake = false;
-
-        deactivationSound.source        = gameObject.AddComponent<AudioSource>();
-        deactivationSound.source.clip   = deactivationSound.clip;
-        deactivationSound.source.volume = deactivationSound.volume;
-        deactivationSound.source.pitch  = deactivationSound.pitch;
-        deactivationSound.source.playOnAwake = false;
-    }
+    public int      waitToPlugOut;
+    protected int   counter;
+    protected bool  isPlugOutEnabled = false;
 
     virtual protected void Start()
     {
@@ -194,24 +167,22 @@ public class SwitchController : MonoBehaviour
 
     protected void PlayPlugInSound()
     {
-        plugInSound.source.Play();
-        Debug.Log("PLUG IN");
+        plugInSound.Play();
     }
 
     protected void PlayPlugOutSound()
     {
-        plugOutSound.source.Play();
-        Debug.Log("PLUG OUT");
+        plugOutSound.Play();
     }
 
     protected void PlayActivationSound()
     {
-        activationSound.source.Play();
+        activationSound.Play();
     }
 
     protected void PlayDeactivationSound()
     {
-        deactivationSound.source.Play();
+        deactivationSound.Play();
     }
 
     virtual protected void SpriteControl()

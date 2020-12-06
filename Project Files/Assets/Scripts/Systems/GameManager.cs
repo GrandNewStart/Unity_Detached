@@ -16,9 +16,9 @@ public class GameManager : MonoBehaviour
     public ArmController    leftArm;
     public ArmController    rightArm;
     public new Camera       camera;
-    public Sound            pageSound;
-    public Sound            clickSound;
-    public Sound            bgm;
+    public AudioSource      pageSound;
+    public AudioSource      clickSound;
+    public AudioSource      bgm;
 
     [Header("Transition")]
     public GameObject   background;
@@ -46,28 +46,6 @@ public class GameManager : MonoBehaviour
     private int         menuIndex = 0;
     private int         controlIndex = 0;
 
-    protected virtual void Awake()
-    {
-        initSounds();
-    }
-
-    private void initSounds()
-    {
-        pageSound.source = gameObject.AddComponent<AudioSource>();
-        pageSound.source.clip = pageSound.clip;
-        pageSound.source.volume = pageSound.volume;
-        pageSound.source.pitch = pageSound.pitch;
-
-        clickSound.source = gameObject.AddComponent<AudioSource>();
-        clickSound.source.clip = clickSound.clip;
-        clickSound.source.volume = clickSound.volume;
-        clickSound.source.pitch = clickSound.pitch;
-
-        bgm.source = gameObject.AddComponent<AudioSource>();
-        bgm.source.clip = bgm.clip;
-        bgm.source.volume = bgm.volume;
-        bgm.source.pitch = bgm.pitch;
-    }
 
     protected virtual void Start()
     {
@@ -318,6 +296,9 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    protected virtual void OnGamePaused() {}
+    protected virtual void OnGameResumed() {}
+
     protected void DisableControl()
     {
         bool playerControl = player.HasControl();
@@ -463,6 +444,7 @@ public class GameManager : MonoBehaviour
 
     private void PauseGame()
     {
+        OnGamePaused();
         isPaused = true;
         pauseMenu.SetActive(true);
         DisableControl();
@@ -472,6 +454,7 @@ public class GameManager : MonoBehaviour
 
     private void ResumeGame()
     {
+        OnGameResumed();
         isPaused = false;
         pauseMenu.SetActive(false);
         EnableControl();
@@ -502,23 +485,23 @@ public class GameManager : MonoBehaviour
 
     public void PlayBGM()
     {
-        bgm.source.loop = true;
-        bgm.source.Play();
+        bgm.loop = true;
+        bgm.Play();
     }
 
     public void StopBGM()
     {
-        bgm.source.Stop();
+        bgm.Stop();
     }
 
     public void PlayClickSound()
     {
-        clickSound.source.Play();
+        clickSound.Play();
     }
 
     public void PlayPageSound()
     {
-        pageSound.source.Play();
+        pageSound.Play();
     }
 
     protected void ShowObject(GameObject obj, Vector3 position, int seconds)

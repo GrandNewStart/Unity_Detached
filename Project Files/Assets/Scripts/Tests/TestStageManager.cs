@@ -11,7 +11,6 @@ public class TestStageManager : GameManager
     {
         base.Start();
         StartCoroutine(TransitionOut(GameManager.DEFAULT));
-        ShowObject(text, text.transform.position, 3);
     }
 
 }

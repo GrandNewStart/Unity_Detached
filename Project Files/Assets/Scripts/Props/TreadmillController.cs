@@ -4,92 +4,39 @@ using UnityEngine;
 
 public class TreadmillController : MonoBehaviour
 {
-    public short            dir;
-    public float            speed;
-    public Sound            operationSound;
-    public float            maxAudioDistance;
-    private float           maxVolume;
-    public GameObject       player;
-    public GameObject       treadmillStart;
-    public GameObject       treadmillEnd;
-    private Vector3         treadmillStartPosition;
-    private Vector3         treadmillEndPosition;
-    private Vector3         playerPosition;
-    private float           distance;
-    private float           volume;
-
-    private void Awake()
-    {
-        initSounds();
-    }
-
-    private void initSounds()
-    {
-        operationSound.source               = gameObject.AddComponent<AudioSource>();
-        operationSound.source.clip          = operationSound.clip;
-        operationSound.source.volume        = operationSound.volume;
-        operationSound.source.pitch         = operationSound.pitch;
-        maxVolume                           = operationSound.volume;
-    }
+    public short                dir;
+    public float                speed;
+    public List<AudioSource>    motorSounds;
+    public GameObject           player;
 
     private void Start()
     {
-        treadmillStartPosition  = treadmillStart.transform.position;
-        treadmillEndPosition    = treadmillEnd.transform.position;
         PlayOperationSound();
-    }
-
-    private void Update()
-    {
-        playerPosition = player.transform.position;
-
-        if (playerPosition.x > treadmillStartPosition.x && playerPosition.x < treadmillEndPosition.x)
-        {
-            distance = 0f;
-        }
-        else if (playerPosition.x <= treadmillStartPosition.x)
-        {
-            distance = treadmillStartPosition.x - playerPosition.x;
-        }
-        else if (playerPosition.x >= treadmillEndPosition.x)
-        {
-            distance = playerPosition.x - treadmillEndPosition.x;
-        }
-        AdjustVolume();
     }
 
     private void PlayOperationSound()
     {
-        operationSound.source.loop = true;
-        operationSound.source.Play();
+        foreach (AudioSource source in motorSounds)
+        {
+            source.loop = true;
+            source.Play();
+        }
     }
 
     private void StopOperationSound()
     {
-        operationSound.source.Stop();
+        foreach (AudioSource source in motorSounds)
+        {
+            source.Stop();
+        }
     }
 
     public void MuteSound(bool mute)
     {
-        operationSound.source.mute = mute;
-    }
-
-    private void AdjustVolume()
-    {
-        if (distance > maxAudioDistance)
+        foreach (AudioSource source in motorSounds)
         {
-            volume = 0f;
+            source.mute = mute;
         }
-        else if (distance == 0)
-        {
-            volume = maxVolume;
-        }
-        else
-        {
-            volume = maxVolume - distance/maxAudioDistance;
-        }
-        operationSound.volume = volume;
-        operationSound.source.volume = volume;
     }
 
     private void OnCollisionStay2D(Collision2D collision)
@@ -141,11 +88,4 @@ public class TreadmillController : MonoBehaviour
         }
     }
 
-    private void OnDrawGizmos()
-    {
-        Gizmos.DrawWireSphere(treadmillStart.transform.position, 5);
-        Gizmos.DrawWireSphere(treadmillEnd.transform.position, 5);
-        Gizmos.DrawLine(playerPosition, treadmillStart.transform.position);
-        Gizmos.DrawLine(playerPosition, treadmillEnd.transform.position);
-    }
 }
