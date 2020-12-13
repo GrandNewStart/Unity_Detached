@@ -42,7 +42,7 @@ public class GameManager : MonoBehaviour
     public GameObject   resumeMenu;
     public GameObject   settingsMenu;
     public GameObject   quitMenu;
-    private bool        pauseDisabled = false;
+    private bool        pauseEnabled = false;
     private int         menuIndex = 0;
     private int         controlIndex = 0;
 
@@ -134,7 +134,7 @@ public class GameManager : MonoBehaviour
         ShowObject(text_continue, text_continue.transform.position, INFINITE);
         DisableControl();
         Time.timeScale = 0f;
-        pauseDisabled = true;
+        pauseEnabled = false;
         OnCutSceneStart(index);
 
         foreach (GameObject scene in scenes)
@@ -164,7 +164,7 @@ public class GameManager : MonoBehaviour
         }
         EnableControl();
         Time.timeScale = 1f;
-        pauseDisabled = false;
+        pauseEnabled = true;
         OnCutSceneEnd(index);
         HideObject(text_continue);
         StartCoroutine(TransitionOut(DEFAULT));
@@ -276,7 +276,7 @@ public class GameManager : MonoBehaviour
 
     private void PauseMenuControl()
     {
-        if (Input.GetButtonDown("Cancel") && !pauseDisabled)
+        if (Input.GetButtonDown("Cancel") && pauseEnabled)
         {
             if (!isPaused)
             {
@@ -448,7 +448,6 @@ public class GameManager : MonoBehaviour
         isPaused = true;
         pauseMenu.SetActive(true);
         DisableControl();
-
         Time.timeScale = 0f;
     }
 
@@ -540,7 +539,7 @@ public class GameManager : MonoBehaviour
     protected void ShowLoadingScreen()
     {
         isLoadingReady  = false;
-        pauseDisabled   = true;
+        pauseEnabled   = false;
         DisableControl();
         StopBGM();
         ShowCube(INFINITE);
@@ -556,6 +555,11 @@ public class GameManager : MonoBehaviour
         ShowObject(loading_text, loading_text.transform.position, INFINITE);
         yield return new WaitForSeconds(0.5f);
         isLoadingReady = true;
+    }
+
+    public void EnablePause(bool enabled)
+    {
+        pauseEnabled = enabled;
     }
 
 }

@@ -118,7 +118,7 @@ public class PlayerController : PhysicalObject
     {
         // Camera position setting
         Vector3 cameraPosition = transform.position;
-        cameraPosition.z = -10;
+        cameraPosition.z = -1;
         cameraPosition.y += 7;
         mainCamera.transform.position = cameraPosition;
 

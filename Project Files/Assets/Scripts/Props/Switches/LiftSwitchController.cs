@@ -20,6 +20,8 @@ public class LiftSwitchController : SwitchController
         minHeight       = minHeightCheck.transform.position.y;
         maxHeightCheck.transform.parent = null;
         minHeightCheck.transform.parent = null;
+        operationSound.transform.parent     = target.transform;
+        operationSound.transform.position   = target.transform.position;
     }
 
     private void FixedUpdate()

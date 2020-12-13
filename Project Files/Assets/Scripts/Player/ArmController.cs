@@ -166,7 +166,7 @@ public class ArmController : PhysicalObject
         {
             // Camera position setting
             Vector3 cameraPosition = transform.position;
-            cameraPosition.z = -100;
+            cameraPosition.z = -1;
             cameraPosition.y += 7;
             mainCamera.transform.position = cameraPosition;
 

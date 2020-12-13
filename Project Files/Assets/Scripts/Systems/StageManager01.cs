@@ -30,23 +30,14 @@ public class StageManager01 : GameManager
     [Header("Tutorial Texts")]
     public GameObject text_jump;
     public GameObject jump_end_point;
-    public GameObject text_fire;
-    public GameObject text_switch_control;
-    public GameObject text_retrieve;
-    public GameObject text_plug_in;
-    public GameObject text_plug_out;
-    private bool jump_done      = false;
-    private bool fire_done      = false;
-    private bool switch_done    = false;
-    private bool retrieve_done  = false;
-    private bool plug_in_done   = false;
-    private bool plug_out_done  = false;
-    private bool fired          = false;
-    private bool switched       = false;
-    private bool retrieved      = false;
-    private bool pluggedIn      = false;
-    private bool pluggedOut     = false;
-    
+    public GameObject tutorial_1;
+    public GameObject tutorial_2;
+    public GameObject tutorial_3;
+    private bool jump_done = false;
+    private bool tutorial_1_done = false;
+    private bool tutorial_2_done = false;
+    private bool tutorial_3_done = false;
+
     [Header("ETC")]
     public TreadmillController  treadmill;
     public DoorSwitchController firstSwitch;
@@ -85,11 +76,9 @@ public class StageManager01 : GameManager
     private void initScene()
     {
         text_jump.SetActive(false);
-        text_fire.SetActive(false);
-        text_switch_control.SetActive(false);
-        text_retrieve.SetActive(false);
-        text_plug_in.SetActive(false);
-        text_plug_out.SetActive(false);
+        tutorial_1.SetActive(false);
+        tutorial_2.SetActive(false);
+        tutorial_3.SetActive(false);
     }
 
     private void CheckStartPosition()
@@ -145,8 +134,7 @@ public class StageManager01 : GameManager
 
     private void ManageTexts()
     {
-        Checkpoint checkpoint4 = checkpoints[3];
-        if (!checkpoint4.IsActive())
+        if (!checkpoints[3].IsActive())
         {
             return;
         }
@@ -162,83 +150,101 @@ public class StageManager01 : GameManager
             HideObject(text_jump);
         }
 
-        // Fire text
-        if (cutScene_2_done && !fire_done)
+        if (cutScene_2_done && !tutorial_1_done)
         {
-            ShowObject(text_fire, text_fire.transform.position, GameManager.INFINITE);
-            fire_done = true;
-        }
-        if (!fired)
-        {
-            if (Input.GetKeyUp(KeyCode.L) || Input.GetKeyUp(KeyCode.F))
+            if (!tutorial_1.activeSelf)
             {
-                HideObject(text_fire);
-                fired = true;
+                SpriteRenderer renderer = tutorial_1.GetComponent<SpriteRenderer>();
+                Color color = renderer.color;
+                color.a = 0;
+                renderer.color = color;
+                tutorial_1.SetActive(true);
+                Invoke("ShowTutorial1", 1.0f);
+            }
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                HideObject(tutorial_1);
+                HideObject(text_continue);
+                EnableControl();
+                Time.timeScale = 1f;
+                tutorial_1_done = true;
+                EnablePause(true);
             }
             return;
         }
 
-        if (fired && !switch_done)
+        if (tutorial_1_done && !tutorial_2_done)
         {
-            ShowObject(text_switch_control, text_switch_control.transform.position, GameManager.INFINITE);
-            switch_done = true;
-        }
-        if (!switched)
-        {
-            if (Input.GetKeyDown(KeyCode.Tab))
+            if (!tutorial_2.activeSelf && player.GetArms() == 0)
             {
-                HideObject(text_switch_control);
-                switched = true;
+                SpriteRenderer renderer = tutorial_2.GetComponent<SpriteRenderer>();
+                Color color = renderer.color;
+                color.a = 0;
+                renderer.color = color;
+                tutorial_2.SetActive(true);
+                Invoke("ShowTutorial2", 1.0f);
+            }
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                HideObject(tutorial_2);
+                HideObject(text_continue);
+                EnableControl();
+                Time.timeScale = 1f;
+                tutorial_2_done = true;
+                EnablePause(true);
             }
             return;
         }
 
-        // Retrieve text
-        if (fired && !retrieve_done)
+        if (tutorial_2_done && !tutorial_3_done)
         {
-            ShowObject(text_retrieve, text_retrieve.transform.position, GameManager.INFINITE);
-            retrieve_done = true;
-        }
-        if (!retrieved)
-        {
-            if (player.HasControl() && Input.GetKeyDown(KeyCode.R))
+            if (!tutorial_3.activeSelf && leftArm.GetControl())
             {
-                HideObject(text_retrieve);
-                retrieved = true;
+                SpriteRenderer renderer = tutorial_3.GetComponent<SpriteRenderer>();
+                Color color = renderer.color;
+                color.a = 0;
+                renderer.color = color;
+                tutorial_3.SetActive(true);
+                Invoke("ShowTutorial3", 1.0f);
+            }
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                HideObject(tutorial_3);
+                HideObject(text_continue);
+                EnableControl();
+                Time.timeScale = 1f;
+                tutorial_3_done = true;
+                EnablePause(true);
             }
             return;
         }
+    }
 
-        // Plug in text
-        if (retrieved && !plug_in_done)
-        {
-            ShowObject(text_plug_in, text_plug_in.transform.position, GameManager.INFINITE);
-            plug_in_done = true;
-        }
-        if (!pluggedIn)
-        {
-            if (firstSwitch.IsPluggedIn())
-            {
-                HideObject(text_plug_in);
-                pluggedIn = true;
-            }
-            return;
-        }
+    private void ShowTutorial1()
+    {
+        ShowObject(tutorial_1, tutorial_1.transform.position, GameManager.INFINITE);
+        ShowObject(text_continue, text_continue.transform.position, GameManager.INFINITE);
+        DisableControl();
+        Time.timeScale = 0f;
+        EnablePause(false);
+    }
 
-        // Plug out text
-        if (pluggedIn && !plug_out_done)
-        {
-            ShowObject(text_plug_out, text_plug_out.transform.position, GameManager.INFINITE);
-            plug_out_done = true;
-        }
-        if (!pluggedOut)
-        {
-            if (!firstSwitch.IsPluggedIn())
-            {
-                HideObject(text_plug_out);
-                pluggedOut = true;
-            }
-        }
+    private void ShowTutorial2()
+    {
+        ShowObject(tutorial_2, tutorial_2.transform.position, GameManager.INFINITE);
+        ShowObject(text_continue, text_continue.transform.position, GameManager.INFINITE);
+        DisableControl();
+        Time.timeScale = 0f;
+        EnablePause(false);
+    }
+
+    private void ShowTutorial3()
+    {
+        ShowObject(tutorial_3, tutorial_3.transform.position, GameManager.INFINITE);
+        ShowObject(text_continue, text_continue.transform.position, GameManager.INFINITE);
+        DisableControl();
+        Time.timeScale = 0f;
+        EnablePause(false);
     }
 
     private void DisablePastCheckpoints()
