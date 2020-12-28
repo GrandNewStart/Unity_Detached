@@ -101,6 +101,15 @@ public class PlayerController : PhysicalObject
                 Retrieve();
             }
         }
+        DIE();
+    }
+
+    private void DIE()
+    {
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            isDestroyed = true;
+        }
     }
 
     private void GroundCheck()
@@ -530,10 +539,29 @@ public class PlayerController : PhysicalObject
         Rigidbody2D leftArmRB   = left_arm.GetComponent<Rigidbody2D>();
         Rigidbody2D rightArmRB  = right_arm.GetComponent<Rigidbody2D>();
 
-        headRB      .AddForce(new Vector2(0.0f, 4.0f), ForceMode2D.Impulse);
-        bodyRB      .AddForce(new Vector2(0.0f, 4.0f), ForceMode2D.Impulse);
-        leftArmRB   .AddForce(new Vector2(2.0f, 4.0f), ForceMode2D.Impulse);
-        rightArmRB  .AddForce(new Vector2(-2.0f, 4.0f), ForceMode2D.Impulse);
+        headRB      .AddForce(new Vector2(0.0f, 8.0f), ForceMode2D.Impulse);
+        bodyRB      .AddForce(new Vector2(0.0f, 8.0f), ForceMode2D.Impulse);
+        leftArmRB   .AddForce(new Vector2(4.0f, 8.0f), ForceMode2D.Impulse);
+        rightArmRB  .AddForce(new Vector2(-4.0f, 8.0f), ForceMode2D.Impulse);
+    }
+
+    public void RecoverDeath()
+    {
+        isDestroyed = false;
+        
+        head.transform.position         = transform.position;
+        body.transform.position         = transform.position;
+        left_arm.transform.position     = transform.position;
+        right_arm.transform.position    = transform.position;
+
+        head.transform.parent       = destroyedSprite.transform;
+        body.transform.parent       = destroyedSprite.transform;
+        left_arm.transform.parent   = destroyedSprite.transform;
+        right_arm.transform.parent  = destroyedSprite.transform;
+
+        rigidBody.velocity = Vector3.zero;
+
+        destroyedSprite.SetActive(false);
     }
 
     private void OnDrawGizmos()

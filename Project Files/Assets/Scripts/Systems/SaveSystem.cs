@@ -5,6 +5,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 public static class SaveSystem
 {
     public static int       initialStage = 1;
+    public static int       initialIndex = 0;
     public static int       initialEnabledArms = 0;
     public static Vector3   initialPosition = new Vector3(-16.5f, -54, 0);
 

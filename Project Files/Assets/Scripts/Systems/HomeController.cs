@@ -433,6 +433,7 @@ public class HomeController : MonoBehaviour
         focusStatus = focus.none;
         SaveSystem.DeleteSaveFile();
         GameManager.stage               = SaveSystem.initialStage;
+        GameManager.currentCheckpoint   = SaveSystem.initialIndex;
         GameManager.enabledArms         = SaveSystem.initialEnabledArms;
         GameManager.position            = SaveSystem.initialPosition;
         GameManager.isLoadingSaveData   = false;
@@ -445,6 +446,7 @@ public class HomeController : MonoBehaviour
         StopBgm();
         focusStatus = focus.none;
         GameManager.stage               = data.GetStage();
+        GameManager.currentCheckpoint   = data.GetIndex();
         GameManager.enabledArms         = data.GetEnabledArms();
         GameManager.position            = data.GetPosition();
         GameManager.isLoadingSaveData   = true;

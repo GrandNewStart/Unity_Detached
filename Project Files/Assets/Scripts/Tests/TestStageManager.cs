@@ -10,7 +10,7 @@ public class TestStageManager : GameManager
     protected override void Start()
     {
         base.Start();
-        StartCoroutine(TransitionOut(GameManager.DEFAULT));
+        StartCoroutine(transition.TransitionOut(0, 0, () => { }));
     }
 
 }

@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class Checkpoint : MonoBehaviour
 {
+    public int          index;
     public GameManager  gameManager;
     public float        checkpointRadius;
     public int          stage;
@@ -32,8 +33,9 @@ public class Checkpoint : MonoBehaviour
     {
         if (isPlayerAround)
         {
-            SaveData data = new SaveData(stage, enabledArms, gameObject.transform.position);
+            SaveData data = new SaveData(stage, index, enabledArms, gameObject.transform.position);
             SaveSystem.SaveGame(data);
+            GameManager.currentCheckpoint = index;
             gameManager.ShowCube(2);
             gameManager.RetrieveHands();
             gameObject.SetActive(false);

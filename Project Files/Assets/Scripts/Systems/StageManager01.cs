@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class StageManager01 : GameManager
 {
-    [Header("Checkpoints")]
-    public List<Checkpoint>     checkpoints;
 
     [Header("Event Triggers")]
     public GameObject           arm_1;
@@ -23,9 +21,7 @@ public class StageManager01 : GameManager
     public List<GameObject>     cutScenes_4;
     private bool cutScene_1_done    = false;
     private bool cutScene_2_done    = false;
-    private bool cutScene_3_done    = false;
     private bool cutScene_4_started = false;
-    private bool cutScene_4_done    = false;
 
     [Header("Tutorial Texts")]
     public GameObject text_jump;
@@ -91,15 +87,15 @@ public class StageManager01 : GameManager
         }
         else
         {
-            StartCoroutine(TransitionOut(GameManager.DEFAULT));
+            StartCoroutine(transition.TransitionOut(0, 0, () => { }));
         }
         // After first arm achievement
-        if (position == checkpoints[3].transform.position)
+        if (currentCheckpoint > 3)
         {
             arm_1.SetActive(false);
         }
         // After second arm achievement
-        if (position == checkpoints[10].transform.position)
+        if (currentCheckpoint > 10)
         {
             arm_1.SetActive(false);
             arm_2.SetActive(false);
@@ -132,6 +128,23 @@ public class StageManager01 : GameManager
         }
     }
 
+    protected override void LoadCheckpoint(int index)
+    {
+        base.LoadCheckpoint(index);
+        if (index < 4)
+        {
+            player.EnableArms(0);
+            arm_1.SetActive(true);
+            return;
+        }
+        if (index < 11)
+        {
+            player.EnableArms(1);
+            arm_2.SetActive(true);
+            return;
+        }
+    }
+
     private void ManageTexts()
     {
         if (!checkpoints[3].IsActive())
@@ -142,33 +155,29 @@ public class StageManager01 : GameManager
         // Jump text
         if (cutScene_1_done && !jump_done)
         {
-            ShowObject(text_jump, text_jump.transform.position, GameManager.INFINITE);
+            transition.ShowObject(text_jump, text_jump.transform.position, GameManager.INFINITE);
             jump_done = true;
         }
         if (Physics2D.OverlapCircle(jump_end_point.transform.position, 4, LayerMask.GetMask("Player")) && text_jump.activeSelf)
         {
-            HideObject(text_jump);
+            transition.HideObject(text_jump);
         }
 
         if (cutScene_2_done && !tutorial_1_done)
         {
             if (!tutorial_1.activeSelf)
             {
-                SpriteRenderer renderer = tutorial_1.GetComponent<SpriteRenderer>();
-                Color color = renderer.color;
-                color.a = 0;
-                renderer.color = color;
-                tutorial_1.SetActive(true);
                 Invoke("ShowTutorial1", 1.0f);
             }
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                HideObject(tutorial_1);
-                HideObject(text_continue);
-                EnableControl();
-                Time.timeScale = 1f;
+                transition.HideObject(tutorial_1);
+                transition.HideObject(text_continue);
+                //EnableControl();
+                //Time.timeScale = 1f;
                 tutorial_1_done = true;
-                EnablePause(true);
+                //EnablePause(true);
+                ForceResumeGame();
             }
             return;
         }
@@ -177,21 +186,17 @@ public class StageManager01 : GameManager
         {
             if (!tutorial_2.activeSelf && player.GetArms() == 0)
             {
-                SpriteRenderer renderer = tutorial_2.GetComponent<SpriteRenderer>();
-                Color color = renderer.color;
-                color.a = 0;
-                renderer.color = color;
-                tutorial_2.SetActive(true);
                 Invoke("ShowTutorial2", 1.0f);
             }
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                HideObject(tutorial_2);
-                HideObject(text_continue);
-                EnableControl();
-                Time.timeScale = 1f;
+                transition.HideObject(tutorial_2);
+                transition.HideObject(text_continue);
+                //EnableControl();
+                //Time.timeScale = 1f;
                 tutorial_2_done = true;
-                EnablePause(true);
+                //EnablePause(true);
+                ForceResumeGame();
             }
             return;
         }
@@ -200,21 +205,17 @@ public class StageManager01 : GameManager
         {
             if (!tutorial_3.activeSelf && leftArm.GetControl())
             {
-                SpriteRenderer renderer = tutorial_3.GetComponent<SpriteRenderer>();
-                Color color = renderer.color;
-                color.a = 0;
-                renderer.color = color;
-                tutorial_3.SetActive(true);
                 Invoke("ShowTutorial3", 1.0f);
             }
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                HideObject(tutorial_3);
-                HideObject(text_continue);
-                EnableControl();
-                Time.timeScale = 1f;
+                transition.HideObject(tutorial_3);
+                transition.HideObject(text_continue);
+                //EnableControl();
+                //Time.timeScale = 1f;
                 tutorial_3_done = true;
-                EnablePause(true);
+                //EnablePause(true);
+                ForceResumeGame();
             }
             return;
         }
@@ -222,26 +223,43 @@ public class StageManager01 : GameManager
 
     private void ShowTutorial1()
     {
-        ShowObject(tutorial_1, tutorial_1.transform.position, GameManager.INFINITE);
-        ShowObject(text_continue, text_continue.transform.position, GameManager.INFINITE);
-        DisableControl();
-        Time.timeScale = 0f;
-        EnablePause(false);
+        SpriteRenderer renderer = tutorial_1.GetComponent<SpriteRenderer>();
+        Color color = renderer.color;
+        color.a = 0;
+        renderer.color = color;
+        tutorial_1.SetActive(true);
+        transition.ShowObject(tutorial_1, tutorial_1.transform.position, GameManager.INFINITE);
+        transition.ShowObject(text_continue, text_continue.transform.position, GameManager.INFINITE);
+        //DisableControl();
+        //Time.timeScale = 0f;
+        //EnablePause(false);
+        ForcePauseGame();
     }
 
     private void ShowTutorial2()
     {
-        ShowObject(tutorial_2, tutorial_2.transform.position, GameManager.INFINITE);
-        ShowObject(text_continue, text_continue.transform.position, GameManager.INFINITE);
-        DisableControl();
-        Time.timeScale = 0f;
-        EnablePause(false);
+        SpriteRenderer renderer = tutorial_2.GetComponent<SpriteRenderer>();
+        Color color = renderer.color;
+        color.a = 0;
+        renderer.color = color;
+        tutorial_2.SetActive(true);
+        transition.ShowObject(tutorial_2, tutorial_2.transform.position, GameManager.INFINITE);
+        transition.ShowObject(text_continue, text_continue.transform.position, GameManager.INFINITE);
+        //DisableControl();
+        //Time.timeScale = 0f;
+        //EnablePause(false);
+        ForcePauseGame();
     }
 
     private void ShowTutorial3()
     {
-        ShowObject(tutorial_3, tutorial_3.transform.position, GameManager.INFINITE);
-        ShowObject(text_continue, text_continue.transform.position, GameManager.INFINITE);
+        SpriteRenderer renderer = tutorial_3.GetComponent<SpriteRenderer>();
+        Color color = renderer.color;
+        color.a = 0;
+        renderer.color = color;
+        tutorial_3.SetActive(true);
+        transition.ShowObject(tutorial_3, tutorial_3.transform.position, GameManager.INFINITE);
+        transition.ShowObject(text_continue, text_continue.transform.position, GameManager.INFINITE);
         DisableControl();
         Time.timeScale = 0f;
         EnablePause(false);
@@ -265,58 +283,43 @@ public class StageManager01 : GameManager
 
     private void PlayCutScene1()
     {
-        StartCoroutine(ShowCutScenes(cutScenes_1, cutScenes_1_Background, 1));
+        ShowCutScene(cutScenes_1,
+            cutScenes_1_Background, 
+            () => {
+                StopBGM();
+                treadmill.MuteSound(true);
+            },
+            () =>
+            {
+                PlayBGM();
+                treadmill.MuteSound(false);
+                cutScene_1_done = true;
+            });
     }
 
     private void PlayCutScene2()
     {
-        StartCoroutine(ShowCutScenes(cutScenes_2, cutScenes_2_Background, 2));
+        ShowCutScene(cutScenes_2,
+            cutScenes_2_Background,
+            () => { },
+            () => { cutScene_2_done = true; });
     }
 
     private void PlayCutScene3()
     {
-        StartCoroutine(ShowCutScenes(cutScenes_3, cutScenes_3_Background, 3));
+        ShowCutScene(cutScenes_3, 
+            cutScenes_4_Background,
+            () => { },
+            () => { });
     }
 
     private void PlayCutScene4()
     {
-        StartCoroutine(ShowCutScenes(cutScenes_4, cutScenes_4_Background, 4));
-    }
-
-    protected override void OnCutSceneStart(int index)
-    {
-        if (index == 1)
-        {
-            StopBGM();
-            treadmill.MuteSound(true);
-        }
-        if (index == 4)
-        {
-            cutScene_4_started = true;
-        }
-    }
-
-    protected override void OnCutSceneEnd(int index)
-    {
-        if (index == 1)
-        {
-            PlayBGM();
-            treadmill.MuteSound(false);
-            cutScene_1_done = true;
-        }
-        if (index == 2)
-        {
-            cutScene_2_done = true;
-        }
-        if (index == 3)
-        {
-            cutScene_3_done = true;
-        }
-        if (index == 4)
-        {
-            cutScene_4_done = true;
-            ShowLoadingScreen();
-        }
+        cutScene_4_started = true;
+        ShowCutScene(cutScenes_4,
+            cutScenes_4_Background,
+            () => { },
+            () => { ShowLoadingScreen(); });
     }
 
     private void OnDrawGizmos()
