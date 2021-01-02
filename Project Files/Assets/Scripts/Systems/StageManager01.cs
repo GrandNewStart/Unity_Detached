@@ -147,11 +147,6 @@ public class StageManager01 : GameManager
 
     private void ManageTexts()
     {
-        if (!checkpoints[3].IsActive())
-        {
-            return;
-        }
-
         // Jump text
         if (cutScene_1_done && !jump_done)
         {
@@ -163,106 +158,6 @@ public class StageManager01 : GameManager
             transition.HideObject(text_jump);
         }
 
-        if (cutScene_2_done && !tutorial_1_done)
-        {
-            if (!tutorial_1.activeSelf)
-            {
-                Invoke("ShowTutorial1", 1.0f);
-            }
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                transition.HideObject(tutorial_1);
-                transition.HideObject(text_continue);
-                //EnableControl();
-                //Time.timeScale = 1f;
-                tutorial_1_done = true;
-                //EnablePause(true);
-                ForceResumeGame();
-            }
-            return;
-        }
-
-        if (tutorial_1_done && !tutorial_2_done)
-        {
-            if (!tutorial_2.activeSelf && player.GetArms() == 0)
-            {
-                Invoke("ShowTutorial2", 1.0f);
-            }
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                transition.HideObject(tutorial_2);
-                transition.HideObject(text_continue);
-                //EnableControl();
-                //Time.timeScale = 1f;
-                tutorial_2_done = true;
-                //EnablePause(true);
-                ForceResumeGame();
-            }
-            return;
-        }
-
-        if (tutorial_2_done && !tutorial_3_done)
-        {
-            if (!tutorial_3.activeSelf && leftArm.GetControl())
-            {
-                Invoke("ShowTutorial3", 1.0f);
-            }
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                transition.HideObject(tutorial_3);
-                transition.HideObject(text_continue);
-                //EnableControl();
-                //Time.timeScale = 1f;
-                tutorial_3_done = true;
-                //EnablePause(true);
-                ForceResumeGame();
-            }
-            return;
-        }
-    }
-
-    private void ShowTutorial1()
-    {
-        SpriteRenderer renderer = tutorial_1.GetComponent<SpriteRenderer>();
-        Color color = renderer.color;
-        color.a = 0;
-        renderer.color = color;
-        tutorial_1.SetActive(true);
-        transition.ShowObject(tutorial_1, tutorial_1.transform.position, GameManager.INFINITE);
-        transition.ShowObject(text_continue, text_continue.transform.position, GameManager.INFINITE);
-        //DisableControl();
-        //Time.timeScale = 0f;
-        //EnablePause(false);
-        ForcePauseGame();
-    }
-
-    private void ShowTutorial2()
-    {
-        SpriteRenderer renderer = tutorial_2.GetComponent<SpriteRenderer>();
-        Color color = renderer.color;
-        color.a = 0;
-        renderer.color = color;
-        tutorial_2.SetActive(true);
-        transition.ShowObject(tutorial_2, tutorial_2.transform.position, GameManager.INFINITE);
-        transition.ShowObject(text_continue, text_continue.transform.position, GameManager.INFINITE);
-        //DisableControl();
-        //Time.timeScale = 0f;
-        //EnablePause(false);
-        ForcePauseGame();
-    }
-
-    private void ShowTutorial3()
-    {
-        SpriteRenderer renderer = tutorial_3.GetComponent<SpriteRenderer>();
-        Color color = renderer.color;
-        color.a = 0;
-        renderer.color = color;
-        tutorial_3.SetActive(true);
-        transition.ShowObject(tutorial_3, tutorial_3.transform.position, GameManager.INFINITE);
-        transition.ShowObject(text_continue, text_continue.transform.position, GameManager.INFINITE);
-        DisableControl();
-        Time.timeScale = 0f;
-        EnablePause(false);
     }
 
     private void DisablePastCheckpoints()
@@ -302,7 +197,104 @@ public class StageManager01 : GameManager
         ShowCutScene(cutScenes_2,
             cutScenes_2_Background,
             () => { },
-            () => { cutScene_2_done = true; });
+            () => { 
+                cutScene_2_done = true;
+                Invoke("ShowTutorial1", 1);
+            });
+    }
+
+    private void ShowTutorial1()
+    {
+        ForcePauseGame();
+        transition.ShowObject(
+            tutorial_1,
+            tutorial_1.transform.position,
+            INFINITE);
+        transition.ShowObjectWithCallback(
+            text_continue,
+            text_continue.transform.position,
+            () => {
+                StartCoroutine(DetectTutorial1Done());
+            });
+    }
+
+    private void ShowTutorial2()
+    {
+        ForcePauseGame();
+        transition.ShowObject(
+           tutorial_2,
+           tutorial_2.transform.position,
+           INFINITE);
+        transition.ShowObjectWithCallback(
+            text_continue,
+            text_continue.transform.position,
+            () => {
+                StartCoroutine(DetectTutorial2Done());
+            });
+    }
+
+
+    private void ShowTutorial3()
+    {
+        ForcePauseGame();
+        transition.ShowObject(
+           tutorial_3,
+           tutorial_3.transform.position,
+           INFINITE);
+        transition.ShowObjectWithCallback(
+            text_continue,
+            text_continue.transform.position,
+            () => {
+                StartCoroutine(DetectTutorial3Done());
+            });
+    }
+
+    private IEnumerator DetectTutorial1Done()
+    {
+        while (!Input.GetKeyDown(KeyCode.Space))
+        {
+            yield return null;
+        }
+        transition.HideObject(tutorial_1);
+        transition.HideObject(text_continue);
+        ForceResumeGame();
+        tutorial_1_done = true;
+        while (player.GetArms() == player.GetEnabledArms())
+        {
+            yield return null;
+        }
+        DisableControl();
+        Invoke("ShowTutorial2", 1);
+    }
+
+    private IEnumerator DetectTutorial2Done()
+    {
+        while (!Input.GetKeyDown(KeyCode.Space))
+        {
+            yield return null;
+        }
+        transition.HideObject(tutorial_2);
+        transition.HideObject(text_continue);
+        ForceResumeGame();
+        tutorial_2_done = true;
+        while (!firstArm.GetControl())
+        {
+            yield return null;
+        }
+        DisableControl();
+        Invoke("ShowTutorial3", 1);
+    }
+
+    private IEnumerator DetectTutorial3Done()
+    {
+        while (!Input.GetKeyDown(KeyCode.Space))
+        {
+            yield return null;
+        }
+        transition.HideObject(tutorial_3);
+        transition.HideObject(text_continue);
+        ForceResumeGame();
+        tutorial_3_done = true;
     }
 
     private void PlayCutScene3()

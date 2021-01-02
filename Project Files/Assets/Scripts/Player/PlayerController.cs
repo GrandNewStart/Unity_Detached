@@ -26,8 +26,10 @@ public class PlayerController : PhysicalObject
     private float           power;
     private int             arms;
     public  int             enabledArms;
-    private bool            isLeftRetrieving;
-    private bool            isRightRetrieving;
+    private bool            isFirstArmRetrieving;
+    private bool            isSecondArmRetrieving;
+    private bool            isFirstArmOut;
+    private bool            isSecondArmOut;
 
     [Header("Ground Check Attributes")]
     public GameObject   groundCheck;
@@ -54,7 +56,14 @@ public class PlayerController : PhysicalObject
     public AudioSource  fireSound;
     public AudioSource  retrieveSound;
     public AudioSource  retrieveCompleteSound;
-    private int         footStepDelay = 0;
+    private float       footStepVolume;
+    private float       jumpVolume;
+    private float       chargeVolume;
+    private float       fireVolume;
+    private float       retrieveVolume;
+    private float       retrieveCompleteVolume;
+    private float       footStepDelay = 0;
+    private float       chargePitch;
     private float       chargeSoundOriginalPitch;
     private bool        isChargeSoundPlaying = false;
 
@@ -69,10 +78,12 @@ public class PlayerController : PhysicalObject
         isControlling       = true;
 
         // Shoot attributes
-        power               = 0.0f;
-        arms                = enabledArms;
-        isLeftRetrieving    = false;
-        isRightRetrieving   = false;
+        power                   = 0.0f;
+        arms                    = enabledArms;
+        isFirstArmRetrieving    = false;
+        isSecondArmRetrieving   = false;
+        isFirstArmOut           = false;
+        isSecondArmOut          = false;
 
         // Animation attributes
         animator        = normal.GetComponent<Animator>();
@@ -82,7 +93,15 @@ public class PlayerController : PhysicalObject
         isStateFixed    = false;
 
         // Sound attributes
-        chargeSoundOriginalPitch = chargeSound.pitch;
+        chargePitch                 = chargeSound.pitch;
+        chargeSoundOriginalPitch    = chargeSound.pitch;
+        footStepVolume              = footStepSound.volume;
+        jumpVolume                  = jumpSound.volume;
+        chargeVolume                = chargeSound.volume;
+        fireVolume                  = fireSound.volume;
+        retrieveVolume              = retrieveSound.volume;
+        retrieveCompleteVolume      = retrieveCompleteSound.volume;
+
     }
 
     protected override void Update()
@@ -220,7 +239,10 @@ public class PlayerController : PhysicalObject
 
     private void Shoot()
     {
-        if (isLeftRetrieving || isRightRetrieving || !isGrounded || isStateFixed)
+        if (isFirstArmRetrieving 
+            || isSecondArmRetrieving 
+            || !isGrounded 
+            || isStateFixed)
         {
             return;
         }
@@ -279,16 +301,19 @@ public class PlayerController : PhysicalObject
             if (arms == 2)
             {
                 firstArm.Fire(power);
+                isFirstArmOut = true;
             }
             if (arms == 1)
             {
-                if (enabledArms == 1)
+                if (isFirstArmOut)
                 {
-                    firstArm.Fire(power);
+                    secondArm.Fire(power);
+                    isSecondArmOut = true;
                 }
                 else
                 {
-                    secondArm.Fire(power);
+                    firstArm.Fire(power);
+                    isFirstArmOut = true;
                 }
             }
             // Play Fire sound 
@@ -332,64 +357,68 @@ public class PlayerController : PhysicalObject
     private void Retrieve()
     {
         // Retrieve
-        if (Input.GetKeyDown(KeyCode.R) 
+        if (Input.GetKeyDown(KeyCode.R)
             && isMovable
-            && !isLeftRetrieving
-            && !isRightRetrieving)
+            && !isFirstArmRetrieving
+            && !isSecondArmRetrieving)
         {
-            if (arms == enabledArms - 1 && enabledArms != 0)
+            if (isFirstArmOut)
             {
-                isLeftRetrieving = true;
+                isFirstArmRetrieving = true;
                 firstArm.StartRetrieve();
                 PlayRetrieveSound();
             }
-            else if (arms == enabledArms - 2 && enabledArms == 2)
+            if (isSecondArmOut)
             {
-                isLeftRetrieving = true;
-                isRightRetrieving = true;
-                firstArm.StartRetrieve();
+                isSecondArmRetrieving = true;
                 secondArm.StartRetrieve();
                 PlayRetrieveSound();
             }
         }
 
+        if (Input.GetKeyDown(KeyCode.G)
+            && isMovable
+            && !isFirstArmRetrieving
+            && isFirstArmOut)
+        {
+            isFirstArmRetrieving = true;
+            firstArm.StartRetrieve();
+            PlayRetrieveSound();
+        }
+
+        if (Input.GetKeyDown(KeyCode.H)
+            && isMovable
+            && !isSecondArmRetrieving
+            && isSecondArmOut)
+        {
+            isSecondArmRetrieving = true;
+            secondArm.StartRetrieve();
+            PlayRetrieveSound();
+        }
+
         // Check if retreiving is all done
-        if (isLeftRetrieving)
+        if (isFirstArmRetrieving)
         {
-            isLeftRetrieving = !firstArm.GetRetrieveComplete();
-            if (!isLeftRetrieving)
+            isFirstArmRetrieving = !firstArm.GetRetrieveComplete();
+            if (!isFirstArmRetrieving)
             {
                 arms++;
+                isFirstArmOut = false;
                 PlayRetrieveCompleteSound();
             }
         }
-        if (isRightRetrieving)
+        if (isSecondArmRetrieving)
         {
-            isRightRetrieving = !secondArm.GetRetrieveComplete();
-            if (!isRightRetrieving)
+            isSecondArmRetrieving = !secondArm.GetRetrieveComplete();
+            if (!isSecondArmRetrieving)
             {
                 arms++;
+                isSecondArmOut = false;
                 PlayRetrieveCompleteSound();
             }
         }
 
     }
-
-
-    public void OnArmRetrieved(int armNumber)
-    {
-        switch (armNumber)
-        {
-            case 1:
-                isLeftRetrieving = false;
-                break;
-            case 2:
-                isRightRetrieving = false;
-                break;
-        }
-        arms++;
-    }
-
 
     public void PlayRetrieveSound()
     {
@@ -410,7 +439,7 @@ public class PlayerController : PhysicalObject
             {
                 if (isControlling)
                 {
-                    if (!isLeftRetrieving)
+                    if (!isFirstArmRetrieving)
                     {
                         isControlling = false;
                         firstArm.SetControl(true);
@@ -426,7 +455,7 @@ public class PlayerController : PhysicalObject
             {
                 if (isControlling)
                 {
-                    if (!isLeftRetrieving)
+                    if (!isFirstArmRetrieving)
                     {
                         isControlling = false;
                         firstArm.SetControl(true);
@@ -457,7 +486,6 @@ public class PlayerController : PhysicalObject
                     if (arms == 2) animator.Play("Idle_Right_1");
                     if (arms == 1) animator.Play("Idle_Right_2");
                     if (arms == 0) animator.Play("Idle_Right_3");
-
                 }
                 if (lastDir == -1)
                 {
@@ -564,6 +592,34 @@ public class PlayerController : PhysicalObject
         destroyedSprite.SetActive(false);
     }
 
+    public void OnPause()
+    {
+        footStepSound.volume            = 0;
+        jumpSound.volume                = 0;
+        chargeSound.volume              = 0;
+        fireSound.volume                = 0;
+        retrieveSound.volume            = 0;
+        retrieveCompleteSound.volume    = 0;
+        if (chargeSound.isPlaying)
+        {
+            chargePitch = chargeSound.pitch;
+        }
+    }
+
+    public void OnResume()
+    {
+        footStepSound.volume            = footStepVolume;
+        jumpSound.volume                = jumpVolume;
+        chargeSound.volume              = chargeVolume;
+        fireSound.volume                = fireVolume;
+        retrieveSound.volume            = retrieveVolume;
+        retrieveCompleteSound.volume    = retrieveCompleteVolume;
+        if (chargeSound.isPlaying)
+        {
+            chargeSound.pitch = chargePitch;
+        }
+    }
+
     private void OnDrawGizmos()
     { Gizmos.DrawWireCube(groundCheck.transform.position, new Vector2(2.2f * groundCheckWidth, 0.5f)); }
 
@@ -592,16 +648,16 @@ public class PlayerController : PhysicalObject
     { isControlling = input; }
 
     public bool IsLeftRetrieving()
-    { return isLeftRetrieving; }
+    { return isFirstArmRetrieving; }
 
     public bool IsRightRetrieving()
-    { return isRightRetrieving; }
+    { return isSecondArmRetrieving; }
 
     public void SetLeftRetrieving(bool input)
-    { isLeftRetrieving = input; }
+    { isFirstArmRetrieving = input; }
 
     public void SetRightRetrieving(bool input)
-    { isRightRetrieving = input; }
+    { isSecondArmRetrieving = input; }
 
     public int GetArms()
     { return arms; }

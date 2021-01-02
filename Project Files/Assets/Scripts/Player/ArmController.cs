@@ -39,6 +39,7 @@ public class ArmController : PhysicalObject
     [Header("Sound Attributes")]
     
     public AudioSource  moveSound;
+    private float       moveVolume;
     private int         moveSoundDelay = 0;
 
     protected override void Start()
@@ -60,6 +61,9 @@ public class ArmController : PhysicalObject
         playerPosition      = player.transform.position;
         normalScale         = rigidbody.gravityScale;
         normalMass          = rigidbody.mass;
+
+        // Audio Attributes
+        moveVolume = moveSound.volume;
     }
 
     protected override void Update()
@@ -150,7 +154,7 @@ public class ArmController : PhysicalObject
                 circleCollider_2.isTrigger  = false;
                 isFireComplete              = false;
                 isRetrieving                = false;
-                isRetrieveComplete          = true;   
+                isRetrieveComplete          = true;
             }
             yield return null;
         }
@@ -292,6 +296,16 @@ public class ArmController : PhysicalObject
         rigidbody.gravityScale      = normalScale;
         rigidbody.mass              = normalMass;
         isMovable                   = true;
+    }
+
+    public void OnPause()
+    {
+        moveSound.volume = 0;
+    }
+
+    public void OnResume()
+    {
+        moveSound.volume = moveVolume;
     }
 
     protected override void OnDestruction()

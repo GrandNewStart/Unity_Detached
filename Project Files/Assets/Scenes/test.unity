@@ -498,12 +498,13 @@ MonoBehaviour:
   isPaused: 0
   cube: {fileID: 1678534496}
   player: {fileID: 1464473727}
-  leftArm: {fileID: 151323485}
-  rightArm: {fileID: 549864644}
+  firstArm: {fileID: 0}
+  secondArm: {fileID: 0}
   camera: {fileID: 1941278919}
   pageSound: {fileID: 40061202}
   clickSound: {fileID: 656693764}
   bgm: {fileID: 1970838797}
+  checkpoints: []
   background: {fileID: 1774094338}
   loading_background: {fileID: 0}
   loading_art: {fileID: 0}
@@ -4265,7 +4266,7 @@ AudioSource:
   Spatialize: 0
   SpatializePostEffects: 0
   Priority: 128
-  DopplerLevel: 1
+  DopplerLevel: 0
   MinDistance: 1
   MaxDistance: 30
   Pan2D: 0
@@ -4929,7 +4930,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1941278917}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 56, y: -66, z: -10}
+  m_LocalPosition: {x: 56, y: -66, z: -1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1774094339}

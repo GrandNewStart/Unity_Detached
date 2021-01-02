@@ -15,8 +15,8 @@ public class GameManager : MonoBehaviour
     public bool             isPaused;
     public GameObject       cube;
     public PlayerController player;
-    public ArmController    leftArm;
-    public ArmController    rightArm;
+    public ArmController    firstArm;
+    public ArmController    secondArm;
     public new Camera       camera;
     public AudioSource      pageSound;
     public AudioSource      clickSound;
@@ -27,8 +27,8 @@ public class GameManager : MonoBehaviour
     private bool            deathDetected = false;
 
     [Header("Transition")]
-    public GameObject       background;
     protected Transition    transition;
+    public GameObject       background;
 
     [Header("Loading Screen")]
     public GameObject   loading_background;
@@ -37,7 +37,7 @@ public class GameManager : MonoBehaviour
     private bool        isLoadingReady = false;
 
     [Header("Cut Scenes")]
-    private CutScene    cutScene;
+    protected CutScene  cutScene;
     public GameObject   text_continue;
 
     [Header("Pause Menu")]
@@ -46,7 +46,7 @@ public class GameManager : MonoBehaviour
     public GameObject   resumeMenu;
     public GameObject   settingsMenu;
     public GameObject   quitMenu;
-    private bool        pauseEnabled = true;
+    private bool        pauseMenuEnabled = true;
     private int         menuIndex = 0;
     private int         controlIndex = 0;
 
@@ -181,7 +181,7 @@ public class GameManager : MonoBehaviour
 
     private void PauseMenuControl()
     {
-        if (Input.GetButtonDown("Cancel") && pauseEnabled)
+        if (Input.GetButtonDown("Cancel") && pauseMenuEnabled)
         {
             if (!isPaused)
             {
@@ -194,21 +194,39 @@ public class GameManager : MonoBehaviour
             PlayPageSound();
         }
 
-        if (isPaused)
+        if (isPaused && pauseMenuEnabled)
         {
             SelectMenu();
             GoMenu();
         }
     }
 
-    protected virtual void OnGamePaused() {}
-    protected virtual void OnGameResumed() {}
+    protected virtual void OnGamePaused() {
+        Debug.Log("GAME PAUSED");
+        DisableControl();
+        Time.timeScale = 0;
+        isPaused = true;
+
+        player.OnPause();
+        firstArm.OnPause();
+        secondArm.OnPause();
+    }
+    protected virtual void OnGameResumed() {
+        Debug.Log("GAME RESUMED");
+        Time.timeScale = 1;
+        isPaused = false;
+        EnableControl();
+
+        player.OnResume();
+        firstArm.OnResume();
+        secondArm.OnResume();
+    }
 
     protected void DisableControl()
     {
         bool playerControl = player.HasControl();
-        bool leftArmControl = leftArm.GetControl();
-        bool rightArmControl = rightArm.GetControl();
+        bool leftArmControl = firstArm.GetControl();
+        bool rightArmControl = secondArm.GetControl();
 
         if (playerControl)
         {
@@ -225,8 +243,8 @@ public class GameManager : MonoBehaviour
         }
 
         player.SetControl(false);
-        leftArm.SetControl(false);
-        rightArm.SetControl(false);
+        firstArm.SetControl(false);
+        secondArm.SetControl(false);
     }
 
     protected void EnableControl()
@@ -237,10 +255,10 @@ public class GameManager : MonoBehaviour
                 player.SetControl(true);
                 break;
             case 1:
-                leftArm.SetControl(true);
+                firstArm.SetControl(true);
                 break;
             case 2:
-                rightArm.SetControl(true);
+                secondArm.SetControl(true);
                 break;
         }
     }
@@ -338,48 +356,36 @@ public class GameManager : MonoBehaviour
     public void RetrieveLeftHand()
     {
         player.SetLeftRetrieving(true);
-        leftArm.StartRetrieve();
+        firstArm.StartRetrieve();
     }
 
     public void RetrieveRightHand()
     {
         player.SetRightRetrieving(true);
-        rightArm.StartRetrieve();
+        secondArm.StartRetrieve();
     }
 
     public void ForcePauseGame() {
         OnGamePaused();
-        DisableControl();
-        pauseEnabled = false;
-        isPaused = false;
-        Time.timeScale = 0f;
+        pauseMenuEnabled = false;
     }
 
     public void PauseGame()
     {
         OnGamePaused();
-        DisableControl();
         pauseMenu.SetActive(true);
-        isPaused = true;
-        Time.timeScale = 0f;
     }
 
     public void ForceResumeGame()
     {
         OnGameResumed();
-        EnableControl();
-        pauseEnabled = true;
-        isPaused = false;
-        Time.timeScale = 1f;
+        pauseMenuEnabled = true;
     }
 
     private void ResumeGame()
     {
         OnGameResumed();
-        EnableControl();
         pauseMenu.SetActive(false);
-        isPaused = false;
-        Time.timeScale = 1f;
     }
 
     private void ShowSettings()
@@ -430,7 +436,7 @@ public class GameManager : MonoBehaviour
     protected void ShowLoadingScreen()
     {
         isLoadingReady  = false;
-        pauseEnabled   = false;
+        pauseMenuEnabled   = false;
         DisableControl();
         StopBGM();
         ShowCube(INFINITE);
@@ -452,7 +458,7 @@ public class GameManager : MonoBehaviour
 
     public void EnablePause(bool enabled)
     {
-        pauseEnabled = enabled;
+        pauseMenuEnabled = enabled;
     }
 
 }

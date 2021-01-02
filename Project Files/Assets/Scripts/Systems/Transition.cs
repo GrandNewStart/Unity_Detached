@@ -126,6 +126,17 @@ public class Transition
         }
     }
 
+    public void ShowObjectWithCallback(
+        GameObject obj, 
+        Vector3 position,
+        Action callback)
+    {
+        obj.SetActive(true);
+        obj.transform.position = position;
+        gameManager.StartCoroutine(ShowFadeIn(0, 0, obj, callback));
+    }
+
+
     private IEnumerator HideRoutine(GameObject obj, int seconds)
     {
         yield return new WaitForSeconds(seconds);

@@ -27340,11 +27340,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isPaused: 0
-  currentCheckpoint: 0
   cube: {fileID: 871924196}
   player: {fileID: 1911538712}
-  leftArm: {fileID: 1260343795}
-  rightArm: {fileID: 618508088}
+  firstArm: {fileID: 1260343795}
+  secondArm: {fileID: 618508088}
   camera: {fileID: 999202561}
   pageSound: {fileID: 842034125}
   clickSound: {fileID: 1417977954}
