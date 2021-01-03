@@ -11,15 +11,16 @@ public class SwitchController : MonoBehaviour
     public GameObject   unpluggedSprite;
     public GameObject   pluggedSpriteRed;
     public GameObject   pluggedSpriteGreen;
-    protected bool      isLeftArmAround;
-    protected bool      isRightArmAround;
-    protected bool      isLeftPlugged;
-    protected bool      isRightPlugged;
+    protected bool      isFirstArmAround;
+    protected bool      isSecondArmAround;
+    protected bool      isFirstArmPlugged;
+    protected bool      isSecondArmPlugged;
 
     [Header("Player")]
     public ArmController    leftArm;
     public ArmController    rightArm;
     public PlayerController player;
+    private bool            deathDetected = false;
 
     [Header("Sound")]
     public AudioSource plugInSound;
@@ -46,39 +47,40 @@ public class SwitchController : MonoBehaviour
         PlugCheck();
         ActivateSwitch();
         SpriteControl();
+        DetectPlayerDeath();
     }
 
     virtual protected void HandCheck()
     {
-        isLeftArmAround  = Physics2D.OverlapBox(transform.position, new Vector3(2.3f, 3.2f, 0), 0.0f, LayerMask.GetMask("Left Arm"));
-        isRightArmAround = Physics2D.OverlapBox(transform.position, new Vector3(2.3f, 3.2f, 0), 0.0f, LayerMask.GetMask("Right Arm"));
+        isFirstArmAround  = Physics2D.OverlapBox(transform.position, new Vector3(2.3f, 3.2f, 0), 0.0f, LayerMask.GetMask("Left Arm"));
+        isSecondArmAround = Physics2D.OverlapBox(transform.position, new Vector3(2.3f, 3.2f, 0), 0.0f, LayerMask.GetMask("Right Arm"));
     }
 
     virtual protected void PlugCheck()
     {
-        if (isLeftPlugged && !isLeftArmAround)
+        if (isFirstArmPlugged && !isFirstArmAround)
         {
-            isLeftPlugged = false;
+            isFirstArmPlugged = false;
             OnDeactivation();
         }
-        if (isRightPlugged && !isRightArmAround)
+        if (isSecondArmPlugged && !isSecondArmAround)
         {
-            isRightPlugged = false;
+            isSecondArmPlugged = false;
             OnDeactivation();
         }
     }
 
     virtual protected void ActivateSwitch()
     {
-        if (!isLeftPlugged && !isRightPlugged)
+        if (!isFirstArmPlugged && !isSecondArmPlugged)
         {
             // Plug in
             if (Input.GetKeyDown(KeyCode.Q))
             {
                 // Left hand ready to plug in
                 // Right hand ready to plug out
-                if (isLeftArmAround && leftArm.GetControl() ||
-                    isRightArmAround && rightArm.GetControl())
+                if (isFirstArmAround && leftArm.GetControl() ||
+                    isSecondArmAround && rightArm.GetControl())
                 {
                     OnActivation();
                     return;
@@ -86,11 +88,11 @@ public class SwitchController : MonoBehaviour
             }
             if (Input.GetKeyDown(KeyCode.R) && player.HasControl())
             {
-                if(isLeftPlugged || isRightPlugged)
+                if(isFirstArmPlugged || isSecondArmPlugged)
                 {
                     OnDeactivation();
-                    isLeftArmAround = false;
-                    isRightArmAround = false;
+                    isFirstArmAround = false;
+                    isSecondArmAround = false;
                     isPlugOutEnabled = true;
                 }
             }
@@ -99,7 +101,7 @@ public class SwitchController : MonoBehaviour
         if (Input.GetKey(KeyCode.Q) && isPlugOutEnabled)
         {
             // If left hand must come out
-            if (isLeftPlugged && leftArm.GetControl())
+            if (isFirstArmPlugged && leftArm.GetControl())
             {
                 if (counter++ > waitToPlugOut)
                 {
@@ -107,7 +109,7 @@ public class SwitchController : MonoBehaviour
                 }
             }
             // If right hand must come out
-            if (isRightPlugged && rightArm.GetControl())
+            if (isSecondArmPlugged && rightArm.GetControl())
             {
                 if (counter++ > waitToPlugOut)
                 {
@@ -119,8 +121,8 @@ public class SwitchController : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.Q))
         {
             counter = 0;
-            if ((isLeftPlugged && leftArm.GetControl()) ||
-                (isRightPlugged && rightArm.GetControl()))
+            if ((isFirstArmPlugged && leftArm.GetControl()) ||
+                (isSecondArmPlugged && rightArm.GetControl()))
             {
                 isPlugOutEnabled = true;
             }
@@ -130,15 +132,15 @@ public class SwitchController : MonoBehaviour
     virtual protected void OnActivation() {
         PlayPlugInSound();
 
-        if (isLeftArmAround)
+        if (isFirstArmAround)
         {
-            isLeftPlugged = true;
+            isFirstArmPlugged = true;
             leftArm.OnPlugIn();
             return;
         }
-        if (isRightArmAround)
+        if (isSecondArmAround)
         {
-            isRightPlugged = true;
+            isSecondArmPlugged = true;
             rightArm.OnPlugIn();
             return;
         }
@@ -149,19 +151,35 @@ public class SwitchController : MonoBehaviour
         counter = 0;
         PlayPlugOutSound();
 
-        if (isLeftPlugged)
+        if (isFirstArmPlugged)
         {
-            isLeftPlugged       = false;
+            isFirstArmPlugged   = false;
             isPlugOutEnabled    = false;
             leftArm.OnPlugOut();
             return;
         }
-        if (isRightPlugged)
+        if (isSecondArmPlugged)
         {
-            isRightPlugged      = false;
+            isSecondArmPlugged  = false;
             isPlugOutEnabled    = false;
             rightArm.OnPlugOut();
             return;
+        }
+    }
+
+    private void DetectPlayerDeath()
+    {
+        if (isFirstArmPlugged || isSecondArmPlugged)
+        {
+            if (player.isDestroyed && !deathDetected)
+            {
+                deathDetected = true;
+                OnDeactivation();
+            }
+            if (!player.isDestroyed && deathDetected)
+            {
+                deathDetected = false;
+            }
         }
     }
 
@@ -187,7 +205,7 @@ public class SwitchController : MonoBehaviour
 
     virtual protected void SpriteControl()
     {
-        if (isLeftPlugged || isRightPlugged)
+        if (isFirstArmPlugged || isSecondArmPlugged)
         {
             pluggedSpriteGreen  .SetActive(true);
             unpluggedSprite     .SetActive(false);
@@ -201,7 +219,7 @@ public class SwitchController : MonoBehaviour
 
     public bool IsPluggedIn()
     {
-        return (isLeftPlugged || isRightPlugged);
+        return (isFirstArmPlugged || isSecondArmPlugged);
     }
 
     private void OnDrawGizmos()

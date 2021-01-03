@@ -9,6 +9,7 @@ public class PhysicalObject : MonoBehaviour
     public GameObject       normalSprite;
     public GameObject       destroyedSprite;
     public new Rigidbody2D  rigidbody;
+    private bool            destructionDetected = false;
     
     protected virtual void Start()
     {
@@ -44,13 +45,20 @@ public class PhysicalObject : MonoBehaviour
         transform.localPosition = newPosition;
     }
 
-    protected virtual void OnDestruction() 
+    public void DestroyObject()
     {
-        if (!isDestroyed)
-        {
-            isDestroyed = true;
-        }
+        isDestroyed = true;
+        OnDestruction();
     }
+
+    public void RecoverObject()
+    {
+        isDestroyed = false;
+        OnRestoration();
+    }
+
+    protected virtual void OnDestruction() {}
+    protected virtual void OnRestoration() {}
 
     protected virtual void OnCollisionEnter2D(Collision2D collision)
     {
@@ -60,7 +68,7 @@ public class PhysicalObject : MonoBehaviour
         }
         if (collision.collider.CompareTag("Crusher"))
         {
-            OnDestruction();
+            DestroyObject();
         }
     }
 

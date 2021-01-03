@@ -63,7 +63,8 @@ public class ArmController : PhysicalObject
         normalMass          = rigidbody.mass;
 
         // Audio Attributes
-        moveVolume = moveSound.volume;
+        moveSound.volume    = .1f;
+        moveVolume          = moveSound.volume;
     }
 
     protected override void Update()

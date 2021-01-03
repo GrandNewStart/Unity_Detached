@@ -10,9 +10,9 @@ public class HomeController : MonoBehaviour
     private int         selectedMenu = 1;
     private enum        focus { main, noSaveData, saveDataExists, settings, quit, none };
     private focus       focusStatus = focus.main;
-    public Sound        bgm;
-    public Sound        click;
-    public Sound        page;
+    public AudioSource  bgm;
+    public AudioSource  click;
+    public AudioSource  page;
 
     [Header("No Save Data")]
     public GameObject   noSaveDataDialog;
@@ -43,29 +43,6 @@ public class HomeController : MonoBehaviour
     [Header("Loading Screens")]
     public GameObject   loading_1;
     private StageLoader stageLoader;
-
-    private void Awake()
-    {
-        initSounds();
-    }
-
-    private void initSounds()
-    {
-        bgm.source          = gameObject.AddComponent<AudioSource>();
-        bgm.source.clip     = bgm.clip;
-        bgm.source.volume   = bgm.volume;
-        bgm.source.pitch    = bgm.pitch;
-
-        click.source        = gameObject.AddComponent<AudioSource>();
-        click.source.clip   = click.clip;
-        click.source.volume = click.volume;
-        click.source.pitch  = click.pitch;
-
-        page.source         = gameObject.AddComponent<AudioSource>();
-        page.source.clip    = page.clip;
-        page.source.volume  = page.volume;
-        page.source.pitch   = page.pitch;
-    }
 
     void Start()
     {
@@ -463,22 +440,22 @@ public class HomeController : MonoBehaviour
 
     private void PlayBgm()
     {
-        bgm.source.Play();
-        bgm.source.loop = true;
+        bgm.loop = true;
+        bgm.Play();
     }
 
     private void StopBgm()
     {
-        bgm.source.Stop();
+        bgm.Stop();
     }
 
     private void PlayPageSound()
     {
-        page.source.Play();
+        page.Play();
     }
 
     private void PlayClickSound()
     {
-        click.source.Play();
+        click.Play();
     }
 }

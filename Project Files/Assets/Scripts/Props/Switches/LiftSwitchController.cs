@@ -33,7 +33,7 @@ public class LiftSwitchController : SwitchController
     {
         targetPosition = target.transform.position;
 
-        if (isLeftPlugged || isRightPlugged)
+        if (isFirstArmPlugged || isSecondArmPlugged)
         {
             MoveUp();
         }

@@ -151,9 +151,10 @@ public class GameManager : MonoBehaviour
         if (player.isDestroyed && !deathDetected)
         {
             deathDetected = true;
+            pauseMenuEnabled = false;
             StartCoroutine(transition.TransitionIn(2, 2, () =>
                 {
-                    player.RecoverDeath();
+                    player.RecoverObject();
                     LoadCheckpoint(currentCheckpoint);
                     StartCoroutine(transition.TransitionOut(0, 0, () =>
                         {
@@ -176,7 +177,6 @@ public class GameManager : MonoBehaviour
         cameraPosition.z -= 1;
         cameraPosition.y += 7;
         camera.transform.position = cameraPosition;
-        RetrieveHands();
     }
 
     private void PauseMenuControl()
@@ -202,7 +202,6 @@ public class GameManager : MonoBehaviour
     }
 
     protected virtual void OnGamePaused() {
-        Debug.Log("GAME PAUSED");
         DisableControl();
         Time.timeScale = 0;
         isPaused = true;
@@ -212,7 +211,6 @@ public class GameManager : MonoBehaviour
         secondArm.OnPause();
     }
     protected virtual void OnGameResumed() {
-        Debug.Log("GAME RESUMED");
         Time.timeScale = 1;
         isPaused = false;
         EnableControl();
@@ -408,19 +406,13 @@ public class GameManager : MonoBehaviour
     }
 
     public void StopBGM()
-    {
-        bgm.Stop();
-    }
+    { bgm.Stop(); }
 
     public void PlayClickSound()
-    {
-        clickSound.Play();
-    }
+    { clickSound.Play(); }
 
     public void PlayPageSound()
-    {
-        pageSound.Play();
-    }
+    { pageSound.Play(); }
 
     private void ManageLoading()
     {
@@ -457,8 +449,6 @@ public class GameManager : MonoBehaviour
     }
 
     public void EnablePause(bool enabled)
-    {
-        pauseMenuEnabled = enabled;
-    }
+    { pauseMenuEnabled = enabled; }
 
 }

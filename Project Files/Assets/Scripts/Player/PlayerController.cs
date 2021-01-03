@@ -93,14 +93,20 @@ public class PlayerController : PhysicalObject
         isStateFixed    = false;
 
         // Sound attributes
-        chargePitch                 = chargeSound.pitch;
-        chargeSoundOriginalPitch    = chargeSound.pitch;
-        footStepVolume              = footStepSound.volume;
-        jumpVolume                  = jumpSound.volume;
-        chargeVolume                = chargeSound.volume;
-        fireVolume                  = fireSound.volume;
-        retrieveVolume              = retrieveSound.volume;
-        retrieveCompleteVolume      = retrieveCompleteSound.volume;
+        chargePitch                     = chargeSound.pitch;
+        chargeSoundOriginalPitch        = chargeSound.pitch;
+        footStepSound.volume            = .2f;
+        jumpSound.volume                = .8f;
+        chargeSound.volume              = .3f;
+        fireSound.volume                = 1f;
+        retrieveSound.volume            = .08f;
+        retrieveCompleteSound.volume    = .4f;
+        footStepVolume                  = footStepSound.volume;
+        jumpVolume                      = jumpSound.volume;
+        chargeVolume                    = chargeSound.volume;
+        fireVolume                      = fireSound.volume;
+        retrieveVolume                  = retrieveSound.volume;
+        retrieveCompleteVolume          = retrieveCompleteSound.volume;
 
     }
 
@@ -127,7 +133,7 @@ public class PlayerController : PhysicalObject
     {
         if (Input.GetKeyDown(KeyCode.P))
         {
-            isDestroyed = true;
+            DestroyObject();
         }
     }
 
@@ -327,15 +333,15 @@ public class PlayerController : PhysicalObject
         chargeSound.Play();
         chargeSound.loop = true;
 
-        while (state == State.charge)
+        while (state == State.charge && !isDestroyed)
         {
-            if (chargeSound.pitch < Sound.maxPitch)
+            if (chargeSound.pitch < 2)
             {
                 chargeSound.pitch *= 1.01f;
             }
             else
             {
-                chargeSound.pitch = Sound.maxPitch;
+                chargeSound.pitch = 2;
             }
             yield return null;
         }
@@ -434,44 +440,35 @@ public class PlayerController : PhysicalObject
     {
         if (Input.GetKeyDown(KeyCode.Tab) && state != State.charge)
         {
-            if ((arms == 1 && enabledArms == 2) ||
-                (arms == 0 && enabledArms == 1))
+            if (isControlling)
             {
-                if (isControlling)
+                isControlling = false;
+                if (isFirstArmOut)
                 {
-                    if (!isFirstArmRetrieving)
-                    {
-                        isControlling = false;
-                        firstArm.SetControl(true);
-                    }
+                    firstArm.SetControl(true);
+                    return;
                 }
-                else if (firstArm.GetControl())
+                if (isSecondArmOut)
                 {
-                    isControlling = true;
-                    firstArm.SetControl(false);
+                    secondArm.SetControl(true);
+                    return;
                 }
             }
-            else if (arms == 0)
+            else
             {
-                if (isControlling)
-                {
-                    if (!isFirstArmRetrieving)
-                    {
-                        isControlling = false;
-                        firstArm.SetControl(true);
-                    }
-                }
-                else if (firstArm.GetControl())
+                if (firstArm.GetControl())
                 {
                     firstArm.SetControl(false);
-                    secondArm.SetControl(true);
+                    secondArm.SetControl(isSecondArmOut);
+                    isControlling = !isSecondArmOut;
+                    return;
                 }
-                else
+                if (secondArm.GetControl())
                 {
-                    isControlling = true;
                     secondArm.SetControl(false);
+                    isControlling = true;
+                    return;
                 }
-
             }
         }
     }
@@ -556,6 +553,7 @@ public class PlayerController : PhysicalObject
     protected override void OnDestruction()
     {
         base.OnDestruction();
+        foreach(GameObject gauge in gauges) { gauge.SetActive(false); }
 
         head        .transform.parent = null;
         body        .transform.parent = null;
@@ -567,16 +565,43 @@ public class PlayerController : PhysicalObject
         Rigidbody2D leftArmRB   = left_arm.GetComponent<Rigidbody2D>();
         Rigidbody2D rightArmRB  = right_arm.GetComponent<Rigidbody2D>();
 
-        headRB      .AddForce(new Vector2(0.0f, 8.0f), ForceMode2D.Impulse);
-        bodyRB      .AddForce(new Vector2(0.0f, 8.0f), ForceMode2D.Impulse);
-        leftArmRB   .AddForce(new Vector2(4.0f, 8.0f), ForceMode2D.Impulse);
-        rightArmRB  .AddForce(new Vector2(-4.0f, 8.0f), ForceMode2D.Impulse);
+        headRB      .AddForce(new Vector2(0.0f, 20.0f), ForceMode2D.Impulse);
+        bodyRB      .AddForce(new Vector2(0.0f, 10.0f), ForceMode2D.Impulse);
+        leftArmRB   .AddForce(new Vector2(10.0f, 15.0f), ForceMode2D.Impulse);
+        rightArmRB  .AddForce(new Vector2(-10.0f, 15.0f), ForceMode2D.Impulse);
+        
+        if (arms == 0)
+        {
+            left_arm.SetActive(false);
+            right_arm.SetActive(false);
+        }
+        if (arms == 1)
+        {
+            if (enabledArms == 1)
+            {
+                right_arm.SetActive(false);
+            }
+            if (enabledArms == 2)
+            {
+                if (isFirstArmOut)
+                {
+                    left_arm.SetActive(false);
+                }
+                if (isSecondArmOut)
+                {
+                    right_arm.SetActive(false);
+                }
+            }
+        }
     }
 
-    public void RecoverDeath()
+    protected override void OnRestoration()
     {
-        isDestroyed = false;
-        
+        head.SetActive(true);
+        body.SetActive(true);
+        left_arm.SetActive(true);
+        right_arm.SetActive(true);
+
         head.transform.position         = transform.position;
         body.transform.position         = transform.position;
         left_arm.transform.position     = transform.position;
@@ -590,6 +615,13 @@ public class PlayerController : PhysicalObject
         rigidBody.velocity = Vector3.zero;
 
         destroyedSprite.SetActive(false);
+        firstArm.gameObject.SetActive(false);
+        secondArm.gameObject.SetActive(false);
+        isFirstArmOut = false;
+        isSecondArmOut = false;
+        isFirstArmRetrieving = false;
+        isSecondArmRetrieving = false;
+        arms = enabledArms;
     }
 
     public void OnPause()
