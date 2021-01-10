@@ -49,10 +49,11 @@ public class CutScene
             scene.SetActive(false);
         }
 
-        onFinish();
+        
         gameManager.ForceResumeGame();
         gameManager.StartCoroutine(HideFadeOut(0, 0, text_continue, ()=>{}));
         gameManager.StartCoroutine(TransitionOut(0, 0, ()=>{}));
+        onFinish();
     }
 
     private IEnumerator ShowFadeIn(int secondsBefore, int secondsAfter, GameObject target, Action callback)

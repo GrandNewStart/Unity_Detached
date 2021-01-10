@@ -34,7 +34,6 @@ public class GameManager : MonoBehaviour
     public GameObject   loading_background;
     public GameObject   loading_art;
     public GameObject   loading_text;
-    private bool        isLoadingReady = false;
 
     [Header("Cut Scenes")]
     protected CutScene  cutScene;
@@ -61,7 +60,6 @@ public class GameManager : MonoBehaviour
     {
         RotateCube();
         PauseMenuControl();
-        ManageLoading();
         DetectDeath();
     }
 
@@ -151,7 +149,7 @@ public class GameManager : MonoBehaviour
         if (player.isDestroyed && !deathDetected)
         {
             deathDetected = true;
-            pauseMenuEnabled = false;
+            EnablePause(false);
             StartCoroutine(transition.TransitionIn(2, 2, () =>
                 {
                     player.RecoverObject();
@@ -229,7 +227,6 @@ public class GameManager : MonoBehaviour
         if (playerControl)
         {
             controlIndex = 0;
-            player.ResetPower();
         }
         else if (leftArmControl)
         {
@@ -365,7 +362,7 @@ public class GameManager : MonoBehaviour
 
     public void ForcePauseGame() {
         OnGamePaused();
-        pauseMenuEnabled = false;
+        EnablePause(false);
     }
 
     public void PauseGame()
@@ -377,7 +374,7 @@ public class GameManager : MonoBehaviour
     public void ForceResumeGame()
     {
         OnGameResumed();
-        pauseMenuEnabled = true;
+        EnablePause(true);
     }
 
     private void ResumeGame()
@@ -414,24 +411,8 @@ public class GameManager : MonoBehaviour
     public void PlayPageSound()
     { pageSound.Play(); }
 
-    private void ManageLoading()
+    protected void LoadNextStage()
     {
-        if (isLoadingReady)
-        {
-            if (Input.anyKeyDown)
-            {
-                SceneManager.LoadScene(stage + 1);
-            }
-        }
-    }
-
-    protected void ShowLoadingScreen()
-    {
-        isLoadingReady  = false;
-        pauseMenuEnabled   = false;
-        DisableControl();
-        StopBGM();
-        ShowCube(INFINITE);
         StartCoroutine(transition.TransitionIn(0, 0, () => {
             StartCoroutine(LoadingRoutine());
         }));
@@ -439,13 +420,20 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator LoadingRoutine()
     {
+        ResumeGame();
+        EnablePause(false);
+        DisableControl();
+        StopBGM();
+        ShowCube(INFINITE);
         transition.ShowObject(loading_background, loading_background.transform.position, INFINITE);
         yield return new WaitForSeconds(1);
         transition.ShowObject(loading_art, loading_art.transform.position, INFINITE);
         yield return new WaitForSeconds(1);
         transition.ShowObject(loading_text, loading_text.transform.position, INFINITE);
         yield return new WaitForSeconds(0.5f);
-        isLoadingReady = true;
+        while(!Input.anyKeyDown) { yield return null; }
+        //SceneManager.LoadScene(stage + 1);
+        SceneManager.LoadScene(0);
     }
 
     public void EnablePause(bool enabled)

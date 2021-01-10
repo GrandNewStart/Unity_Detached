@@ -434,7 +434,7 @@ public class HomeController : MonoBehaviour
     private void ExitGame()
     {
         StopBgm();
-        UnityEditor.EditorApplication.isPlaying = false;
+        //UnityEditor.EditorApplication.isPlaying = false;
         Application.Quit();
     }
 

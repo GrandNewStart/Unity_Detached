@@ -311,7 +311,7 @@ public class StageManager01 : GameManager
         ShowCutScene(cutScenes_4,
             cutScenes_4_Background,
             () => { },
-            () => { ShowLoadingScreen(); });
+            () => { LoadNextStage(); });
     }
 
     private void OnDrawGizmos()

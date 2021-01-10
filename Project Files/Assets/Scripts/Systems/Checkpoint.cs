@@ -49,6 +49,6 @@ public class Checkpoint : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        Gizmos.DrawWireSphere(origin, checkpointRadius);
+        Gizmos.DrawWireSphere(transform.position, checkpointRadius);
     }
 }
