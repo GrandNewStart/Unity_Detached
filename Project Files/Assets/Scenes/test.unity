@@ -498,8 +498,8 @@ MonoBehaviour:
   isPaused: 0
   cube: {fileID: 1678534496}
   player: {fileID: 1464473727}
-  firstArm: {fileID: 0}
-  secondArm: {fileID: 0}
+  firstArm: {fileID: 151323485}
+  secondArm: {fileID: 549864644}
   camera: {fileID: 1941278919}
   pageSound: {fileID: 40061202}
   clickSound: {fileID: 656693764}

@@ -7,7 +7,12 @@ using System;
 public class GameManager : MonoBehaviour
 {
     public static bool      isLoadingSaveData = false;
-    public static int       INFINITE = 0;
+    public const int        INFINITE = 0;
+    public const int        PLAYER = 0;
+    public const int        FIRST_ARM = 1;
+    public const int        SECOND_ARM = 2;
+    public const int        UI = 3;
+    public const int        DISABLED = -1;
     public static int       stage;
     public static int       enabledArms;
     public static int       currentCheckpoint;
@@ -48,7 +53,7 @@ public class GameManager : MonoBehaviour
     private bool        pauseMenuEnabled = true;
     private int         menuIndex = 0;
     private int         controlIndex = 0;
-
+    private int         tempControlIndex = 0;
 
     protected virtual void Start()
     {
@@ -61,6 +66,7 @@ public class GameManager : MonoBehaviour
         RotateCube();
         PauseMenuControl();
         DetectDeath();
+        Control();
     }
 
     private void OnStageStarted()
@@ -91,6 +97,55 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < checkpoints.Count; i++)
         {
             checkpoints[i].index = i;
+        }
+    }
+
+    private void Control()
+    {
+        switch (controlIndex)
+        {
+            case PLAYER:
+                player.ControlPlayer();
+                ChangeControl();
+                break;
+            case FIRST_ARM:
+                firstArm.ControlArm();
+                ChangeControl();
+                break;
+            case SECOND_ARM:
+                secondArm.ControlArm();
+                ChangeControl();
+                break;
+            case UI:
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void ChangeControl()
+    {
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            controlIndex = player.ChangeControl();
+            switch (controlIndex)
+            {
+                case PLAYER:
+                    player.EnableControl(true);
+                    firstArm.EnableControl(false);
+                    secondArm.EnableControl(false);
+                    break;
+                case FIRST_ARM:
+                    player.EnableControl(false);
+                    firstArm.EnableControl(true);
+                    secondArm.EnableControl(false);
+                    break;
+                case SECOND_ARM:
+                    player.EnableControl(false);
+                    firstArm.EnableControl(false);
+                    secondArm.EnableControl(true);
+                    break;
+            }
         }
     }
 
@@ -177,7 +232,23 @@ public class GameManager : MonoBehaviour
         camera.transform.position = cameraPosition;
     }
 
-    private void PauseMenuControl()
+    protected void DisablePastCheckpoints()
+    {
+        for (int i = 0; i < checkpoints.Count; i++)
+        {
+            Checkpoint checkpoint = checkpoints[i];
+            if (position == checkpoint.transform.position)
+            {
+                for (int j = 0; j <= i; j++)
+                {
+                    checkpoints[j].gameObject.SetActive(false);
+                }
+                return;
+            }
+        }
+    }
+
+        private void PauseMenuControl()
     {
         if (Input.GetButtonDown("Cancel") && pauseMenuEnabled)
         {
@@ -209,9 +280,9 @@ public class GameManager : MonoBehaviour
         secondArm.OnPause();
     }
     protected virtual void OnGameResumed() {
+        EnableControl();
         Time.timeScale = 1;
         isPaused = false;
-        EnableControl();
 
         player.OnResume();
         firstArm.OnResume();
@@ -220,42 +291,15 @@ public class GameManager : MonoBehaviour
 
     protected void DisableControl()
     {
-        bool playerControl = player.HasControl();
-        bool leftArmControl = firstArm.GetControl();
-        bool rightArmControl = secondArm.GetControl();
-
-        if (playerControl)
-        {
-            controlIndex = 0;
-        }
-        else if (leftArmControl)
-        {
-            controlIndex = 1;
-        }
-        else if (rightArmControl)
-        {
-            controlIndex = 2;
-        }
-
-        player.SetControl(false);
-        firstArm.SetControl(false);
-        secondArm.SetControl(false);
+        if (controlIndex == UI) return;
+        if (controlIndex == DISABLED) return;
+        tempControlIndex = controlIndex;
+        controlIndex = UI;
     }
 
     protected void EnableControl()
     {
-        switch (controlIndex)
-        {
-            case 0:
-                player.SetControl(true);
-                break;
-            case 1:
-                firstArm.SetControl(true);
-                break;
-            case 2:
-                secondArm.SetControl(true);
-                break;
-        }
+        controlIndex = tempControlIndex;
     }
 
     private void SelectMenu()

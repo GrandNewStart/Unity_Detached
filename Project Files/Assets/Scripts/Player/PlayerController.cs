@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-public class PlayerController : PhysicalObject
+public partial class PlayerController : PhysicalObject
 {
     [Header("Movement Attributes")]
     public  Camera      mainCamera;
@@ -70,511 +70,18 @@ public class PlayerController : PhysicalObject
     protected override void Start()
     {
         base.Start();
-        // Movement attributes
-        rigidBody           = GetComponent<Rigidbody2D>();
-        treadmillVelocity   = 0;
-        isOnTreadmill       = false;
-        isMovable           = true;
-        isControlling       = true;
-
-        // Shoot attributes
-        power                   = 0.0f;
-        tempPower               = power;
-        arms                    = enabledArms;
-        isFirstArmRetrieving    = false;
-        isSecondArmRetrieving   = false;
-        isFirstArmOut           = false;
-        isSecondArmOut          = false;
-        controlShiftEnabled     = true;
-
-        // Animation attributes
-        animator        = normal.GetComponent<Animator>();
-        dir             = 0;
-        lastDir         = 1;
-        state           = State.idle;
-        isStateFixed    = false;
-
-        // Sound attributes
-        chargePitch                     = chargeSound.pitch;
-        chargeSoundOriginalPitch        = chargeSound.pitch;
-        footStepSound.volume            = .2f;
-        jumpSound.volume                = .8f;
-        chargeSound.volume              = .3f;
-        fireSound.volume                = 1f;
-        retrieveSound.volume            = .08f;
-        retrieveCompleteSound.volume    = .4f;
-        footStepVolume                  = footStepSound.volume;
-        jumpVolume                      = jumpSound.volume;
-        chargeVolume                    = chargeSound.volume;
-        fireVolume                      = fireSound.volume;
-        retrieveVolume                  = retrieveSound.volume;
-        footStepDelay                   = 0;
-        retrieveCompleteVolume          = retrieveCompleteSound.volume;
-        isChargeSoundPlaying            = false;
-
+        InitMovementAttributes();
+        InitShootingAttributes();
+        InitAnimationAttributes();
+        InitSoundAttributes();
     }
 
     protected override void Update()
     {
         base.Update();
-        if (!isDestroyed)
-        {
-            GroundCheck();
-            ChangeControl();
-            AnimationControl();
-            if (isControlling)
-            {
-                Jump();
-                Move();
-                Shoot();
-                Retrieve();
-            }
-        }
-        DIE();
-    }
-
-    private void DIE()
-    {
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            DestroyObject();
-        }
-    }
-
-    private void GroundCheck()
-    {
-        isGrounded = Physics2D.OverlapBox(groundCheck.transform.position, new Vector2(2.2f * groundCheckWidth, 0.5f), 0.0f, LayerMask.GetMask("Ground")) ||
-                     Physics2D.OverlapBox(groundCheck.transform.position, new Vector2(2.2f * groundCheckWidth, 0.5f), 0.0f, LayerMask.GetMask("Physical Object"));
-        if (!isGrounded)
-        {
-            state           = State.jump;
-            footStepDelay   = 10;
-        }
-    }
-
-    private void Move()
-    {
-        // Camera position setting
-        Vector3 cameraPosition = transform.position;
-        cameraPosition.z = -1;
-        cameraPosition.y += 7;
-        mainCamera.transform.position = cameraPosition;
-
-        // Camera size setting
-        //mainCamera.orthographicSize = 85 + 70 * cameraPosition.y / 73;
-        //if (mainCamera.orthographicSize > 25) mainCamera.orthographicSize = 25; 
-        //if (mainCamera.orthographicSize < 13) mainCamera.orthographicSize = 14;
-
-        // User input movement
-        float horizontal = Input.GetAxis("Horizontal") * moveSpeed * Time.deltaTime;
-
-        if (horizontal < 0)
-        {
-            dir     = -1;
-            lastDir = -1;
-            if (isGrounded && !isStateFixed)
-            {
-                state = State.walk;
-            }
-        }
-        if (horizontal > 0)
-        {
-            dir     = 1;
-            lastDir = 1;
-            if (isGrounded && !isStateFixed)
-            {
-                state = State.walk;
-            }
-        }
-        if (horizontal == 0)
-        {
-            dir = 0;
-            if (isGrounded && !isStateFixed)
-            {
-                state = State.idle;
-            }
-        }
-
-        // Move
-        if (isMovable)
-        {
-            float vertical = rigidBody.velocity.y;
-
-            if (isOnTreadmill)
-            {
-                horizontal += treadmillVelocity * Time.deltaTime;
-                rigidBody.velocity = new Vector3(horizontal, vertical, 0.0f);
-            }
-            else
-            {
-                if (horizontal != 0)
-                {
-                    rigidBody.velocity = new Vector3(horizontal, vertical, 0.0f);
-                }
-            }
-
-            if (state == State.walk)
-            {
-                PlayFootStepSound();
-            }
-        }
-
-    }
-
-    private void PlayFootStepSound()
-    {
-        if (footStepDelay++ > 20)
-        {
-            footStepSound.Play();
-            footStepDelay = 0;
-        }
-    }
-
-    private void Jump()
-    {
-        // Jump only when player is on ground and movable
-        if (isGrounded && isMovable)
-        {
-            if (Input.GetKeyDown(KeyCode.Space) ||
-                Input.GetKeyDown(KeyCode.W) ||
-                Input.GetKeyDown(KeyCode.UpArrow))
-            {
-                // Do jump by adjusting the rigidbody's velocity
-                float horizontal = rigidBody.velocity.x * Time.deltaTime;
-                float vertical = rigidBody.velocity.y + jumpHeight;
-                rigidBody.velocity = new Vector3(horizontal, vertical, 0.0f);
-                // Play jump sound
-                jumpSound.Play();
-            }
-        }
-    }
-
-    private void Shoot()
-    {
-        if (isFirstArmRetrieving 
-            || isSecondArmRetrieving 
-            || !isGrounded 
-            || isStateFixed)
-        {
-            return;
-        }
-
-        // Charge
-        if ((Input.GetKey(KeyCode.L) || Input.GetKey(KeyCode.F)) && arms != 0)
-        {
-            // Charging start.
-            state = State.charge;
-            // Play charge sound
-            if (!isChargeSoundPlaying)
-            {
-                isChargeSoundPlaying = true;
-                StartCoroutine(PlayChargeSound());
-            }
-            // Player can't move while charging.
-            isMovable = false;
-            // Increase power until limit;
-            if (power < powerLimit) power += powerIncrement;
-            // Raise pitch according to power;
-            if (chargeSound.pitch < 2)
-            {
-                chargeSound.pitch *= 1.01f;
-            }
-            else
-            {
-                chargeSound.pitch = 2;
-            }
-
-            for (int i = 0; i < 5; i++)
-            {
-                if (power / powerLimit >= 0.2f * (i + 1))
-                {
-                    if (lastDir == 1)
-                    {
-                        gauges[i].transform.localPosition = (new Vector2(-18.0f, 0.8f + 2.4f * i));
-                    }
-                    else if (lastDir == -1)
-                    {
-                        gauges[i].transform.localPosition = (new Vector2(18.0f, 0.8f + 2.4f * i));
-                    }
-                    gauges[i].SetActive(true);
-                }
-            }
-        }
-        else
-        {
-            gauges[0].SetActive(false);
-            gauges[1].SetActive(false);
-            gauges[2].SetActive(false);
-            gauges[3].SetActive(false);
-            gauges[4].SetActive(false);
-        }
-
-        // Fire
-        if ((Input.GetKeyUp(KeyCode.L) || Input.GetKeyUp(KeyCode.F)) && arms != 0)
-        {
-            // Firing start.
-            state = State.fire;
-            // Wait for the fire animation to finish.
-            Invoke("FinishFire", 0.3f);
-            // Player's state is fixed while the animation is playing
-            isStateFixed = true;
-            // Call HandController class's function to actually fire
-            if (arms == 2)
-            {
-                firstArm.Fire(power);
-                isFirstArmOut = true;
-            }
-            if (arms == 1)
-            {
-                if (isFirstArmOut)
-                {
-                    secondArm.Fire(power);
-                    isSecondArmOut = true;
-                }
-                else
-                {
-                    firstArm.Fire(power);
-                    isFirstArmOut = true;
-                }
-            }
-            // Play Fire sound 
-            fireSound.Play();
-            power = 0.0f;
-        }
-    }
-
-    private IEnumerator PlayChargeSound()
-    {
-        chargeSound.Play();
-        chargeSound.loop = true;
-
-        while (state == State.charge && !isDestroyed)
-        {
-            //if (chargeSound.pitch < 2)
-            //{
-            //    chargeSound.pitch *= 1.01f;
-            //}
-            //else
-            //{
-            //    chargeSound.pitch = 2;
-            //}
-            yield return null;
-        }
-
-        chargeSound.Stop();
-        chargeSound.pitch = chargeSoundOriginalPitch;
-        isChargeSoundPlaying = false;
-    }
-
-    private void FinishFire()
-    {
-        // Once firing is done, player is able to move, change state and an arm is reduced.
-        isMovable       = true;
-        isStateFixed    = false;
-        state           = State.idle;
-        arms--;
-    }
-
-    private void Retrieve()
-    {
-        if (isFirstArmRetrieving || isSecondArmRetrieving)
-        {
-            controlShiftEnabled = false;
-        }
-
-        // Retrieve
-        if (Input.GetKeyDown(KeyCode.R)
-            && isMovable
-            && !isFirstArmRetrieving
-            && !isSecondArmRetrieving)
-        {
-            controlShiftEnabled = false;
-            if (isFirstArmOut)
-            {
-                isFirstArmRetrieving = true;
-                firstArm.StartRetrieve();
-                PlayRetrieveSound();
-            }
-            if (isSecondArmOut)
-            {
-                isSecondArmRetrieving = true;
-                secondArm.StartRetrieve();
-                PlayRetrieveSound();
-            }
-        }
-
-        //if (Input.GetKeyDown(KeyCode.G)
-        //    && isMovable
-        //    && !isFirstArmRetrieving
-        //    && isFirstArmOut)
-        //{
-        //    isFirstArmRetrieving = true;
-        //    firstArm.StartRetrieve();
-        //    PlayRetrieveSound();
-        //}
-
-        //if (Input.GetKeyDown(KeyCode.H)
-        //    && isMovable
-        //    && !isSecondArmRetrieving
-        //    && isSecondArmOut)
-        //{
-        //    isSecondArmRetrieving = true;
-        //    secondArm.StartRetrieve();
-        //    PlayRetrieveSound();
-        //}
-
-        // Check if retreiving is all done
-        if (isFirstArmRetrieving)
-        {
-            isFirstArmRetrieving = !firstArm.GetRetrieveComplete();
-            if (!isFirstArmRetrieving)
-            {
-                arms++;
-                isFirstArmOut = false;
-                PlayRetrieveCompleteSound();
-            }
-        }
-        if (isSecondArmRetrieving)
-        {
-            isSecondArmRetrieving = !secondArm.GetRetrieveComplete();
-            if (!isSecondArmRetrieving)
-            {
-                arms++;
-                isSecondArmOut = false;
-                PlayRetrieveCompleteSound();
-            }
-        }
-        if (!isFirstArmOut && !isSecondArmOut)
-        {
-            controlShiftEnabled = true;
-        }
-    }
-
-    public void PlayRetrieveSound()
-    {
-        retrieveSound.Play();
-    }
-
-    public void PlayRetrieveCompleteSound()
-    {
-        retrieveCompleteSound.Play();
-    }
-
-    private void ChangeControl()
-    {
-        if (Input.GetKeyDown(KeyCode.Tab)
-            && state != State.charge
-            && controlShiftEnabled)
-        {
-            if (isControlling)
-            {
-                if (isFirstArmOut)
-                {
-                    firstArm.SetControl(true);
-                    isControlling = false;
-                    return;
-                }
-                if (isSecondArmOut)
-                {
-                    secondArm.SetControl(true);
-                    isControlling = false;
-                    return;
-                }
-            }
-            else
-            {
-                if (firstArm.GetControl())
-                {
-                    firstArm.SetControl(false);
-                    secondArm.SetControl(isSecondArmOut);
-                    isControlling = !isSecondArmOut;
-                    return;
-                }
-                if (secondArm.GetControl())
-                {
-                    secondArm.SetControl(false);
-                    isControlling = true;
-                    return;
-                }
-            }
-        }
-    }
-
-    private void AnimationControl()
-    {
-        switch (state)
-        {
-            case State.idle:
-                if (lastDir == 1)
-                {
-                    if (arms == 2) animator.Play("Idle_Right_1");
-                    if (arms == 1) animator.Play("Idle_Right_2");
-                    if (arms == 0) animator.Play("Idle_Right_3");
-                }
-                if (lastDir == -1)
-                {
-                    if (arms == 2) animator.Play("Idle_Left_1");
-                    if (arms == 1) animator.Play("Idle_Left_2");
-                    if (arms == 0) animator.Play("Idle_Left_3");
-                }
-                break;
-            case State.walk:
-                if (dir == 1)
-                {
-                    if (arms == 2) animator.Play("Walk_Right_1");
-                    if (arms == 1) animator.Play("Walk_Right_2");
-                    if (arms == 0) animator.Play("Walk_Right_3");
-                }
-                if (dir == -1)
-                {
-                    if (arms == 2) animator.Play("Walk_Left_1");
-                    if (arms == 1) animator.Play("Walk_Left_2");
-                    if (arms == 0) animator.Play("Walk_Left_3");
-                }
-                if (!isControlling) state = State.idle;
-                break;
-            case State.jump:
-                if (lastDir == 1)
-                {
-                    if (arms == 2) animator.Play("Jump_Right_Air_1");
-                    if (arms == 1) animator.Play("Jump_Right_Air_2");
-                    if (arms == 0) animator.Play("Jump_Right_Air_3");
-                }
-                if (lastDir == -1)
-                {
-                    if (arms == 2) animator.Play("Jump_Left_Air_1");
-                    if (arms == 1) animator.Play("Jump_Left_Air_2");
-                    if (arms == 0) animator.Play("Jump_Left_Air_3");
-                }
-                if (!isControlling && groundCheck) state = State.idle;
-                break;
-            case State.charge:
-                if (lastDir == 1)
-                {
-                    if (arms == 2) animator.Play("Shoot_Right_Charge_1");
-                    if (arms == 1) animator.Play("Shoot_Right_Charge_2");
-                    if (arms == 0) animator.Play("Shoot_Right_Charge_3");
-                }
-                if (lastDir == -1)
-                {
-                    if (arms == 2) animator.Play("Shoot_Left_Charge_1");
-                    if (arms == 1) animator.Play("Shoot_Left_Charge_2");
-                    if (arms == 0) animator.Play("Shoot_Left_Charge_3");
-                }
-                break;
-            case State.fire:
-                if (lastDir == 1)
-                {
-                    if (arms == 2) animator.Play("Shoot_Right_Fire_1");
-                    if (arms == 1) animator.Play("Shoot_Right_Fire_2");
-                }
-                if (lastDir == -1)
-                {
-                    if (arms == 2) animator.Play("Shoot_Left_Fire_1");
-                    if (arms == 1) animator.Play("Shoot_Left_Fire_2");
-                }
-                break;
-        }
+        GroundCheck();
+        AnimationControl();
+        MoveOnTreadmill();
     }
 
     protected override void OnDestruction()
@@ -659,7 +166,7 @@ public class PlayerController : PhysicalObject
         arms = enabledArms;
     }
 
-    public void OnPause()
+    public override void OnPause()
     {
         footStepSound.volume            = 0;
         jumpSound.volume                = 0;
@@ -674,7 +181,7 @@ public class PlayerController : PhysicalObject
         }
     }
 
-    public void OnResume()
+    public override void OnResume()
     {
         footStepSound.volume            = footStepVolume;
         jumpSound.volume                = jumpVolume;
@@ -687,6 +194,37 @@ public class PlayerController : PhysicalObject
             chargeSound.pitch = chargePitch;
         }
         RecoverPower();
+    }
+
+    public void ControlPlayer()
+    {
+        if (!isDestroyed)
+        {
+            Move();
+            Jump();
+            Shoot();
+            Retrieve();
+        }
+    }
+
+    private void DIE()
+    {
+        if (Input.GetKeyDown(KeyCode.P)) DestroyObject();
+    }
+
+
+    public int ChangeControl()
+    {
+        if (isControlling)
+        {
+            if (isFirstArmOut) return GameManager.FIRST_ARM;
+            if (isSecondArmOut) return GameManager.SECOND_ARM;
+        }
+        else
+        {
+            if (firstArm.IsControlling() && isSecondArmOut) return GameManager.SECOND_ARM;
+        }
+        return GameManager.PLAYER;
     }
 
     private void OnDrawGizmos()
@@ -713,8 +251,8 @@ public class PlayerController : PhysicalObject
     public bool HasControl()
     { return isControlling; }
 
-    public void SetControl(bool input)
-    { isControlling = input; }
+    public void EnableControl(bool enabled)
+    { isControlling = enabled; }
 
     public bool IsLeftRetrieving()
     { return isFirstArmRetrieving; }
@@ -731,24 +269,4 @@ public class PlayerController : PhysicalObject
     public int GetArms()
     { return arms; }
 
-    public void ResetPower() 
-    {
-        tempPower = power;
-        power = 0.0f;
-    }
-
-    public void RecoverPower()
-    {
-        if (!Input.GetKey(KeyCode.L) && !Input.GetKey(KeyCode.F))
-        {
-            isMovable = true;
-            power = 0;
-            tempPower = 0;
-        }
-        else
-        {
-            power = tempPower;
-            tempPower = 0;
-        }
-    }
 }

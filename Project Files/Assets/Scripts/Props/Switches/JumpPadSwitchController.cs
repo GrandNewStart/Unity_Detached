@@ -50,8 +50,8 @@ public class JumpPadSwitchController : MonoBehaviour
                 if (!isActivated)
                 {
                     // Activate only when the plugged hand is being controlled
-                    if ((isLeftPlugged    &&  leftHand.GetControl()) ||
-                        (isRightPlugged   &&  rightHand.GetControl()))
+                    if ((isLeftPlugged    &&  leftHand.IsControlling()) ||
+                        (isRightPlugged   &&  rightHand.IsControlling()))
                     {
                         isActivated = true;
                         Invoke("Deactivate", 0.5f);
@@ -61,13 +61,13 @@ public class JumpPadSwitchController : MonoBehaviour
             else
             {
                 // Plugging into switch
-                if (isLeftHandAround && !isLeftPlugged && leftHand.GetControl())
+                if (isLeftHandAround && !isLeftPlugged && leftHand.IsControlling())
                 {
                     isLeftPlugged = true;
                     leftHand.OnPlugIn();
                     return;
                 }
-                if (isRightHandAround && !isRightPlugged && rightHand.GetControl())
+                if (isRightHandAround && !isRightPlugged && rightHand.IsControlling())
                 {
                     isRightPlugged = true;
                     rightHand.OnPlugIn();
@@ -77,7 +77,7 @@ public class JumpPadSwitchController : MonoBehaviour
         }
         if (Input.GetKey(KeyCode.Q) && isPlugOutEnabled)
         {
-            if (isLeftPlugged && leftHand.GetControl())
+            if (isLeftPlugged && leftHand.IsControlling())
             {
                 if (counter++ > waitToPlugOut)
                 {
@@ -86,7 +86,7 @@ public class JumpPadSwitchController : MonoBehaviour
                     isPlugOutEnabled = false;
                 }
             }
-            if (isRightPlugged && rightHand.GetControl())
+            if (isRightPlugged && rightHand.IsControlling())
             {
                 if (counter++ > waitToPlugOut)
                 {
@@ -99,7 +99,7 @@ public class JumpPadSwitchController : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.Q))
         {
             counter = 0;
-            if((isLeftPlugged && leftHand.GetControl()) || (isRightPlugged && rightHand.GetControl()))
+            if((isLeftPlugged && leftHand.IsControlling()) || (isRightPlugged && rightHand.IsControlling()))
             {
                 isPlugOutEnabled = true;
             }

@@ -79,8 +79,8 @@ public class SwitchController : MonoBehaviour
             {
                 // Left hand ready to plug in
                 // Right hand ready to plug out
-                if (isFirstArmAround && leftArm.GetControl() ||
-                    isSecondArmAround && rightArm.GetControl())
+                if (isFirstArmAround && leftArm.IsControlling() ||
+                    isSecondArmAround && rightArm.IsControlling())
                 {
                     OnActivation();
                     return;
@@ -101,7 +101,7 @@ public class SwitchController : MonoBehaviour
         if (Input.GetKey(KeyCode.Q) && isPlugOutEnabled)
         {
             // If left hand must come out
-            if (isFirstArmPlugged && leftArm.GetControl())
+            if (isFirstArmPlugged && leftArm.IsControlling())
             {
                 if (counter++ > waitToPlugOut)
                 {
@@ -109,7 +109,7 @@ public class SwitchController : MonoBehaviour
                 }
             }
             // If right hand must come out
-            if (isSecondArmPlugged && rightArm.GetControl())
+            if (isSecondArmPlugged && rightArm.IsControlling())
             {
                 if (counter++ > waitToPlugOut)
                 {
@@ -121,8 +121,8 @@ public class SwitchController : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.Q))
         {
             counter = 0;
-            if ((isFirstArmPlugged && leftArm.GetControl()) ||
-                (isSecondArmPlugged && rightArm.GetControl()))
+            if ((isFirstArmPlugged && leftArm.IsControlling()) ||
+                (isSecondArmPlugged && rightArm.IsControlling()))
             {
                 isPlugOutEnabled = true;
             }
