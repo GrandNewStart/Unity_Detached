@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UIController: MonoBehaviour
+public class MenuController
 {
     public List<Menu> items;
     public GameObject arrow;
     public AudioSource click;
     public AudioSource page;
+    private MenuInterface menuAction;
     private int index = 0;
     private int max = 0;
     private bool isEnabled = false;
@@ -17,23 +18,40 @@ public class UIController: MonoBehaviour
     public enum Orientation { horizontal, vertical }
     private Orientation orientation = Orientation.vertical;
 
-    private void Start()
+    public MenuController(
+        Orientation orientation,
+        Style style,
+        List<Menu> items,
+        AudioSource click,
+        AudioSource page,
+        MenuInterface menuAction)
+    {
+        this.orientation = orientation;
+        this.style = style;
+        this.items = items;
+        this.click = click;
+        this.page = page;
+        this.menuAction = menuAction;
+        max = items.Count - 1;
+        InitAudioAttributes();
+    }
+
+    private void InitAudioAttributes()
     {
         click.playOnAwake = false;
         click.loop = false;
         page.playOnAwake = false;
         page.loop = false;
-        max = items.Count - 1;
-        HideMenu(isVisible);
     }
 
-    private void Update()
+    public void ControlUI()
     {
         if (isVisible)
         {
             if (isEnabled)
             {
                 SelectMenu();
+                EnterMenu();
             }
         }
     }
@@ -54,11 +72,20 @@ public class UIController: MonoBehaviour
         }
     }
 
+    private void EnterMenu()
+    {
+        if (Input.GetKeyDown(KeyCode.Return) ||
+            Input.GetKeyDown(KeyCode.Space))
+        {
+            menuAction.OnMenuSelected(index);
+        }
+    }
+
     private void MoveIndex(int dir)
     {
         if (arrow != null)
         {
-            if (dir == 1)
+            if (dir == -1)
             {
                 if (index >= max)
                 {
@@ -69,7 +96,7 @@ public class UIController: MonoBehaviour
                     index++;
                 }
             }
-            if (dir == -1)
+            if (dir == 1)
             {
                 if (index <= 0)
                 {
@@ -97,14 +124,16 @@ public class UIController: MonoBehaviour
         switch (orientation)
         {
             case Orientation.vertical:
-                if (Input.GetButtonDown("up"))
+                if (Input.GetKeyDown(KeyCode.UpArrow) ||
+                    Input.GetKeyDown(KeyCode.W))
                 {
                     MoveIndex(1);
                     MoveArrow();
                     PlayClickSound();
                 }
 
-                if (Input.GetButtonDown("down"))
+                if (Input.GetKeyDown(KeyCode.DownArrow) ||
+                    Input.GetKeyDown(KeyCode.S))
                 {
                     MoveIndex(-1);
                     MoveArrow();
@@ -112,13 +141,15 @@ public class UIController: MonoBehaviour
                 }
                 break;
             case Orientation.horizontal:
-                if (Input.GetButtonDown("left"))
+                if (Input.GetKeyDown(KeyCode.LeftArrow) ||
+                    Input.GetKeyDown(KeyCode.A))
                 {
                     MoveIndex(-1);
                     MoveArrow();
                     PlayClickSound();
                 }
-                if (Input.GetButtonDown("right"))
+                if (Input.GetKeyDown(KeyCode.RightArrow) ||
+                    Input.GetKeyDown(KeyCode.D))
                 {
                     MoveIndex(1);
                     MoveArrow();
@@ -133,7 +164,7 @@ public class UIController: MonoBehaviour
         Menu menu = items[index];
         Vector3 position = menu.GetPosition();
         Vector3 size = menu.GetSprite().size;
-        position.x += (size.x / 2 + 10);
+        position.x += size.x / 2;
         arrow.transform.position = position;
     }
 
@@ -142,14 +173,16 @@ public class UIController: MonoBehaviour
         switch (orientation)
         {
             case Orientation.vertical:
-                if (Input.GetButtonDown("up"))
+                if (Input.GetKeyDown(KeyCode.UpArrow) ||
+                    Input.GetKeyDown(KeyCode.W))
                 {
                     MoveIndex(1);
                     AdjustItemSize();
                     PlayClickSound();
                 }
 
-                if (Input.GetButtonDown("down"))
+                if (Input.GetKeyDown(KeyCode.DownArrow) ||
+                    Input.GetKeyDown(KeyCode.S))
                 {
                     MoveIndex(-1);
                     AdjustItemSize();
@@ -157,13 +190,15 @@ public class UIController: MonoBehaviour
                 }
                 break;
             case Orientation.horizontal:
-                if (Input.GetButtonDown("left"))
+                if (Input.GetKeyDown(KeyCode.LeftArrow) ||
+                    Input.GetKeyDown(KeyCode.A))
                 {
                     MoveIndex(-1);
                     AdjustItemSize();
                     PlayClickSound();
                 }
-                if (Input.GetButtonDown("right"))
+                if (Input.GetKeyDown(KeyCode.RightArrow) ||
+                    Input.GetKeyDown(KeyCode.D))
                 {
                     MoveIndex(1);
                     AdjustItemSize();
@@ -188,14 +223,16 @@ public class UIController: MonoBehaviour
         switch (orientation)
         {
             case Orientation.vertical:
-                if (Input.GetButtonDown("up"))
+                if (Input.GetKeyDown(KeyCode.UpArrow) ||
+                    Input.GetKeyDown(KeyCode.W))
                 {
                     MoveIndex(1);
                     AdjustItemBrightness();
                     PlayClickSound();
                 }
 
-                if (Input.GetButtonDown("down"))
+                if (Input.GetKeyDown(KeyCode.DownArrow) ||
+                    Input.GetKeyDown(KeyCode.S))
                 {
                     MoveIndex(-1);
                     AdjustItemBrightness();
@@ -203,13 +240,15 @@ public class UIController: MonoBehaviour
                 }
                 break;
             case Orientation.horizontal:
-                if (Input.GetButtonDown("left"))
+                if (Input.GetKeyDown(KeyCode.LeftArrow) ||
+                    Input.GetKeyDown(KeyCode.A))
                 {
                     MoveIndex(-1);
                     AdjustItemBrightness();
                     PlayClickSound();
                 }
-                if (Input.GetButtonDown("right"))
+                if (Input.GetKeyDown(KeyCode.RightArrow) ||
+                    Input.GetKeyDown(KeyCode.D))
                 {
                     MoveIndex(1);
                     AdjustItemBrightness();
@@ -248,6 +287,33 @@ public class UIController: MonoBehaviour
         }
     }
 
+    public void SetDefault()
+    {
+        index = 0;
+        switch (style)
+        {
+            case Style.arrow:
+                MoveArrow();
+                break;
+            case Style.brightness:
+                AdjustItemSize();
+                break;
+            case Style.size:
+                AdjustItemSize();
+                break;
+        }
+    }
+
+    public void SetVisible(bool isVisible)
+    {
+        this.isVisible = isVisible;
+    }
+
+    public void SetEnabled(bool isEnabled)
+    {
+        this.isEnabled = isEnabled;
+    }
+
     private void PlayClickSound()
     {
         click.Play();
@@ -257,34 +323,4 @@ public class UIController: MonoBehaviour
     {
         page.Play();
     }
-}
-
-public class Menu
-{
-    private int             id;
-    private string          name;
-    private GameObject      icon;
-    private SpriteRenderer  sprite;
-
-    public Menu(int id, string name, GameObject icon) {
-        this.id = id;
-        this.name = name;
-        this.icon = icon;
-        sprite = icon.GetComponent<SpriteRenderer>();
-    }
-
-    public string GetName()
-    { return name; }
-
-    public GameObject GetObject()
-    { return icon; }
-
-    public Transform GetTransform()
-    { return icon.transform; }
-
-    public Vector3 GetPosition()
-    { return icon.transform.position; }
-
-    public SpriteRenderer GetSprite()
-    { return sprite; }
 }

@@ -37,7 +37,7 @@ public class Checkpoint : MonoBehaviour
             SaveSystem.SaveGame(data);
             GameManager.currentCheckpoint = index;
             gameManager.ShowCube(2);
-            gameManager.RetrieveHands();
+            gameManager.RetrieveArms();
             gameObject.SetActive(false);
         }
     }

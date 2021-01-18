@@ -59,7 +59,6 @@ public class PhysicalObject : MonoBehaviour
 
     protected virtual void OnDestruction() {}
     protected virtual void OnRestoration() {}
-
     public virtual void OnPause() {}
     public virtual void OnResume() {}
 

@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public partial class StageManager01 : GameManager
@@ -38,11 +37,10 @@ public partial class StageManager01 : GameManager
         InitTutorials();
     }
 
-    protected override void Start()
+    protected override void OnStageStarted()
     {
-        base.Start();
+        base.OnStageStarted();
         CheckStartPosition();
-        DisablePastCheckpoints();
     }
 
     protected override void Update()
