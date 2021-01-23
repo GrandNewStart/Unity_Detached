@@ -41,14 +41,6 @@ public partial class PlayerController
 
         while (state == State.charge && !isDestroyed)
         {
-            //if (chargeSound.pitch < 2)
-            //{
-            //    chargeSound.pitch *= 1.01f;
-            //}
-            //else
-            //{
-            //    chargeSound.pitch = 2;
-            //}
             yield return null;
         }
 

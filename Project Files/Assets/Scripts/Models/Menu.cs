@@ -15,6 +15,9 @@ public class Menu
         sprite = icon.GetComponent<SpriteRenderer>();
     }
 
+    public int GetId()
+    { return id; }
+    
     public string GetName()
     { return name; }
 
@@ -33,5 +36,5 @@ public class Menu
 
 public interface MenuInterface
 {
-    void OnMenuSelected(int index);
+    void OnMenuSelected(int id);
 }

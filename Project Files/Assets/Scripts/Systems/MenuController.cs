@@ -5,6 +5,7 @@ using UnityEngine;
 public class MenuController
 {
     public List<Menu> items;
+    public GameObject menuObject;
     public GameObject arrow;
     public AudioSource click;
     public AudioSource page;
@@ -13,6 +14,7 @@ public class MenuController
     private int max = 0;
     private bool isEnabled = false;
     private bool isVisible = false;
+    private List<Vector3> scales;
     public enum Style { arrow, size, brightness }
     private Style style = Style.arrow;
     public enum Orientation { horizontal, vertical }
@@ -21,6 +23,7 @@ public class MenuController
     public MenuController(
         Orientation orientation,
         Style style,
+        GameObject menuObject,
         List<Menu> items,
         AudioSource click,
         AudioSource page,
@@ -28,12 +31,19 @@ public class MenuController
     {
         this.orientation = orientation;
         this.style = style;
+        this.menuObject = menuObject;
         this.items = items;
         this.click = click;
         this.page = page;
         this.menuAction = menuAction;
         max = items.Count - 1;
         InitAudioAttributes();
+
+        scales = new List<Vector3>();
+        foreach (Menu item in items)
+        {
+            scales.Add(item.GetObject().transform.localScale);
+        }
     }
 
     private void InitAudioAttributes()
@@ -44,7 +54,7 @@ public class MenuController
         page.loop = false;
     }
 
-    public void ControlUI()
+    public void ControlMenu()
     {
         if (isVisible)
         {
@@ -58,64 +68,60 @@ public class MenuController
 
     private void SelectMenu()
     {
-        switch (style)
+        if (items.Count > 0)
         {
-            case Style.arrow:
-                SelectByArrow();
-                break;
-            case Style.size:
-                SelectBySize();
-                break;
-            case Style.brightness:
-                SelectByBrightness();
-                break;
+            switch (style)
+            {
+                case Style.arrow:
+                    SelectByArrow();
+                    break;
+                case Style.size:
+                    SelectBySize();
+                    break;
+                case Style.brightness:
+                    SelectByBrightness();
+                    break;
+            }
         }
     }
 
     private void EnterMenu()
     {
-        if (Input.GetKeyDown(KeyCode.Return) ||
-            Input.GetKeyDown(KeyCode.Space))
+        if (items.Count > 0)
         {
-            menuAction.OnMenuSelected(index);
+            if (Input.GetKeyDown(KeyCode.Return) ||
+            Input.GetKeyDown(KeyCode.Space))
+            {
+                int id = items[index].GetId();
+                menuAction.OnMenuSelected(id);
+                PlayPageSound();
+            }
         }
     }
 
     private void MoveIndex(int dir)
     {
-        if (arrow != null)
+        if (dir == -1)
         {
-            if (dir == -1)
+            if (index >= max)
             {
-                if (index >= max)
-                {
-                    index = 0;
-                }
-                else
-                {
-                    index++;
-                }
+                index = 0;
             }
-            if (dir == 1)
+            else
             {
-                if (index <= 0)
-                {
-                    index = max;
-                }
-                else
-                {
-                    index--;
-                }
+                index++;
             }
-
         }
-    }
-
-    private void HideMenu(bool visible)
-    {
-        foreach (Menu item in items)
+        if (dir == 1)
         {
-            item.GetObject().SetActive(visible);
+            if (index <= 0)
+            {
+                index = max;
+            }
+            else
+            {
+                index--;
+            }
         }
     }
 
@@ -161,11 +167,27 @@ public class MenuController
 
     private void MoveArrow()
     {
-        Menu menu = items[index];
-        Vector3 position = menu.GetPosition();
-        Vector3 size = menu.GetSprite().size;
-        position.x += size.x / 2;
-        arrow.transform.position = position;
+        if (arrow != null)
+        {
+            Menu menu = items[index];
+            Vector3 position = menu.GetPosition();
+            Vector3 size = menu.GetSprite().size;
+            Vector3 scale = menu.GetObject().transform.localScale;
+            size.x *= scale.x;
+            size.y *= scale.y;
+            size.z *= scale.z;
+            Vector3 arrowScale = arrow.transform.localScale;
+            Vector3 arrowSize = arrow.GetComponent<SpriteRenderer>().size;
+            arrowSize.x *= arrowScale.x;
+            arrowSize.y *= arrowScale.y;
+            arrowSize.z *= arrowScale.z;
+            position.x += size.x/2 + arrowSize.x;
+            arrow.transform.position = position;
+        }
+        else
+        {
+            Debug.LogError("ARROW IS NOT ALLOCATED!");
+        }
     }
 
     private void SelectBySize()
@@ -210,9 +232,9 @@ public class MenuController
 
     private void AdjustItemSize()
     {
-        foreach (Menu item in items)
+        for (int i = 0; i < items.Count; i++)
         {
-            item.GetTransform().localScale = Vector3.one;
+            items[i].GetTransform().localScale = scales[i];
         }
         Menu menu = items[index];
         menu.GetObject().transform.localScale *= 2;
@@ -289,24 +311,32 @@ public class MenuController
 
     public void SetDefault()
     {
-        index = 0;
-        switch (style)
+        if (items.Count > 0)
         {
-            case Style.arrow:
-                MoveArrow();
-                break;
-            case Style.brightness:
-                AdjustItemSize();
-                break;
-            case Style.size:
-                AdjustItemSize();
-                break;
+            index = 0;
+            switch (style)
+            {
+                case Style.arrow:
+                    MoveArrow();
+                    break;
+                case Style.brightness:
+                    AdjustItemSize();
+                    break;
+                case Style.size:
+                    AdjustItemSize();
+                    break;
+            }
         }
     }
 
     public void SetVisible(bool isVisible)
     {
         this.isVisible = isVisible;
+        if (menuObject != null)
+        {
+            menuObject.SetActive(isVisible);
+        }
+        SetDefault();
     }
 
     public void SetEnabled(bool isEnabled)
@@ -316,11 +346,17 @@ public class MenuController
 
     private void PlayClickSound()
     {
-        click.Play();
+        if (click != null)
+        {
+            click.Play();
+        }
     }
 
     private void PlayPageSound()
     {
-        page.Play();
+        if (page != null)
+        {
+            page.Play();
+        }
     }
 }

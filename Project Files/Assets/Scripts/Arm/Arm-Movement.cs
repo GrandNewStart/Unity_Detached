@@ -30,9 +30,6 @@ public partial class ArmController
 
     private void Move()
     {
-        MoveCamera();
-        AdjustCameraSize();
-
         float horizontal = Input.GetAxis("Horizontal") * moveSpeed * Time.deltaTime;
         float vertical = rigidbody.velocity.y;
 
@@ -84,21 +81,6 @@ public partial class ArmController
                 rigidbody.velocity = new Vector3(horizontal, vertical, 0);
             }
         }
-    }
-
-    private void MoveCamera()
-    {
-        Vector3 cameraPosition = transform.position;
-        cameraPosition.z = -1;
-        cameraPosition.y += 7;
-        mainCamera.transform.position = cameraPosition;
-    }
-
-    private void AdjustCameraSize()
-    {
-        //mainCamera.orthographicSize = 85 + 70 * cameraPosition.y / 73;
-        //if (mainCamera.orthographicSize > 25) mainCamera.orthographicSize = 25; 
-        //if (mainCamera.orthographicSize < 13) mainCamera.orthographicSize = 14;
     }
 
 }

@@ -14,6 +14,7 @@ public partial class GameManager : MenuInterface
         pauseUI = new MenuController(
             MenuController.Orientation.vertical,
             MenuController.Style.arrow,
+            pauseMenu,
             items,
             clickSound,
             pageSound,
@@ -23,19 +24,20 @@ public partial class GameManager : MenuInterface
 
     private void ShowPauseMenu()
     {
-        pauseMenu.SetActive(true);
+        //pauseMenu.SetActive(true);
         pauseUI.SetVisible(true);
         pauseUI.SetEnabled(true);
     }
 
     private void HidePauseMenu()
     {
-        pauseMenu.SetActive(false);
+        //pauseMenu.SetActive(false);
         pauseUI.SetVisible(false);
         pauseUI.SetEnabled(false);
         pauseUI.SetDefault();
     }
 
+    // Overrided from MenuInterface
     public void OnMenuSelected(int index)
     {
         switch (index)

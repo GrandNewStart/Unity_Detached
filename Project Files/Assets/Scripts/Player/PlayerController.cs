@@ -4,7 +4,6 @@ using UnityEngine;
 public partial class PlayerController : PhysicalObject
 {
     [Header("Movement Attributes")]
-    public  Camera      mainCamera;
     private Rigidbody2D rigidBody;
     public  GameObject  normal;
     public  float       moveSpeed;
@@ -29,7 +28,6 @@ public partial class PlayerController : PhysicalObject
     private bool            isSecondArmRetrieving;
     private bool            isFirstArmOut;
     private bool            isSecondArmOut;
-    private bool            controlShiftEnabled;
 
     [Header("Ground Check Attributes")]
     public GameObject   groundCheck;

@@ -4,15 +4,17 @@ using UnityEngine;
 public partial class GameManager : MonoBehaviour
 {
     public static bool      isLoadingSaveData = false;
-    public const int        INFINITE = 0;
-    public const int        PLAYER = 0;
-    public const int        FIRST_ARM = 1;
-    public const int        SECOND_ARM = 2;
-    public const int        UI = 3;
-    public const int        DISABLED = -1;
     public static int       stage;
     public static int       enabledArms;
     public static int       currentCheckpoint;
+
+    public const int        INFINITE    = 0;
+    public const int        PLAYER      = 0;
+    public const int        FIRST_ARM   = 1;
+    public const int        SECOND_ARM  = 2;
+    public const int        UI          = 3;
+    public const int        DISABLED    = -1;
+
     private int             controlIndex = 0;
     private int             tempControlIndex = 0;
     public static           Vector3 position;
@@ -44,13 +46,13 @@ public partial class GameManager : MonoBehaviour
     public GameObject   text_continue;
 
     [Header("Pause Menu")]
-    private MenuController    pauseUI;
-    public GameObject       pauseMenu;
-    public GameObject       indicator;
-    public GameObject       resumeMenu;
-    public GameObject       settingsMenu;
-    public GameObject       quitMenu;
-    private bool            pauseMenuEnabled = true;
+    private MenuController      pauseUI;
+    public GameObject           pauseMenu;
+    public GameObject           indicator;
+    public GameObject           resumeMenu;
+    public GameObject           settingsMenu;
+    public GameObject           quitMenu;
+    private bool                pauseMenuEnabled = true;
 
     protected virtual void Start()
     {
@@ -63,6 +65,11 @@ public partial class GameManager : MonoBehaviour
         RotateCube();
         DetectDeath();
         Control();
+    }
+
+    private void LateUpdate()
+    {
+        MoveCamera();
     }
 
     protected virtual void OnStageStarted()
@@ -80,6 +87,7 @@ public partial class GameManager : MonoBehaviour
         }
     }
 
+    // Called both in Pause & ForcePause
     protected virtual void OnGamePaused()
     {
         DisableControl();
@@ -90,6 +98,8 @@ public partial class GameManager : MonoBehaviour
         firstArm.OnPause();
         secondArm.OnPause();
     }
+
+    // Called both in Resume & ForceResume
     protected virtual void OnGameResumed()
     {
         EnableControl();
@@ -101,6 +111,7 @@ public partial class GameManager : MonoBehaviour
         secondArm.OnResume();
     }
 
+    // Pause game with pause menu
     public void PauseGame()
     {
         tempControlIndex = controlIndex;
@@ -109,18 +120,21 @@ public partial class GameManager : MonoBehaviour
         ShowPauseMenu();
     }
 
+    // Resume game from pause menu
     private void ResumeGame()
     {
         OnGameResumed();
         HidePauseMenu();
     }
 
+    // Pause game without pause menu. Force freeze controls
     public void ForcePauseGame()
     {
         OnGamePaused();
         EnablePause(false);
     }
 
+    // Resume game from forced pause state
     public void ForceResumeGame()
     {
         OnGameResumed();

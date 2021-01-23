@@ -13,7 +13,6 @@ public partial class PlayerController
         isSecondArmRetrieving = false;
         isFirstArmOut = false;
         isSecondArmOut = false;
-        controlShiftEnabled = true;
     }
 
     private void Shoot()
@@ -45,8 +44,8 @@ public partial class PlayerController
             // Increase power until limit;
             if (power < powerLimit) power += powerIncrement;
             // Raise pitch according to power;
-            if (chargeSound.pitch < 2) chargeSound.pitch *= 1.01f;
-            else chargeSound.pitch = 2;
+            if (chargeSound.pitch < 1.5f) chargeSound.pitch *= 1.01f;
+            else chargeSound.pitch = 1.5f;
 
             for (int i = 0; i < 5; i++)
             {
@@ -123,16 +122,12 @@ public partial class PlayerController
 
     private void Retrieve()
     {
-        if (isFirstArmRetrieving) controlShiftEnabled = false;
-        if (isSecondArmRetrieving) controlShiftEnabled = false;
-
         // Retrieve
         if (Input.GetKeyDown(KeyCode.R)
             && isMovable
             && !isFirstArmRetrieving
             && !isSecondArmRetrieving)
         {
-            controlShiftEnabled = false;
             if (isFirstArmOut)
             {
                 isFirstArmRetrieving = true;
@@ -187,11 +182,6 @@ public partial class PlayerController
                 isSecondArmOut = false;
                 PlayRetrieveCompleteSound();
             }
-        }
-        
-        if (!isFirstArmOut && !isSecondArmOut)
-        {
-            controlShiftEnabled = true;
         }
     }
 

@@ -34,7 +34,7 @@ public partial class GameManager
                     ChangeControl();
                     break;
                 case UI:
-                    pauseUI.ControlUI();
+                    pauseUI.ControlMenu();
                     break;
                 default:
                     break;
@@ -80,5 +80,32 @@ public partial class GameManager
         if (controlIndex == DISABLED) return;
         tempControlIndex = controlIndex;
         controlIndex = DISABLED;
+    }
+
+    private void MoveCamera()
+    {
+        Vector3 cameraPos = new Vector3();
+        switch(controlIndex) 
+        {
+            case PLAYER:
+                cameraPos = player.transform.position;
+                cameraPos.z = -1;
+                cameraPos.y += 7;
+                camera.transform.position = cameraPos;
+                break;
+            case FIRST_ARM:
+                cameraPos = firstArm.transform.position;
+                cameraPos.z = -1;
+                cameraPos.y += 7;
+                camera.transform.position = cameraPos;
+                break;
+            case SECOND_ARM:
+                cameraPos = secondArm.transform.position;
+                cameraPos.z = -1;
+                cameraPos.y += 7;
+                camera.transform.position = cameraPos;
+                break;
+        }
+        
     }
 }
