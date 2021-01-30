@@ -57,7 +57,7 @@ public class TreadmillController : MonoBehaviour
         if (collision.collider.CompareTag("Player"))
         {
             PlayerController player = collision.gameObject.GetComponent<PlayerController>();
-            if (!player.GetOnTreadMill())
+            if (!player.IsOnTreadMill())
             {
                 player.SetOnTreadmill(true);
                 player.SetTreadmillVelocity(dir * speed);

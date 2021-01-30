@@ -89,7 +89,7 @@ public partial class StageManager01 : GameManager
         }
         else
         {
-            StartCoroutine(transition.TransitionOut(0, 0, () => { }));
+            StartCoroutine(transition.TransitionIn(0, 0, () => { }));
         }
         // After first arm achievement
         if (currentCheckpoint > 3)

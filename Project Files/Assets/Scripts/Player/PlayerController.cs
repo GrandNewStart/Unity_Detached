@@ -4,7 +4,6 @@ using UnityEngine;
 public partial class PlayerController : PhysicalObject
 {
     [Header("Movement Attributes")]
-    private Rigidbody2D rigidBody;
     public  GameObject  normal;
     public  float       moveSpeed;
     public  float       jumpHeight;
@@ -12,7 +11,7 @@ public partial class PlayerController : PhysicalObject
     private bool        isOnTreadmill;
     private bool        isGrounded;
     private bool        isMovable;
-    private bool        isControlling;
+    private bool        hasControl;
 
     [Header("Shoot Attributes")]
     public  ArmController   firstArm;
@@ -42,10 +41,11 @@ public partial class PlayerController : PhysicalObject
     private bool        isStateFixed;
 
     [Header("Destruction Attributes")]
-    public  GameObject  head;
-    public  GameObject  body;
-    public  GameObject  left_arm;
-    public  GameObject  right_arm;
+    public  CapsuleCollider2D   deathCollider;
+    public  GameObject          head;
+    public  GameObject          body;
+    public  GameObject          left_arm;
+    public  GameObject          right_arm;
 
     [Header("Sound Attributes")]
     public AudioSource  footStepSound;
@@ -78,6 +78,7 @@ public partial class PlayerController : PhysicalObject
     {
         base.Update();
         GroundCheck();
+        DeathCollisionCheck();
         AnimationControl();
         MoveOnTreadmill();
     }
@@ -98,17 +99,20 @@ public partial class PlayerController : PhysicalObject
         Rigidbody2D leftArmRB   = left_arm.GetComponent<Rigidbody2D>();
         Rigidbody2D rightArmRB  = right_arm.GetComponent<Rigidbody2D>();
 
-        Vector3 velocity    = rigidBody.velocity;
+        Vector3 velocity    = rigidbody.velocity;
         headRB.velocity     = velocity;
         bodyRB.velocity     = velocity;
         leftArmRB.velocity  = velocity;
         rightArmRB.velocity = velocity;
-        rigidBody.velocity  = Vector3.zero;
+
+        rigidbody.velocity  = Vector3.zero;
+        rigidbody.mass          = 0;
+        rigidbody.gravityScale  = 0;
 
         headRB      .AddForce(new Vector2(0.0f, 20.0f), ForceMode2D.Impulse);
         bodyRB      .AddForce(new Vector2(0.0f, 10.0f), ForceMode2D.Impulse);
-        leftArmRB   .AddForce(new Vector2(10.0f, 15.0f), ForceMode2D.Impulse);
-        rightArmRB  .AddForce(new Vector2(-10.0f, 15.0f), ForceMode2D.Impulse);
+        leftArmRB   .AddForce(new Vector2(-10.0f, 15.0f), ForceMode2D.Impulse);
+        rightArmRB  .AddForce(new Vector2(10.0f, 15.0f), ForceMode2D.Impulse);
         
         if (arms == 0)
         {
@@ -152,7 +156,9 @@ public partial class PlayerController : PhysicalObject
         left_arm.transform.parent   = destroyedSprite.transform;
         right_arm.transform.parent  = destroyedSprite.transform;
 
-        rigidBody.velocity = Vector3.zero;
+        rigidbody.velocity      = Vector3.zero;
+        rigidbody.gravityScale  = gravityScale;
+        rigidbody.mass          = mass;
 
         destroyedSprite.SetActive(false);
         firstArm.gameObject.SetActive(false);
@@ -213,7 +219,7 @@ public partial class PlayerController : PhysicalObject
 
     public int ChangeControl()
     {
-        if (isControlling)
+        if (hasControl)
         {
             if (isFirstArmOut) return GameManager.FIRST_ARM;
             if (isSecondArmOut) return GameManager.SECOND_ARM;
@@ -225,13 +231,22 @@ public partial class PlayerController : PhysicalObject
         return GameManager.PLAYER;
     }
 
+    private void DeathCollisionCheck()
+    {
+        if (isDestroyed) return;
+        if (deathCollider.IsTouchingLayers(LayerMask.GetMask("Ground")))
+        {
+            isDestroyed = true;
+        }
+    }
+
     private void OnDrawGizmos()
     { Gizmos.DrawWireCube(groundCheck.transform.position, new Vector2(2.2f * groundCheckWidth, 0.5f)); }
 
     public void SetTreadmillVelocity(float treadmillVelocity)
     { this.treadmillVelocity = treadmillVelocity; }
 
-    public bool GetOnTreadMill()
+    public bool IsOnTreadMill()
     { return isOnTreadmill; }
 
     public void SetOnTreadmill(bool isOnTreadmill)
@@ -247,10 +262,10 @@ public partial class PlayerController : PhysicalObject
     { return lastDir; }
 
     public bool HasControl()
-    { return isControlling; }
+    { return hasControl; }
 
     public void EnableControl(bool enabled)
-    { isControlling = enabled; }
+    { hasControl = enabled; }
 
     public bool IsLeftRetrieving()
     { return isFirstArmRetrieving; }

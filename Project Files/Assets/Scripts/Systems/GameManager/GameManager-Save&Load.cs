@@ -6,7 +6,7 @@ public partial class GameManager
 {
     protected void LoadNextStage()
     {
-        StartCoroutine(transition.TransitionIn(0, 0, () => {
+        StartCoroutine(transition.TransitionOut(0, 0, () => {
             StartCoroutine(LoadingRoutine());
         }));
     }
@@ -34,15 +34,20 @@ public partial class GameManager
         if (player.isDestroyed && !deathDetected)
         {
             deathDetected = true;
+            cameraTarget = player.transform;
+            if (!cameraMoving) StartCoroutine(MoveCamera());
+            DisableControl();
             EnablePause(false);
-            StartCoroutine(transition.TransitionIn(2, 2, () =>
+            StartCoroutine(transition.TransitionOut(2, 2, () =>
             {
                 player.RecoverObject();
                 LoadCheckpoint(currentCheckpoint);
-                StartCoroutine(transition.TransitionOut(0, 0, () =>
+                StartCoroutine(transition.TransitionIn(0, 0, () =>
                 {
                     HideCube();
                     ForceResumeGame();
+                    EnableControl();
+                    controlIndex = PLAYER;
                     deathDetected = false;
                 })
                 );

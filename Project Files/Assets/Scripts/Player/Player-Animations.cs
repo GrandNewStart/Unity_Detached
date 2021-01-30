@@ -15,6 +15,8 @@ public partial class PlayerController
 
     private void AnimationControl()
     {
+        if (isDestroyed) return;
+
         switch (state)
         {
             case State.idle:
@@ -44,7 +46,7 @@ public partial class PlayerController
                     if (arms == 1) animator.Play("Walk_Left_2");
                     if (arms == 0) animator.Play("Walk_Left_3");
                 }
-                if (!isControlling) state = State.idle;
+                if (!hasControl) state = State.idle;
                 break;
             case State.jump:
                 if (lastDir == 1)
@@ -59,7 +61,7 @@ public partial class PlayerController
                     if (arms == 1) animator.Play("Jump_Left_Air_2");
                     if (arms == 0) animator.Play("Jump_Left_Air_3");
                 }
-                if (!isControlling && groundCheck) state = State.idle;
+                if (!hasControl && groundCheck) state = State.idle;
                 break;
             case State.charge:
                 if (lastDir == 1)

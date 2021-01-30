@@ -86,8 +86,8 @@ public class BoxGenerator : MonoBehaviour
     private void OnDrawGizmos()
     {
         Vector2 origin  = fallCheck.transform.position;
-        Vector2 start   = new Vector2(origin.x - 1000 ,origin.y);
-        Vector2 end     = new Vector2(origin.x + 1000, origin.y);
+        Vector2 start   = new Vector2(origin.x - 100 ,origin.y);
+        Vector2 end     = new Vector2(origin.x + 100, origin.y);
         Gizmos.DrawLine(start, end);
     }
 }

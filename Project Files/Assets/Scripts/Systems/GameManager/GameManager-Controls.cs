@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public partial class GameManager
 {
@@ -23,15 +21,20 @@ public partial class GameManager
             {
                 case PLAYER:
                     player.ControlPlayer();
-                    ChangeControl();
+                    if (!player.isDestroyed) ChangeControl();
                     break;
                 case FIRST_ARM:
-                    firstArm.ControlArm();
-                    ChangeControl();
+                    if (!player.isDestroyed) {
+                        firstArm.ControlArm();
+                        ChangeControl();
+                    }
                     break;
                 case SECOND_ARM:
-                    secondArm.ControlArm();
-                    ChangeControl();
+                    if (!player.isDestroyed)
+                    {
+                        secondArm.ControlArm();
+                        ChangeControl();
+                    }
                     break;
                 case UI:
                     pauseUI.ControlMenu();
@@ -45,27 +48,35 @@ public partial class GameManager
 
     private void ChangeControl()
     {
+        if (cameraMoving) return;
+        if (player.IsLeftRetrieving()) return;
+        if (player.IsRightRetrieving()) return;
+
         if (Input.GetKeyDown(KeyCode.Tab))
         {
             controlIndex = player.ChangeControl();
             switch (controlIndex)
             {
                 case PLAYER:
+                    cameraTarget = player.transform;
                     player.EnableControl(true);
                     firstArm.EnableControl(false);
                     secondArm.EnableControl(false);
                     break;
                 case FIRST_ARM:
+                    cameraTarget = firstArm.transform;
                     player.EnableControl(false);
                     firstArm.EnableControl(true);
                     secondArm.EnableControl(false);
                     break;
                 case SECOND_ARM:
+                    cameraTarget = secondArm.transform;
                     player.EnableControl(false);
                     firstArm.EnableControl(false);
                     secondArm.EnableControl(true);
                     break;
             }
+            StartCoroutine(MoveCamera());
         }
     }
 
@@ -82,30 +93,4 @@ public partial class GameManager
         controlIndex = DISABLED;
     }
 
-    private void MoveCamera()
-    {
-        Vector3 cameraPos = new Vector3();
-        switch(controlIndex) 
-        {
-            case PLAYER:
-                cameraPos = player.transform.position;
-                cameraPos.z = -1;
-                cameraPos.y += 7;
-                camera.transform.position = cameraPos;
-                break;
-            case FIRST_ARM:
-                cameraPos = firstArm.transform.position;
-                cameraPos.z = -1;
-                cameraPos.y += 7;
-                camera.transform.position = cameraPos;
-                break;
-            case SECOND_ARM:
-                cameraPos = secondArm.transform.position;
-                cameraPos.z = -1;
-                cameraPos.y += 7;
-                camera.transform.position = cameraPos;
-                break;
-        }
-        
-    }
 }

@@ -16,7 +16,7 @@ public class Transition
         this.background = background;
     }
 
-    public IEnumerator TransitionIn(int secondsBefore, int secondsAfter, Action callback)
+    public IEnumerator TransitionOut(int secondsBefore, int secondsAfter, Action callback)
     {
         if (!isTransitionComplete) { yield return null; }
         yield return new WaitForSeconds(secondsBefore);
@@ -40,7 +40,7 @@ public class Transition
         isTransitionComplete = true;
     }
 
-    public IEnumerator TransitionOut(int secondsBefore, int secondsAfter, Action callback)
+    public IEnumerator TransitionIn(int secondsBefore, int secondsAfter, Action callback)
     {
         if (!isTransitionComplete) { yield return null; }
         yield return new WaitForSeconds(secondsBefore);

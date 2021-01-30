@@ -4,11 +4,10 @@ public partial class PlayerController
 {
     private void InitMovementAttributes()
     {
-        rigidBody = GetComponent<Rigidbody2D>();
         treadmillVelocity = 0;
         isOnTreadmill = false;
         isMovable = true;
-        isControlling = true;
+        hasControl = true;
     }
 
     private void GroundCheck()
@@ -54,12 +53,12 @@ public partial class PlayerController
             }
         }
 
-        float vertical = rigidBody.velocity.y;
+        float vertical = rigidbody.velocity.y;
 
         if (isOnTreadmill)
         {
             horizontal += treadmillVelocity * Time.deltaTime;
-            rigidBody.velocity = new Vector3(horizontal, vertical, 0.0f);
+            rigidbody.velocity = new Vector3(horizontal, vertical, 0.0f);
         }
         else
         {
@@ -67,7 +66,7 @@ public partial class PlayerController
             {
                 if (horizontal != 0)
                 {
-                    rigidBody.velocity = new Vector3(horizontal, vertical, 0.0f);
+                    rigidbody.velocity = new Vector3(horizontal, vertical, 0.0f);
                 }
                 if (state == State.walk)
                 {
@@ -81,7 +80,7 @@ public partial class PlayerController
 
     private void MoveOnTreadmill()
     {
-        if (!isControlling)
+        if (!hasControl)
         {
             float horizontal;
             float vertical = rigidbody.velocity.y;
@@ -104,9 +103,9 @@ public partial class PlayerController
                 Input.GetKeyDown(KeyCode.UpArrow))
             {
                 // Do jump by adjusting the rigidbody's velocity
-                float horizontal = rigidBody.velocity.x * Time.deltaTime;
-                float vertical = rigidBody.velocity.y + jumpHeight;
-                rigidBody.velocity = new Vector3(horizontal, vertical, 0.0f);
+                float horizontal = rigidbody.velocity.x * Time.deltaTime;
+                float vertical = rigidbody.velocity.y + jumpHeight;
+                rigidbody.velocity = new Vector3(horizontal, vertical, 0.0f);
                 // Play jump sound
                 jumpSound.Play();
             }

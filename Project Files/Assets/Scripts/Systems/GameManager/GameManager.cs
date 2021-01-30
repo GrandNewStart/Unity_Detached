@@ -7,6 +7,7 @@ public partial class GameManager : MonoBehaviour
     public static int       stage;
     public static int       enabledArms;
     public static int       currentCheckpoint;
+    public static Vector3   position;
 
     public const int        INFINITE    = 0;
     public const int        PLAYER      = 0;
@@ -15,37 +16,39 @@ public partial class GameManager : MonoBehaviour
     public const int        UI          = 3;
     public const int        DISABLED    = -1;
 
-    private int             controlIndex = 0;
-    private int             tempControlIndex = 0;
-    public static           Vector3 position;
+    private int             controlIndex        = 0;
+    private int             tempControlIndex    = 0;
+    private float           cameraSpeed         = 200;
     public bool             isPaused;
+    private bool            cameraMoving = false;
     public GameObject       cube;
     public PlayerController player;
     public ArmController    firstArm;
     public ArmController    secondArm;
     public new Camera       camera;
+    private Transform       cameraTarget;
     public AudioSource      pageSound;
     public AudioSource      clickSound;
     public AudioSource      bgm;
 
-    [Header("Checkpoints")]
+    //[Header("Checkpoints")]
     public List<Checkpoint> checkpoints;
     private bool            deathDetected = false;
 
-    [Header("Transition")]
+    //[Header("Transition")]
     protected Transition    transition;
     public GameObject       background;
 
-    [Header("Loading Screen")]
+    //[Header("Loading Screen")]
     public GameObject   loading_background;
     public GameObject   loading_art;
     public GameObject   loading_text;
 
-    [Header("Cut Scenes")]
+    //[Header("Cut Scenes")]
     protected CutScene  cutScene;
     public GameObject   text_continue;
 
-    [Header("Pause Menu")]
+    //[Header("Pause Menu")]
     private MenuController      pauseUI;
     public GameObject           pauseMenu;
     public GameObject           indicator;
@@ -69,7 +72,7 @@ public partial class GameManager : MonoBehaviour
 
     private void LateUpdate()
     {
-        MoveCamera();
+        UpdateCamera();
     }
 
     protected virtual void OnStageStarted()
@@ -78,6 +81,7 @@ public partial class GameManager : MonoBehaviour
         InitTransition();
         InitCutScene();
         InitCheckpoints();
+        InitCamera();
         DisablePastCheckpoints();
 
         if (isLoadingSaveData)

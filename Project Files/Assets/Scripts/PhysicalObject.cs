@@ -1,20 +1,21 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PhysicalObject : MonoBehaviour
 {
-    public Boolean          isDestroyed;
-    public GameObject       normalSprite;
-    public GameObject       destroyedSprite;
-    public new Rigidbody2D  rigidbody;
-    private bool            destructionDetected = false;
+    public Boolean              isDestroyed;
+    public GameObject           normalSprite;
+    public GameObject           destroyedSprite;
+    public new Rigidbody2D      rigidbody;
+    protected float             gravityScale;
+    protected float             mass;
     
     protected virtual void Start()
     {
         isDestroyed = false;
-        rigidbody   = GetComponent<Rigidbody2D>();
+        rigidbody       = GetComponent<Rigidbody2D>();
+        gravityScale    = rigidbody.gravityScale;
+        mass            = rigidbody.mass;
         normalSprite    .SetActive(true);
         destroyedSprite .SetActive(false);
     }

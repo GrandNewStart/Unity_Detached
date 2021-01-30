@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 510559149}
   - component: {fileID: 510559148}
   - component: {fileID: 510559147}
+  - component: {fileID: 900782542230378337}
   m_Layer: 10
   m_Name: Normal
   m_TagString: Player
@@ -133,6 +134,22 @@ CircleCollider2D:
   m_Offset: {x: 0, y: -7.28}
   serializedVersion: 2
   m_Radius: 3.6
+--- !u!70 &900782542230378337
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 510559145}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_Size: {x: 6, y: 18}
+  m_Direction: 0
 --- !u!1 &1801738212
 GameObject:
   m_ObjectHideFlags: 0
@@ -470,7 +487,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 6
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
@@ -1006,8 +1023,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4200882710565440738}
-  - component: {fileID: 4200882710565440737}
   - component: {fileID: 4200882710565440741}
+  - component: {fileID: 4645689379091801436}
   m_Layer: 10
   m_Name: Player
   m_TagString: Player
@@ -1034,7 +1051,50 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!50 &4200882710565440737
+--- !u!114 &4200882710565440741
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4200882710565440542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02ffb66acb27cce4a8f0b302415d5dc8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isDestroyed: 0
+  normalSprite: {fileID: 510559145}
+  destroyedSprite: {fileID: 1801738212}
+  rigidbody: {fileID: 0}
+  normal: {fileID: 510559145}
+  moveSpeed: 800
+  jumpHeight: 25
+  firstArm: {fileID: 0}
+  secondArm: {fileID: 0}
+  gauges:
+  - {fileID: 2904233772593377318}
+  - {fileID: 1298267383746588800}
+  - {fileID: 7090252993703238972}
+  - {fileID: 1753361217444107752}
+  - {fileID: 4690470376427979515}
+  powerLimit: 20
+  powerIncrement: 0.15
+  enabledArms: 0
+  groundCheck: {fileID: 4200882710150230876}
+  groundCheckWidth: 0.61
+  deathCollider: {fileID: 900782542230378337}
+  head: {fileID: 217572153747566742}
+  body: {fileID: 8494617191472200783}
+  left_arm: {fileID: 676597475124804034}
+  right_arm: {fileID: 6420234171398646050}
+  footStepSound: {fileID: 6653897967604766513}
+  jumpSound: {fileID: 872690372185157069}
+  chargeSound: {fileID: 5485869522369400654}
+  fireSound: {fileID: 7253087577830712953}
+  retrieveSound: {fileID: 4123990703494577846}
+  retrieveCompleteSound: {fileID: 8360109717520048548}
+--- !u!50 &4645689379091801436
 Rigidbody2D:
   serializedVersion: 4
   m_ObjectHideFlags: 0
@@ -1055,49 +1115,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
---- !u!114 &4200882710565440741
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4200882710565440542}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 02ffb66acb27cce4a8f0b302415d5dc8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isDestroyed: 0
-  normalSprite: {fileID: 510559145}
-  destroyedSprite: {fileID: 1801738212}
-  rigidbody: {fileID: 4200882710565440737}
-  mainCamera: {fileID: 0}
-  normal: {fileID: 510559145}
-  moveSpeed: 800
-  jumpHeight: 25
-  firstArm: {fileID: 0}
-  secondArm: {fileID: 0}
-  gauges:
-  - {fileID: 2904233772593377318}
-  - {fileID: 1298267383746588800}
-  - {fileID: 7090252993703238972}
-  - {fileID: 1753361217444107752}
-  - {fileID: 4690470376427979515}
-  powerLimit: 20
-  powerIncrement: 0.15
-  enabledArms: 0
-  groundCheck: {fileID: 4200882710150230876}
-  groundCheckWidth: 0.61
-  head: {fileID: 217572153747566742}
-  body: {fileID: 8494617191472200783}
-  left_arm: {fileID: 676597475124804034}
-  right_arm: {fileID: 6420234171398646050}
-  footStepSound: {fileID: 6653897967604766513}
-  jumpSound: {fileID: 872690372185157069}
-  chargeSound: {fileID: 5485869522369400654}
-  fireSound: {fileID: 7253087577830712953}
-  retrieveSound: {fileID: 4123990703494577846}
-  retrieveCompleteSound: {fileID: 8360109717520048548}
 --- !u!1 &4317557799566469745
 GameObject:
   m_ObjectHideFlags: 0
@@ -2068,7 +2085,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 6
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1

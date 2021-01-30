@@ -10,7 +10,8 @@ public class TestStageManager : GameManager
     protected override void Start()
     {
         base.Start();
-        StartCoroutine(transition.TransitionOut(0, 0, () => { }));
+        currentCheckpoint = 0;
+        StartCoroutine(transition.TransitionIn(0, 0, () => { }));
     }
 
 }

@@ -13,12 +13,13 @@ public class CrusherController : MonoBehaviour
     public GameObject leftArm;
     public GameObject rightArm;
 
+    public AudioSource crushSound;
+
     private Vector2 crusherPosition;
     private Vector2 origin;
 
     private bool isActivated;
     private bool isGoingUp;
-
 
     private void Start()
     {
@@ -26,6 +27,9 @@ public class CrusherController : MonoBehaviour
         origin          = crusherPosition;
         isGoingUp       = false;
         isActivated     = true;
+
+        crushSound.loop         = false;
+        crushSound.playOnAwake  = false;
     }
 
     private void Update()
@@ -60,6 +64,7 @@ public class CrusherController : MonoBehaviour
                 }
                 else
                 {
+                    crushSound.Play();
                     isGoingUp = true;
                 }
             }
