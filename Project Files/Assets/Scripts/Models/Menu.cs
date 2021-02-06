@@ -1,37 +1,19 @@
 ﻿using UnityEngine;
+using TMPro;
 
 public class Menu
 {
-    private int id;
-    private string name;
-    private GameObject icon;
-    private SpriteRenderer sprite;
+    public int id;
+    public TextMeshProUGUI text;
+    public string name;
 
-    public Menu(int id, string name, GameObject icon)
+    public Menu(int id, TextMeshProUGUI text, string name)
     {
         this.id = id;
+        this.text = text;
         this.name = name;
-        this.icon = icon;
-        sprite = icon.GetComponent<SpriteRenderer>();
     }
 
-    public int GetId()
-    { return id; }
-    
-    public string GetName()
-    { return name; }
-
-    public GameObject GetObject()
-    { return icon; }
-
-    public Transform GetTransform()
-    { return icon.transform; }
-
-    public Vector3 GetPosition()
-    { return icon.transform.position; }
-
-    public SpriteRenderer GetSprite()
-    { return sprite; }
 }
 
 public interface MenuInterface

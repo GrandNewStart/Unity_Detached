@@ -7,21 +7,16 @@ public partial class HomeController : MenuInterface
     {
         menuIndex = MENU_HOME;
         List<Menu> menus = new List<Menu>();
-        menus.Add(new Menu(0, "New Game", newGame));
-        menus.Add(new Menu(1, "Load Game", loadGame));
-        menus.Add(new Menu(2, "Settings", settings));
-        menus.Add(new Menu(3, "Quit", quit));
-        menuController = new MenuController(
-            MenuController.Orientation.vertical,
-            MenuController.Style.arrow,
-            null,
-            menus,
-            click,
-            page,
-            this);
-        menuController.arrow = indicator;
-        menuController.SetVisible(true);
+        menus.Add(new Menu(0, loadGame, "load game"));
+        menus.Add(new Menu(1, newGame, "new game"));
+        menus.Add(new Menu(2, settings, "settings"));
+        menus.Add(new Menu(3, quit, "quit"));
+        menuController = new MenuController(null, menus, this);
+        menuController.SetNextSound(click);
+        menuController.SetOkSound(page);
+        menuController.SetOrientation(MenuController.Orientation.vertical);
         menuController.SetEnabled(true);
+        menuController.SetVisible(true);
     }
 
     // Overrided from MenuInterface
@@ -31,10 +26,10 @@ public partial class HomeController : MenuInterface
         switch (index)
         {
             case 0:
-                NewGame();
+                LoadGame();
                 break;
             case 1:
-                LoadGame();
+                NewGame();
                 break;
             case 2:
                 ShowMenu3();

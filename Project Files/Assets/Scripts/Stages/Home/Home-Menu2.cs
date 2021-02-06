@@ -7,22 +7,19 @@ public partial class HomeController
     private void InitMenu2()
     {
         List<Menu> menus = new List<Menu>();
-        menus.Add(new Menu(6, "Yes", menu_2_yes));
-        menus.Add(new Menu(7, "No", menu_2_no));
-        menu_2_controller = new MenuController(
-            MenuController.Orientation.horizontal,
-            MenuController.Style.size,
-            menu_2,
-            menus,
-            click,
-            page,
-            this);
+        menus.Add(new Menu(6, menu_2_yes, "yes"));
+        menus.Add(new Menu(7, menu_2_no, "no"));
+        menu_2_controller = new MenuController(menu_2_screen, menus, this);
+        menu_2_controller.SetNextSound(click);
+        menu_2_controller.SetOkSound(page);
+        menu_2_controller.SetOrientation(MenuController.Orientation.horizontal);
     }
 
     private void ShowMenu2()
     {
         menu_2_controller.SetVisible(true);
         menu_2_controller.SetEnabled(true);
+        menu_2_controller.SetIndex(1);
         menuIndex = MENU_2;
     }
 

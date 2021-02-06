@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-
+using TMPro;
 public partial class GameManager : MonoBehaviour
 {
     public static bool      isLoadingSaveData = false;
@@ -49,13 +49,13 @@ public partial class GameManager : MonoBehaviour
     public GameObject   text_continue;
 
     //[Header("Pause Menu")]
-    private MenuController      pauseUI;
-    public GameObject           pauseMenu;
-    public GameObject           indicator;
-    public GameObject           resumeMenu;
-    public GameObject           settingsMenu;
-    public GameObject           quitMenu;
-    private bool                pauseMenuEnabled = true;
+    private MenuController pauseUI;
+    public GameObject       pauseMenu;
+    public TextMeshProUGUI  resume;
+    public TextMeshProUGUI  settings;
+    public TextMeshProUGUI  tutorials;
+    public TextMeshProUGUI  quit;
+    private bool            pauseMenuEnabled = true;
 
     protected virtual void Start()
     {

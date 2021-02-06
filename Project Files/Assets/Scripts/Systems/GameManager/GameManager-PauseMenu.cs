@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -7,31 +6,25 @@ public partial class GameManager : MenuInterface
 {
     private void InitPauseMenu()
     {
-        List<Menu> items = new List<Menu>();
-        items.Add(new Menu(0, "resume", resumeMenu));
-        items.Add(new Menu(1, "settings", settingsMenu));
-        items.Add(new Menu(2, "quit", quitMenu));
-        pauseUI = new MenuController(
-            MenuController.Orientation.vertical,
-            MenuController.Style.arrow,
-            pauseMenu,
-            items,
-            clickSound,
-            pageSound,
-            this);
-        pauseUI.arrow = indicator;
+        List<Menu> menus = new List<Menu>();
+        menus.Add(new Menu(0, resume, "resume"));
+        menus.Add(new Menu(1, settings, "settings"));
+        menus.Add(new Menu(2, tutorials, "tutorials"));
+        menus.Add(new Menu(3, quit, "quit"));
+        pauseUI = new MenuController(pauseMenu, menus, this);
+        pauseUI.SetOkSound(pageSound);
+        pauseUI.SetNextSound(clickSound);
+        pauseUI.SetOrientation(MenuController.Orientation.vertical);
     }
 
     private void ShowPauseMenu()
     {
-        //pauseMenu.SetActive(true);
         pauseUI.SetVisible(true);
         pauseUI.SetEnabled(true);
     }
 
     private void HidePauseMenu()
     {
-        //pauseMenu.SetActive(false);
         pauseUI.SetVisible(false);
         pauseUI.SetEnabled(false);
         pauseUI.SetDefault();
@@ -49,6 +42,9 @@ public partial class GameManager : MenuInterface
                 ShowSettings();
                 break;
             case 2:
+                ShowTutorials();
+                break;
+            case 3:
                 QuitGame();
                 break;
             default:
@@ -57,7 +53,12 @@ public partial class GameManager : MenuInterface
     }
     private void ShowSettings()
     {
-        Debug.Log("설정");
+        Debug.Log("SETTINGS");
+    }
+
+    private void ShowTutorials()
+    {
+        Debug.Log("TUTORIALS");
     }
 
     private void QuitGame()

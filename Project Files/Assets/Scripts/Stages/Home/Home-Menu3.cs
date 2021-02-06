@@ -4,15 +4,9 @@ public partial class HomeController
 {
     private void InitMenu3()
     {
-        List<Menu> menus = new List<Menu>();
-        menu_3_controller = new MenuController(
-            MenuController.Orientation.horizontal,
-            MenuController.Style.size,
-            menu_3,
-            menus,
-            click,
-            page,
-            this);
+        menu_3_controller = new MenuController(menu_3_screen, null, this);
+        menu_3_controller.SetNextSound(click);
+        menu_3_controller.SetOkSound(page);
     }
 
     private void ShowMenu3()
