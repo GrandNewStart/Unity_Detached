@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public partial class StageManager01 : GameManager
 {
@@ -9,10 +11,6 @@ public partial class StageManager01 : GameManager
     public GameObject           truck;
 
     [Header("Cut Scenes")]
-    public GameObject           cutScenes_1_Background;
-    public GameObject           cutScenes_2_Background;
-    public GameObject           cutScenes_3_Background;
-    public GameObject           cutScenes_4_Background;
     public List<GameObject>     cutScenes_1;
     public List<GameObject>     cutScenes_2;
     public List<GameObject>     cutScenes_3;
@@ -21,15 +19,15 @@ public partial class StageManager01 : GameManager
     private bool cutScene_4_started = false;
 
     [Header("Tutorial Texts")]
-    public GameObject text_jump;
-    public GameObject jump_end_point;
-    public GameObject tutorial_1;
-    public GameObject tutorial_2;
-    public GameObject tutorial_3;
-    private bool jump_done = false;
+    public TextMeshProUGUI  text_jump;
+    public GameObject       jump_end_point;
+    public GameObject       tutorial_background;
+    public Image            tutorial_1;
+    public Image            tutorial_2;
+    public Image            tutorial_3;
+    private bool            jump_done = false;
 
     [Header("ETC")]
-    public TreadmillController  treadmill;
     public DoorSwitchController firstSwitch;
 
     protected void Awake()
@@ -53,13 +51,11 @@ public partial class StageManager01 : GameManager
     protected override void OnGamePaused()
     {
         base.OnGamePaused();
-        treadmill.MuteSound(true);
     }
 
     protected override void OnGameResumed()
     {
         base.OnGameResumed();
-        treadmill.MuteSound(false);
     }
 
     protected override void LoadCheckpoint(int index)
@@ -82,14 +78,14 @@ public partial class StageManager01 : GameManager
     private void CheckStartPosition()
     {
         PlayBGM();
-        // New game -> Play cut scene
-        if (!isLoadingSaveData)
+        if (isLoadingSaveData)
         {
-            PlayCutScene1();
+            StartCoroutine(transition.SceneFadeIn(0, 0, null));
         }
         else
         {
-            StartCoroutine(transition.TransitionIn(0, 0, () => { }));
+            // New game -> Play cut scene
+            PlayCutScene1();
         }
         // After first arm achievement
         if (currentCheckpoint > 3)
@@ -106,8 +102,8 @@ public partial class StageManager01 : GameManager
     
     private void DetectEventTriggers()
     {
-        bool arm_1_achieved = Physics2D.OverlapCircle(arm_1.transform.position, 2, LayerMask.GetMask("Player"));
-        bool arm_2_achieved = Physics2D.OverlapCircle(arm_2.transform.position, 2, LayerMask.GetMask("Player"));
+        bool arm_1_achieved = Physics2D.OverlapCircle(arm_1.transform.position, 1.5f, LayerMask.GetMask("Player"));
+        bool arm_2_achieved = Physics2D.OverlapCircle(arm_2.transform.position, 1.5f, LayerMask.GetMask("Player"));
         bool truck_reached = Physics2D.OverlapBox(truck.transform.position, new Vector2(15, 6), 0, LayerMask.GetMask("Player"));
 
         if (arm_1_achieved && arm_1.activeSelf)
@@ -123,6 +119,7 @@ public partial class StageManager01 : GameManager
             arm_2.SetActive(false);
             PlayCutScene3();
         }
+
         if (truck_reached && !cutScene_4_started)
         {
             PlayCutScene4();
@@ -133,8 +130,8 @@ public partial class StageManager01 : GameManager
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireSphere(jump_end_point.transform.position, 4);
-        Gizmos.DrawWireSphere(arm_1.transform.position, 2);
-        Gizmos.DrawWireSphere(arm_2.transform.position, 2);
+        Gizmos.DrawWireSphere(arm_1.transform.position, 1.5f);
+        Gizmos.DrawWireSphere(arm_2.transform.position, 1.5f);
         Gizmos.DrawWireCube(truck.transform.position, new Vector2(15, 6));
     }
 

@@ -8,6 +8,7 @@ public class CrusherController : MonoBehaviour
     public float accel;
     public float bound;
 
+    public GameManager gameManager;
     public GameObject columnCollider;
     public GameObject player;
     public GameObject leftArm;
@@ -39,6 +40,7 @@ public class CrusherController : MonoBehaviour
 
     private void OperateCrusher()
     {
+        isActivated = !gameManager.isPaused;
         crusherPosition = transform.position;
 
         if (isActivated)

@@ -19,7 +19,7 @@ public partial class ArmController
         rigidbody.mass = normalMass;
         isRetrieveComplete = false;
         playerPosition = player.transform.position;
-        playerPosition.z = gameObject.transform.position.z;
+        //playerPosition.z = gameObject.transform.position.z;
         gameObject.transform.position = playerPosition;
         gameObject.SetActive(true);
         dir = 0;

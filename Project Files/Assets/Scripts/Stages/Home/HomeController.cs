@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public partial class HomeController : MonoBehaviour
 {
@@ -11,6 +12,11 @@ public partial class HomeController : MonoBehaviour
     private const int       MENU_3      = 3;
     private const int       MENU_4      = 4;
 
+    public TMPro.TMP_FontAsset font_english;
+    public TMPro.TMP_FontAsset font_korean;
+    public Sprite checkbox_unchecked;
+    public Sprite checkbox_checked;
+
     [Header("Menus")]
     private MenuController menuController;
     public TextMeshProUGUI loadGame;
@@ -19,24 +25,53 @@ public partial class HomeController : MonoBehaviour
     public TextMeshProUGUI quit;
 
     [Header("No Save Data")]
-    private MenuController menu_1_controller;
+    private MenuController  menu_1_controller;
     public GameObject       menu_1_screen;
+    public TextMeshProUGUI  menu_1_message;
     public TextMeshProUGUI  menu_1_yes;
     public TextMeshProUGUI  menu_1_no;
 
     [Header("Save Data Exists")]
     private MenuController menu_2_controller;
     public GameObject       menu_2_screen;
+    public TextMeshProUGUI  menu_2_message;
     public TextMeshProUGUI  menu_2_yes;
     public TextMeshProUGUI  menu_2_no;
 
     [Header("Settings")]
-    private MenuController menu_3_controller;
+    private MenuController  menu_3_controller;
     public GameObject       menu_3_screen;
+    public TextMeshProUGUI  menu_3_message;
+    public TextMeshProUGUI  menu_3_full_screen;
+    public TextMeshProUGUI  menu_3_windowed;
+    public TextMeshProUGUI  menu_3_resolution;
+    public TextMeshProUGUI  menu_3_resolution_value;
+    public TextMeshProUGUI  menu_3_master_volume;
+    public TextMeshProUGUI  menu_3_master_volume_value;
+    public TextMeshProUGUI  menu_3_music_volume;
+    public TextMeshProUGUI  menu_3_music_volume_value;
+    public TextMeshProUGUI  menu_3_game_volume;
+    public TextMeshProUGUI  menu_3_game_volume_value;
+    public TextMeshProUGUI  menu_3_language;
+    public TextMeshProUGUI  menu_3_language_value;
+    public TextMeshProUGUI  menu_3_apply;
+    public TextMeshProUGUI  menu_3_back;
+    public Image            menu_3_full_screen_checkbox;
+    public Image            menu_3_windowed_checkbox;
+    public Slider           menu_3_master_volume_slider;
+    public Slider           menu_3_music_volume_slider;
+    public Slider           menu_3_game_volume_slider;
+    private bool            isFullScreen = true;
+    private int             language = GameSettings.ENGLISH;
+    private int             resolution = GameSettings.FHD;
+    private float           masterVolume = 0.5f;
+    private float           musicVolume = 0.5f;
+    private float           gameVolume = 0.5f;
 
     [Header("Quit")]
     private MenuController menu_4_controller;
     public GameObject       menu_4_screen;
+    public TextMeshProUGUI  menu_4_message;
     public TextMeshProUGUI  menu_4_yes;
     public TextMeshProUGUI  menu_4_no;
 
@@ -54,6 +89,7 @@ public partial class HomeController : MonoBehaviour
 
     private void Start()
     {
+        InitGameSettings();
         InitAudioAttributes();
         InitMenus();
         InitMenu1();

@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class SwitchController : MonoBehaviour
 {
+    public float            width;
+    public float            height;
+    public BoxCollider2D    collider;
+
     [Header("Target")]
     public GameObject   target;
 
@@ -35,6 +39,7 @@ public class SwitchController : MonoBehaviour
 
     virtual protected void Start()
     {
+        collider.size       = new Vector2(width, height);
         unpluggedSprite     .SetActive(true);
         pluggedSpriteGreen  .SetActive(false);
         pluggedSpriteRed    .SetActive(false);
@@ -52,8 +57,10 @@ public class SwitchController : MonoBehaviour
 
     virtual protected void HandCheck()
     {
-        isFirstArmAround  = Physics2D.OverlapBox(transform.position, new Vector3(2.3f, 3.2f, 0), 0.0f, LayerMask.GetMask("Left Arm"));
-        isSecondArmAround = Physics2D.OverlapBox(transform.position, new Vector3(2.3f, 3.2f, 0), 0.0f, LayerMask.GetMask("Right Arm"));
+        //isFirstArmAround  = Physics2D.OverlapBox(transform.position, new Vector3(2.3f, 3.2f, 0), 0.0f, LayerMask.GetMask("Left Arm"));
+        isFirstArmAround  = Physics2D.OverlapBox(transform.position, new Vector3(width, height, 0), 0.0f, LayerMask.GetMask("Left Arm"));
+        //isSecondArmAround = Physics2D.OverlapBox(transform.position, new Vector3(2.3f, 3.2f, 0), 0.0f, LayerMask.GetMask("Left Arm"));
+        isSecondArmAround = Physics2D.OverlapBox(transform.position, new Vector3(width, height, 0), 0.0f, LayerMask.GetMask("Right Arm"));
     }
 
     virtual protected void PlugCheck()
@@ -222,8 +229,9 @@ public class SwitchController : MonoBehaviour
         return (isFirstArmPlugged || isSecondArmPlugged);
     }
 
-    private void OnDrawGizmos()
+    protected void OnDrawGizmos()
     {
-        Gizmos.DrawWireCube(transform.position, new Vector3(2.3f, 3.2f, 0));
+        //Gizmos.DrawWireCube(transform.position, new Vector3(2.3f, 3.2f, 0));
+        Gizmos.DrawWireCube(transform.position, new Vector3(width, height, 0));
     }
 }

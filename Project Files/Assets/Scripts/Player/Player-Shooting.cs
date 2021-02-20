@@ -13,6 +13,8 @@ public partial class PlayerController
         isSecondArmRetrieving = false;
         isFirstArmOut = false;
         isSecondArmOut = false;
+
+        foreach (GameObject gauge in gauges) gauge.SetActive(false);
     }
 
     private void Shoot()
@@ -53,11 +55,13 @@ public partial class PlayerController
                 {
                     if (lastDir == 1)
                     {
-                        gauges[i].transform.localPosition = (new Vector2(-18.0f, 0.8f + 2.4f * i));
+                        //gauges[i].transform.localPosition = (new Vector2(-18.0f, 0.8f + 2.4f * i));
+                        gauges[i].transform.localPosition = (new Vector2(-2.0f, 0.8f + 0.4f * i));
                     }
                     else if (lastDir == -1)
                     {
-                        gauges[i].transform.localPosition = (new Vector2(18.0f, 0.8f + 2.4f * i));
+                        gauges[i].transform.localPosition = (new Vector2(2.0f, 0.8f + 0.4f * i));
+                        //gauges[i].transform.localPosition = (new Vector2(18.0f, 0.8f + 2.4f * i));
                     }
                     gauges[i].SetActive(true);
                 }

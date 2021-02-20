@@ -34,10 +34,10 @@ public partial class HomeController
         StopBgm();
         SaveSystem.DeleteSaveFile();
         stage = 1;
-        GameManager.stage = SaveSystem.initialStage;
-        GameManager.currentCheckpoint = SaveSystem.initialIndex;
-        GameManager.enabledArms = SaveSystem.initialEnabledArms;
-        GameManager.position = SaveSystem.initialPosition;
+        GameManager.stage = SaveSystem.defaultStage;
+        GameManager.currentCheckpoint = SaveSystem.defaultIndex;
+        GameManager.enabledArms = SaveSystem.defaultEnabledArms;
+        GameManager.position = SaveSystem.defaultPosition;
         GameManager.isLoadingSaveData = false;
         StartLoadingRoutine();
     }

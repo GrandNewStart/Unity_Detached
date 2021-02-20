@@ -20,7 +20,8 @@ public partial class GameManager
                 if (cameraMoving) return;
                 cameraPos = cameraTarget.position;
                 cameraPos.z = -1;
-                cameraPos.y += 7;
+                //cameraPos.y += 7;
+                cameraPos.y += 2;
                 camera.transform.position = cameraPos;
                 break;
             case FIRST_ARM:
@@ -29,7 +30,8 @@ public partial class GameManager
                 if (cameraMoving) return;
                 cameraPos = cameraTarget.position;
                 cameraPos.z = -1;
-                cameraPos.y += 7;
+                //cameraPos.y += 7;
+                cameraPos.y += 2;
                 camera.transform.position = cameraPos;
                 break;
             case SECOND_ARM:
@@ -38,7 +40,8 @@ public partial class GameManager
                 if (cameraMoving) return;
                 cameraPos = cameraTarget.position;
                 cameraPos.z = -1;
-                cameraPos.y += 7;
+                //cameraPos.y += 7;
+                cameraPos.y += 2;
                 camera.transform.position = cameraPos;
                 break;
         }
@@ -51,7 +54,8 @@ public partial class GameManager
         {
             Vector3 targetPos = cameraTarget.position;
             targetPos.z = -1;
-            targetPos.y += 7;
+            //targetPos.y += 7;
+            targetPos.y += 2;
             Vector3 currentPos = camera.transform.position;
             Vector3 diff = targetPos - currentPos;
             Vector3 direction = diff.normalized;

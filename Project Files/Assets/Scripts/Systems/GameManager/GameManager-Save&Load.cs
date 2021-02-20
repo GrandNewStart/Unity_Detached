@@ -6,7 +6,7 @@ public partial class GameManager
 {
     protected void LoadNextStage()
     {
-        StartCoroutine(transition.TransitionOut(0, 0, () => {
+        StartCoroutine(transition.SceneFadeIn(0, 0, () => {
             StartCoroutine(LoadingRoutine());
         }));
     }
@@ -18,12 +18,22 @@ public partial class GameManager
         DisableControl();
         StopBGM();
         ShowCube(INFINITE);
-        transition.ShowObject(loading_background, loading_background.transform.position, INFINITE);
+        transition.ShowFadeIn(background, null);
+
         yield return new WaitForSeconds(1);
-        transition.ShowObject(loading_art, loading_art.transform.position, INFINITE);
+
+        loading_art.SetActive(true);
+        SpriteRenderer art = loading_art.GetComponent<SpriteRenderer>();
+        transition.ShowFadeIn(art, null);
+
         yield return new WaitForSeconds(1);
-        transition.ShowObject(loading_text, loading_text.transform.position, INFINITE);
+
+        loading_text.SetActive(true);
+        SpriteRenderer text = loading_text.GetComponent<SpriteRenderer>();
+        transition.ShowFadeIn(text, null);
+
         yield return new WaitForSeconds(0.5f);
+
         while (!Input.anyKeyDown) { yield return null; }
         //SceneManager.LoadScene(stage + 1);
         SceneManager.LoadScene(0);
@@ -38,11 +48,11 @@ public partial class GameManager
             if (!cameraMoving) StartCoroutine(MoveCamera());
             DisableControl();
             EnablePause(false);
-            StartCoroutine(transition.TransitionOut(2, 2, () =>
+            StartCoroutine(transition.SceneFadeIn(2, 2, () =>
             {
                 player.RecoverObject();
                 LoadCheckpoint(currentCheckpoint);
-                StartCoroutine(transition.TransitionIn(0, 0, () =>
+                StartCoroutine(transition.SceneFadeOut(0, 0, () =>
                 {
                     HideCube();
                     ForceResumeGame();

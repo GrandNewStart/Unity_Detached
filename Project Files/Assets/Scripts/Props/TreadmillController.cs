@@ -4,14 +4,33 @@ using UnityEngine;
 
 public class TreadmillController : MonoBehaviour
 {
+    public GameManager          gameManager;
     public short                dir;
     public float                speed;
     public List<AudioSource>    motorSounds;
     public GameObject           player;
+    private List<float>         originalVolumes;
 
     private void Start()
     {
+        originalVolumes = new List<float>();
+        foreach (AudioSource source in motorSounds)
+        {
+            originalVolumes.Add(source.volume);
+        }
         PlayOperationSound();
+    }
+
+    private void Update()
+    {
+        if (gameManager.isPaused)
+        {
+            PauseOperationSound();
+        }
+        else
+        {
+            ResumeOperationSound();
+        }
     }
 
     private void PlayOperationSound()
@@ -23,11 +42,21 @@ public class TreadmillController : MonoBehaviour
         }
     }
 
-    private void StopOperationSound()
+    private void PauseOperationSound()
     {
         foreach (AudioSource source in motorSounds)
         {
-            source.Stop();
+            source.volume = 0;
+        }
+    }
+
+    private void ResumeOperationSound()
+    {
+        for (int i = 0; i < motorSounds.Count; i++)
+        {
+            AudioSource source = motorSounds[i];
+            float originalVolume = originalVolumes[i];
+            source.volume = originalVolume;
         }
     }
 

@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
+
 public partial class GameManager : MonoBehaviour
 {
     public static bool      isLoadingSaveData = false;
@@ -37,16 +39,16 @@ public partial class GameManager : MonoBehaviour
 
     //[Header("Transition")]
     protected Transition    transition;
-    public GameObject       background;
+    public Image            background;
 
     //[Header("Loading Screen")]
-    public GameObject   loading_background;
+    //public GameObject   loading_background;
     public GameObject   loading_art;
     public GameObject   loading_text;
 
     //[Header("Cut Scenes")]
-    protected CutScene  cutScene;
-    public GameObject   text_continue;
+    protected CutScene      cutScene;
+    public TextMeshProUGUI  text_continue;
 
     //[Header("Pause Menu")]
     private MenuController pauseUI;

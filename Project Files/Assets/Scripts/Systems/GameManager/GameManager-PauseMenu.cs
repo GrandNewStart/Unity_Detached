@@ -63,7 +63,7 @@ public partial class GameManager : MenuInterface
 
     private void QuitGame()
     {
-        StartCoroutine(transition.TransitionOut(0, 0, () => {
+        StartCoroutine(transition.SceneFadeOut(0, 0, () => {
             SceneManager.LoadScene(0);
             Time.timeScale = 1f;
         }));

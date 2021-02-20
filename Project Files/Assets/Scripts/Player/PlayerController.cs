@@ -3,6 +3,9 @@ using UnityEngine;
 
 public partial class PlayerController : PhysicalObject
 {
+    public enum Resolution { _1024, _512, _256, _128 };
+    private enum State { idle, walk, jump, charge, fire };
+
     [Header("Movement Attributes")]
     public  GameObject  normal;
     public  float       moveSpeed;
@@ -33,10 +36,10 @@ public partial class PlayerController : PhysicalObject
     public float        groundCheckWidth;
 
     [Header("Animation Attributes")]
+    public Resolution   resolution = Resolution._1024;
     private Animator    animator;
     private short       dir;
     private short       lastDir;
-    private enum        State { idle, walk, jump, charge, fire };
     private State       state;
     private bool        isStateFixed;
 

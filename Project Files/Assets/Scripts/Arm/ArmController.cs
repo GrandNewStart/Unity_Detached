@@ -3,12 +3,12 @@ using UnityEngine;
 
 public partial class ArmController : PhysicalObject
 {
+    public enum Resolution { _1024, _512, _256, _128 };
+
     [Header("Movement Attributes")]
     public  GameObject          player;
     public  GameObject          normal;
     private PlayerController    playerController;
-    public  Camera              mainCamera;
-    private Animator            anim;
     private Vector3             origin;
     public  float               retrieveSpeed;
     public  float               moveSpeed;
@@ -38,6 +38,11 @@ public partial class ArmController : PhysicalObject
     public AudioSource  moveSound;
     private float       moveVolume;
     private int         moveSoundDelay = 0;
+
+    [Header("Animation Attributes")]
+    public Animator     anim;
+    public Resolution   resolution = Resolution._1024;
+    public bool         isLeft = false;
 
     protected override void Start()
     {
@@ -124,5 +129,8 @@ public partial class ArmController : PhysicalObject
     { return isRetrieveComplete; }
 
     private void OnDrawGizmos() 
-    { Gizmos.DrawWireCube(transform.position, new Vector3(checkRectX, checkRectY, 0)); }
+    { 
+        Gizmos.DrawWireCube(transform.position, new Vector3(checkRectX, checkRectY, 0));
+        Gizmos.DrawWireSphere(transform.position, retreiveRadius);
+    }
 }

@@ -11,7 +11,7 @@ public class TestStageManager : GameManager
     {
         base.Start();
         currentCheckpoint = 0;
-        StartCoroutine(transition.TransitionIn(0, 0, () => { }));
+        StartCoroutine(transition.SceneFadeOut(0, 0, () => { }));
     }
 
 }

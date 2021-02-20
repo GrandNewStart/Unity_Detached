@@ -11,11 +11,10 @@ public partial class GameManager
     }
 
     protected void ShowCutScene(
-        List<GameObject> scenes, 
-        GameObject background,
+        List<GameObject> scenes,
         Action onStart, 
         Action onFinish)
     {
-        StartCoroutine(cutScene.ShowCutScenes(scenes, background, onStart, onFinish));
+        StartCoroutine(cutScene.ShowCutScene(scenes, onStart, onFinish));
     }
 }

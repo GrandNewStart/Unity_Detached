@@ -92,6 +92,7 @@ public class LiftSwitchController : SwitchController
 
     private void OnDrawGizmos()
     {
+        base.OnDrawGizmos();
         Gizmos.DrawLine(
             new Vector3(minHeightCheck.transform.position.x, minHeightCheck.transform.position.y, 0.0f), 
             new Vector3(maxHeightCheck.transform.position.x, maxHeightCheck.transform.position.y, 0.0f));
