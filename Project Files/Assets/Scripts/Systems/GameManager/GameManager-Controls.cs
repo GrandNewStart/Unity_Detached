@@ -6,14 +6,7 @@ public partial class GameManager
     {
         if (Input.GetKeyDown(KeyCode.Escape) && pauseMenuEnabled)
         {
-            if (isPaused)
-            {
-                ResumeGame();
-            }
-            else
-            {
-                PauseGame();
-            }
+            EscapeControl();
         }
         else
         {
@@ -37,13 +30,51 @@ public partial class GameManager
                     }
                     break;
                 case UI:
-                    pauseUI.ControlMenu();
+                    UIControl();
                     break;
                 default:
                     break;
             }
         }
 
+    }
+
+    private void UIControl()
+    {
+        switch(menuIndex)
+        {
+            case PAUSE:
+                pause_controller.ControlMenu();
+                break;
+            case SETTINGS:
+                settings_controller.ControlMenu();
+                break;
+            case TUTORIALS:
+                break;
+        }
+    }
+
+    private void EscapeControl()
+    {
+        if (isPaused)
+        {
+            switch (menuIndex)
+            {
+                case PAUSE:
+                    ResumeGame();
+                    break;
+                case SETTINGS:
+                    CloseSettings();
+                    break;
+                case TUTORIALS:
+                    ResumeGame();
+                    break;
+            }
+        }
+        else
+        {
+            PauseGame();
+        }
     }
 
     private void ChangeControl()

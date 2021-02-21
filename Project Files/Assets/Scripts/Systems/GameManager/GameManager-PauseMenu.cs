@@ -6,54 +6,29 @@ public partial class GameManager : MenuInterface
 {
     private void InitPauseMenu()
     {
+        menuIndex = PAUSE;
         List<Menu> menus = new List<Menu>();
         menus.Add(new Menu(0, resume, "resume"));
         menus.Add(new Menu(1, settings, "settings"));
         menus.Add(new Menu(2, tutorials, "tutorials"));
         menus.Add(new Menu(3, quit, "quit"));
-        pauseUI = new MenuController(pauseMenu, menus, this);
-        pauseUI.SetOkSound(pageSound);
-        pauseUI.SetNextSound(clickSound);
-        pauseUI.SetOrientation(MenuController.Orientation.vertical);
+        pause_controller = new MenuController(pauseMenu, menus, this);
+        pause_controller.SetOkSound(pageSound);
+        pause_controller.SetNextSound(clickSound);
+        pause_controller.SetOrientation(MenuController.Orientation.vertical);
     }
 
     private void ShowPauseMenu()
     {
-        pauseUI.SetVisible(true);
-        pauseUI.SetEnabled(true);
+        pause_controller.SetVisible(true);
+        pause_controller.SetEnabled(true);
     }
 
     private void HidePauseMenu()
     {
-        pauseUI.SetVisible(false);
-        pauseUI.SetEnabled(false);
-        pauseUI.SetDefault();
-    }
-
-    // Overrided from MenuInterface
-    public void OnMenuSelected(int index)
-    {
-        switch (index)
-        {
-            case 0:
-                ResumeGame();
-                break;
-            case 1:
-                ShowSettings();
-                break;
-            case 2:
-                ShowTutorials();
-                break;
-            case 3:
-                QuitGame();
-                break;
-            default:
-                break;
-        }
-    }
-    private void ShowSettings()
-    {
-        Debug.Log("SETTINGS");
+        pause_controller.SetVisible(false);
+        pause_controller.SetEnabled(false);
+        pause_controller.SetDefault();
     }
 
     private void ShowTutorials()

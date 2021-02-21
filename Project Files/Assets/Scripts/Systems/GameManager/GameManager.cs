@@ -17,6 +17,9 @@ public partial class GameManager : MonoBehaviour
     public const int        SECOND_ARM  = 2;
     public const int        UI          = 3;
     public const int        DISABLED    = -1;
+    public const int        PAUSE       = 0;
+    public const int        SETTINGS    = 1;
+    public const int        TUTORIALS   = 2;
 
     private int             controlIndex        = 0;
     private int             tempControlIndex    = 0;
@@ -32,26 +35,66 @@ public partial class GameManager : MonoBehaviour
     public AudioSource      pageSound;
     public AudioSource      clickSound;
     public AudioSource      bgm;
+    public Sprite           checkbox_checked;
+    public Sprite           checkbox_unchecked;
+    private List<Resolution> resolutions = new List<Resolution>();
+    private int             resolutionIndex = 0;
+    private int             menuIndex = 0;
 
-    //[Header("Checkpoints")]
+    [Header("Game Settings")]
+    private MenuController  settings_controller;
+    public GameObject       settings_screen;
+    public TextMeshProUGUI  settings_title;
+    public TextMeshProUGUI  settings_full_screen;
+    public TextMeshProUGUI  settings_windowed;
+    public TextMeshProUGUI  settings_resolution;
+    public TextMeshProUGUI  settings_resolution_value;
+    public TextMeshProUGUI  settings_master_volume;
+    public TextMeshProUGUI  settings_master_volume_value;
+    public TextMeshProUGUI  settings_music_volume;
+    public TextMeshProUGUI  settings_music_volume_value;
+    public TextMeshProUGUI  settings_game_volume;
+    public TextMeshProUGUI  settings_game_volume_value;
+    public TextMeshProUGUI  settings_language;
+    public TextMeshProUGUI  settings_language_value;
+    public TextMeshProUGUI  settings_apply;
+    public TextMeshProUGUI  settings_back;
+    public Image            settings_full_screen_checkbox;
+    public Image            settings_windowed_checkbox;
+    public Slider           settings_master_volume_slider;
+    public Slider           settings_music_volume_slider;
+    public Slider           settings_game_volume_slider;
+    private bool    isFullScreen = false;
+    private bool    tempIsFullScreen = false;
+    private int     resolution = GameSettings.FHD;
+    private int     tempResolution = GameSettings.FHD;
+    private int     language = GameSettings.ENGLISH;
+    private int     tempLanguage = GameSettings.ENGLISH;
+    private float   masterVolume = 0.5f;
+    private float   tempMasterVolume = 0.5f;
+    private float   musicVolume = 0.5f;
+    private float   tempMusicVolume = 0.5f;
+    private float   gameVolume = 0.5f;
+    private float   tempGameVolume = 0.5f;
+
+    [Header("Checkpoints")]
     public List<Checkpoint> checkpoints;
     private bool            deathDetected = false;
 
-    //[Header("Transition")]
+    [Header("Transition")]
     protected Transition    transition;
     public Image            background;
 
-    //[Header("Loading Screen")]
-    //public GameObject   loading_background;
+    [Header("Loading Screen")]
     public GameObject   loading_art;
     public GameObject   loading_text;
 
-    //[Header("Cut Scenes")]
+    [Header("Cut Scenes")]
     protected CutScene      cutScene;
     public TextMeshProUGUI  text_continue;
 
-    //[Header("Pause Menu")]
-    private MenuController pauseUI;
+    [Header("Pause Menu")]
+    private MenuController  pause_controller;
     public GameObject       pauseMenu;
     public TextMeshProUGUI  resume;
     public TextMeshProUGUI  settings;
@@ -79,7 +122,10 @@ public partial class GameManager : MonoBehaviour
 
     protected virtual void OnStageStarted()
     {
+        DetectResolutions();
+        InitGameSettings();
         InitPauseMenu();
+        InitSettingsMenu();
         InitTransition();
         InitCutScene();
         InitCheckpoints();

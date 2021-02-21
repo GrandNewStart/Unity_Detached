@@ -46,6 +46,14 @@ public static class SaveSystem
 
     public static void SaveSettings(GameSettings settings)
     {
+        Debug.Log("--- SAVE SETTINGS ---"
+            + "\nis full screen: " + settings.IsFullScreen()
+            + "\nresolution: " + settings.GetResolution()
+            + "\nlanguage: " + settings.GetLanguage()
+            + "\nmaster volume: " + settings.GetMasterVolume()
+            + "\nmusic volume: " + settings.GetMusicVolume()
+            + "\ngame volume: " + settings.GetGameVolume());
+
         BinaryFormatter formatter   = new BinaryFormatter();
         string path                 = Application.persistentDataPath + "settings.detached";
         if (File.Exists(path)) { File.Delete(path); }
@@ -64,6 +72,15 @@ public static class SaveSystem
             FileStream stream           = new FileStream(path, FileMode.Open);
             GameSettings settings       = formatter.Deserialize(stream) as GameSettings;
             stream.Close();
+
+            Debug.Log("--- LOAD SETTINGS ---"
+            + "\nis full screen: " + settings.IsFullScreen()
+            + "\nresolution: " + settings.GetResolution()
+            + "\nlanguage: " + settings.GetLanguage()
+            + "\nmaster volume: " + settings.GetMasterVolume()
+            + "\nmusic volume: " + settings.GetMusicVolume()
+            + "\ngame volume: " + settings.GetGameVolume());
+
             return settings;
         }
         else

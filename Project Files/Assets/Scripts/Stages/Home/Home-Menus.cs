@@ -22,7 +22,6 @@ public partial class HomeController : MenuInterface
     // Overrided from MenuInterface
     public void OnMenuSelected(int index)
     {
-        Debug.Log("INDEX: " + index);
         switch (index)
         {
             case 0:
@@ -54,10 +53,41 @@ public partial class HomeController : MenuInterface
                 CloseMenu2();
                 break;
             case 8:
+                // Settings -> Full screen
+                SelectFullScreenMode();
+                break;
+            case 9:
+                // Settings -> Windowed
+                SelectWindowedMode();
+                break;
+            case 10:
+                // Settings -> Resolution
+                break;
+            case 11:
+                // Settings -> Master volume
+                break;
+            case 12:
+                // Settings -> Music volume
+                break;
+            case 13:
+                // Settings -> Game volume
+                break;
+            case 14:
+                // Settings -> Language
+                break;
+            case 15:
+                // Settings -> APPLY
+                ApplyGameSettings();
+                break;
+            case 16:
+                // Settings -> BACK
+                CloseMenu3();
+                break;
+            case 17:
                 // Quit -> YES
                 ExitGame();
                 break;
-            case 9:
+            case 18:
                 // Quit -> NO
                 CloseMenu4();
                 break;

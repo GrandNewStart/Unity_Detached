@@ -5,12 +5,12 @@ using TMPro;
 
 public partial class StageManager01 : GameManager
 {
-    [Header("Event Triggers")]
+    //[Header("Event Triggers")]
     public GameObject           arm_1;
     public GameObject           arm_2;
     public GameObject           truck;
 
-    [Header("Cut Scenes")]
+    //[Header("Cut Scenes")]
     public List<GameObject>     cutScenes_1;
     public List<GameObject>     cutScenes_2;
     public List<GameObject>     cutScenes_3;
@@ -18,7 +18,7 @@ public partial class StageManager01 : GameManager
     private bool cutScene_1_done    = false;
     private bool cutScene_4_started = false;
 
-    [Header("Tutorial Texts")]
+    //[Header("Tutorial Texts")]
     public TextMeshProUGUI  text_jump;
     public GameObject       jump_end_point;
     public GameObject       tutorial_background;
@@ -27,7 +27,7 @@ public partial class StageManager01 : GameManager
     public Image            tutorial_3;
     private bool            jump_done = false;
 
-    [Header("ETC")]
+    //[Header("ETC")]
     public DoorSwitchController firstSwitch;
 
     protected void Awake()

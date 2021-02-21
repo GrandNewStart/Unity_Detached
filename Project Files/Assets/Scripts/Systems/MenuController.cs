@@ -5,7 +5,7 @@ using TMPro;
 
 public class MenuController
 {
-    public enum Orientation { vertical, horizontal }
+    public enum Orientation { vertical, horizontal, both }
 
     private GameObject      screen;
     private List<Menu>      menus;
@@ -63,7 +63,7 @@ public class MenuController
                 AdjustAlpha();
             }
         }
-        else
+        if (orientation == Orientation.horizontal)
         {
             if (Input.GetKeyDown(KeyCode.RightArrow) ||
                 Input.GetKeyDown(KeyCode.D))
@@ -73,6 +73,27 @@ public class MenuController
                 AdjustAlpha();
             }
             if (Input.GetKeyDown(KeyCode.LeftArrow) ||
+                Input.GetKeyDown(KeyCode.A))
+            {
+                MoveIndex(-1);
+                PlayNextSound();
+                AdjustAlpha();
+            }
+        }
+        if (orientation == Orientation.both)
+        {
+            if (Input.GetKeyDown(KeyCode.DownArrow) ||
+                Input.GetKeyDown(KeyCode.S) ||
+                Input.GetKeyDown(KeyCode.RightArrow) ||
+                Input.GetKeyDown(KeyCode.D))
+            {
+                MoveIndex(1);
+                PlayNextSound();
+                AdjustAlpha();
+            }
+            if (Input.GetKeyDown(KeyCode.UpArrow) ||
+                Input.GetKeyDown(KeyCode.W) ||
+                Input.GetKeyDown(KeyCode.LeftArrow) ||
                 Input.GetKeyDown(KeyCode.A))
             {
                 MoveIndex(-1);
@@ -198,6 +219,11 @@ public class MenuController
     {
         if (okSound == null) return;
         okSound.Play();
+    }
+
+    public int GetIndex()
+    {
+        return index;
     }
 
 }

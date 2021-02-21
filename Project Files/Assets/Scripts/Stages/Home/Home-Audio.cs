@@ -11,6 +11,15 @@ public partial class HomeController
         page.loop = false;
     }
 
+    private void SetVolumes()
+    {
+        float musicVol = masterVolume * musicVolume;
+        float gameVol = masterVolume * gameVolume;
+        bgm.volume = musicVol;
+        click.volume = gameVol;
+        page.volume = gameVol;
+    }
+
     private void PlayBgm()
     {
         bgm.loop = true;

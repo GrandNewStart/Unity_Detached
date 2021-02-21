@@ -3,7 +3,7 @@
 [Serializable]
 public class GameSettings
 {
-    public static int KOERAN = 0;
+    public static int KOREAN = 0;
     public static int ENGLISH = 1;
     public static int HD = 0;
     public static int SHD = 1;

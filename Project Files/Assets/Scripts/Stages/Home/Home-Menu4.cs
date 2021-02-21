@@ -6,8 +6,8 @@ public partial class HomeController
     private void InitMenu4()
     {
         List<Menu> menus = new List<Menu>();
-        menus.Add(new Menu(8, menu_4_yes, "yes"));
-        menus.Add(new Menu(9, menu_4_no, "no"));
+        menus.Add(new Menu(17, menu_4_yes, "yes"));
+        menus.Add(new Menu(18, menu_4_no, "no"));
         menu_4_controller = new MenuController(menu_4_screen, menus, this);
         menu_4_controller.SetNextSound(click);
         menu_4_controller.SetOkSound(page);
