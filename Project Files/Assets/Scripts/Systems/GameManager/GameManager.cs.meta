@@ -3,7 +3,49 @@ guid: 4fe69b24f24e55246a5b0d6d0d6469ae
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - cube: {instanceID: 0}
+  - player: {instanceID: 0}
+  - firstArm: {instanceID: 0}
+  - secondArm: {instanceID: 0}
+  - camera: {instanceID: 0}
+  - pageSound: {instanceID: 0}
+  - clickSound: {instanceID: 0}
+  - bgm: {instanceID: 0}
+  - checkbox_checked: {instanceID: 0}
+  - checkbox_unchecked: {instanceID: 0}
+  - font_english: {instanceID: 0}
+  - font_korean: {fileID: 11400000, guid: 17dea6277b3c48c44bb2fbb640564a28, type: 2}
+  - settings_screen: {instanceID: 0}
+  - settings_title: {instanceID: 0}
+  - settings_full_screen: {instanceID: 0}
+  - settings_windowed: {instanceID: 0}
+  - settings_resolution: {instanceID: 0}
+  - settings_resolution_value: {instanceID: 0}
+  - settings_master_volume: {instanceID: 0}
+  - settings_master_volume_value: {instanceID: 0}
+  - settings_music_volume: {instanceID: 0}
+  - settings_music_volume_value: {instanceID: 0}
+  - settings_game_volume: {instanceID: 0}
+  - settings_game_volume_value: {instanceID: 0}
+  - settings_language: {instanceID: 0}
+  - settings_language_value: {instanceID: 0}
+  - settings_apply: {instanceID: 0}
+  - settings_back: {instanceID: 0}
+  - settings_full_screen_checkbox: {instanceID: 0}
+  - settings_windowed_checkbox: {instanceID: 0}
+  - settings_master_volume_slider: {instanceID: 0}
+  - settings_music_volume_slider: {instanceID: 0}
+  - settings_game_volume_slider: {instanceID: 0}
+  - background: {instanceID: 0}
+  - loading_art: {instanceID: 0}
+  - loading_text: {instanceID: 0}
+  - text_continue: {instanceID: 0}
+  - pauseMenu: {instanceID: 0}
+  - pause_resume: {instanceID: 0}
+  - pause_settings: {instanceID: 0}
+  - pause_tutorials: {instanceID: 0}
+  - pause_quit: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

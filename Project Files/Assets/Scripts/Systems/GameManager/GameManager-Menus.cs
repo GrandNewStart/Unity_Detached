@@ -23,9 +23,11 @@
                 break;
             case 4:
                 // Pause -> Settings -> FULL SCREEN
+                SelectFullScreenMode();
                 break;
             case 5:
                 // Pause -> Settings -> WINDOWED
+                SelectWindowedMode();
                 break;
             case 6:
                 // Pause -> Settings -> RESOLUTION

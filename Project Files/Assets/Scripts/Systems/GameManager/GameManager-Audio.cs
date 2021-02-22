@@ -11,6 +11,12 @@ public partial class GameManager
         bgm.volume = musicVol;
         clickSound.volume = gameVol;
         pageSound.volume = gameVol;
+        player.chargeSound.volume = gameVol;
+        player.fireSound.volume = gameVol;
+        player.footStepSound.volume = gameVol;
+        player.jumpSound.volume = gameVol;
+        firstArm.moveSound.volume = gameVol;
+        secondArm.moveSound.volume = gameVol;
     }
 
     public void PlayBGM()

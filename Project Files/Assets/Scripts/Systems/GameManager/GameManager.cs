@@ -21,25 +21,27 @@ public partial class GameManager : MonoBehaviour
     public const int        SETTINGS    = 1;
     public const int        TUTORIALS   = 2;
 
-    private int             controlIndex        = 0;
-    private int             tempControlIndex    = 0;
-    private float           cameraSpeed         = 200;
-    public bool             isPaused;
-    private bool            cameraMoving = false;
-    public GameObject       cube;
-    public PlayerController player;
-    public ArmController    firstArm;
-    public ArmController    secondArm;
-    public new Camera       camera;
-    private Transform       cameraTarget;
-    public AudioSource      pageSound;
-    public AudioSource      clickSound;
-    public AudioSource      bgm;
-    public Sprite           checkbox_checked;
-    public Sprite           checkbox_unchecked;
-    private List<Resolution> resolutions = new List<Resolution>();
-    private int             resolutionIndex = 0;
-    private int             menuIndex = 0;
+    private int                 controlIndex        = 0;
+    private int                 tempControlIndex    = 0;
+    private float               cameraSpeed         = 200;
+    public bool                 isPaused;
+    private bool                cameraMoving = false;
+    public GameObject           cube;
+    public PlayerController     player;
+    public ArmController        firstArm;
+    public ArmController        secondArm;
+    public new Camera           camera;
+    private Transform           cameraTarget;
+    public AudioSource          pageSound;
+    public AudioSource          clickSound;
+    public AudioSource          bgm;
+    public Sprite               checkbox_checked;
+    public Sprite               checkbox_unchecked;
+    public TMPro.TMP_FontAsset  font_english;
+    public TMPro.TMP_FontAsset  font_korean;
+    private List<Resolution>    resolutions = new List<Resolution>();
+    private int                 resolutionIndex = 0;
+    private int                 menuIndex = 0;
 
     [Header("Game Settings")]
     private MenuController  settings_controller;
@@ -96,10 +98,10 @@ public partial class GameManager : MonoBehaviour
     [Header("Pause Menu")]
     private MenuController  pause_controller;
     public GameObject       pauseMenu;
-    public TextMeshProUGUI  resume;
-    public TextMeshProUGUI  settings;
-    public TextMeshProUGUI  tutorials;
-    public TextMeshProUGUI  quit;
+    public TextMeshProUGUI  pause_resume;
+    public TextMeshProUGUI  pause_settings;
+    public TextMeshProUGUI  pause_tutorials;
+    public TextMeshProUGUI  pause_quit;
     private bool            pauseMenuEnabled = true;
 
     protected virtual void Start()

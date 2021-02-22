@@ -7,23 +7,24 @@ public partial class HomeController
         Resolution[] possibleRes = Screen.resolutions;
         foreach (Resolution res in possibleRes)
         {
-            if (res.height == 1280 && res.width == 720)
+            Debug.Log(res.width + " x " + res.height);
+            if (res.width == 1280 && res.height == 720)
             {
                 resolutions.Add(res);
             }
-            if (res.height == 1600 && res.width == 900)
+            if (res.width == 1600 && res.height == 900)
             {
                 resolutions.Add(res);
             }
-            if (res.height == 1920 && res.width == 1080)
+            if (res.width == 1920 && res.height == 1080)
             {
                 resolutions.Add(res);
             }
-            if (res.height == 2560 && res.width == 1440)
+            if (res.width == 2560 && res.height == 1440)
             {
                 resolutions.Add(res);
             }
-            if (res.height == 3840 && res.width == 2160)
+            if (res.width == 3840 && res.height == 2160)
             {
                 resolutions.Add(res);
             }

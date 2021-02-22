@@ -47,6 +47,34 @@ public partial class GameManager
                 pause_controller.ControlMenu();
                 break;
             case SETTINGS:
+                if (settings_controller.GetIndex() == 2)
+                {
+                    SelectResolution();
+                }
+                if (settings_controller.GetIndex() == 3)
+                {
+                    SelectMasterVolume();
+                }
+                if (settings_controller.GetIndex() == 4)
+                {
+                    SelectMusicVolume();
+                }
+                if (settings_controller.GetIndex() == 5)
+                {
+                    SelectGameVolume();
+                }
+                if (settings_controller.GetIndex() == 6)
+                {
+                    SelectLanguage();
+                }
+                if (settings_controller.GetIndex() > 6)
+                {
+                    settings_controller.SetOrientation(MenuController.Orientation.both);
+                }
+                else
+                {
+                    settings_controller.SetOrientation(MenuController.Orientation.vertical);
+                }
                 settings_controller.ControlMenu();
                 break;
             case TUTORIALS:

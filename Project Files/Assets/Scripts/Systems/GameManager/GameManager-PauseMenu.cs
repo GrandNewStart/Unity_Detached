@@ -8,10 +8,10 @@ public partial class GameManager : MenuInterface
     {
         menuIndex = PAUSE;
         List<Menu> menus = new List<Menu>();
-        menus.Add(new Menu(0, resume, "resume"));
-        menus.Add(new Menu(1, settings, "settings"));
-        menus.Add(new Menu(2, tutorials, "tutorials"));
-        menus.Add(new Menu(3, quit, "quit"));
+        menus.Add(new Menu(0, pause_resume, "resume"));
+        menus.Add(new Menu(1, pause_settings, "settings"));
+        menus.Add(new Menu(2, pause_tutorials, "tutorials"));
+        menus.Add(new Menu(3, pause_quit, "quit"));
         pause_controller = new MenuController(pauseMenu, menus, this);
         pause_controller.SetOkSound(pageSound);
         pause_controller.SetNextSound(clickSound);

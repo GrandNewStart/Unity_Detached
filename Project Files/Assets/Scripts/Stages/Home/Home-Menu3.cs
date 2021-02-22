@@ -56,19 +56,19 @@ public partial class HomeController
             if (resolutionIndex == 0) { return; }
             resolutionIndex--;
             Resolution res = resolutions[resolutionIndex];
-            if (res.height == 1280 && res.width == 720)
+            if (res.width == 1280 && res.height == 720)
             {
                 tempResolution = GameSettings.HD;
             }
-            if (res.height == 1600 && res.width == 900)
+            if (res.width == 1600 && res.height == 900)
             {
                 tempResolution = GameSettings.SHD;
             }
-            if (res.height == 1920 && res.width == 1080)
+            if (res.width == 1920 && res.height == 1080)
             {
                 tempResolution = GameSettings.FHD;
             }
-            if (res.height == 2560 && res.width == 1440)
+            if (res.width == 2560 && res.height == 1440)
             {
                 tempResolution = GameSettings.QHD;
             }
@@ -82,19 +82,19 @@ public partial class HomeController
             if (resolutionIndex == resolutions.Count-1) { return; }
             resolutionIndex++;
             Resolution res = resolutions[resolutionIndex];
-            if (res.height == 1600 && res.width == 900)
+            if (res.width == 1600 && res.height == 900)
             {
                 tempResolution = GameSettings.SHD;
             }
-            if (res.height == 1920 && res.width == 1080)
+            if (res.width == 1920 && res.height == 1080)
             {
                 tempResolution = GameSettings.FHD;
             }
-            if (res.height == 2560 && res.width == 1440)
+            if (res.width == 2560 && res.height == 1440)
             {
                 tempResolution = GameSettings.QHD;
             }
-            if (res.height == 3840 && res.width == 2160)
+            if (res.width == 3840 && res.height == 2160)
             {
                 tempResolution = GameSettings.UHD;
             }
@@ -207,26 +207,4 @@ public partial class HomeController
             }
         }
     }
-
-    private void ApplySettings()
-    {
-        PlayPageSound();
-        isFullScreen    = tempIsFullScreen;
-        resolution      = tempResolution;
-        masterVolume    = tempMasterVolume;
-        musicVolume     = tempMusicVolume;
-        gameVolume      = tempGameVolume;
-        language        = tempLanguage;
-        SaveSystem.SaveSettings(new GameSettings(
-            isFullScreen,
-            language,
-            resolution,
-            masterVolume,
-            musicVolume,
-            gameVolume)
-            );
-        InitGameSettings();
-        CloseMenu3();
-    }
-
 }
