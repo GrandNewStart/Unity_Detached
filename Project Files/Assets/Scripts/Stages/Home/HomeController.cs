@@ -13,10 +13,11 @@ public partial class HomeController : MonoBehaviour
     private const int       MENU_3      = 3;
     private const int       MENU_4      = 4;
 
-    public TMPro.TMP_FontAsset font_english;
-    public TMPro.TMP_FontAsset font_korean;
-    public Sprite checkbox_unchecked;
-    public Sprite checkbox_checked;
+    public Animator             crossfade;
+    public TMPro.TMP_FontAsset  font_english;
+    public TMPro.TMP_FontAsset  font_korean;
+    public Sprite               checkbox_unchecked;
+    public Sprite               checkbox_checked;
 
     [Header("Menus")]
     private MenuController menuController;
@@ -33,7 +34,7 @@ public partial class HomeController : MonoBehaviour
     public TextMeshProUGUI  menu_1_no;
 
     [Header("Save Data Exists")]
-    private MenuController menu_2_controller;
+    private MenuController  menu_2_controller;
     public GameObject       menu_2_screen;
     public TextMeshProUGUI  menu_2_message;
     public TextMeshProUGUI  menu_2_yes;
@@ -78,18 +79,15 @@ public partial class HomeController : MonoBehaviour
     private List<Resolution> resolutions = new List<Resolution>();
 
     [Header("Quit")]
-    private MenuController menu_4_controller;
+    private MenuController  menu_4_controller;
     public GameObject       menu_4_screen;
     public TextMeshProUGUI  menu_4_message;
     public TextMeshProUGUI  menu_4_yes;
     public TextMeshProUGUI  menu_4_no;
 
     [Header("Loading Screens")]
-    public GameObject loadingScreen;
-    public GameObject background;
-    public GameObject splashArt;
-    public GameObject cube;
-    public GameObject text;
+    public Animator chap_1_splash;
+    public Animator press_any_key;
 
     [Header("Audios")]
     public AudioSource bgm;
@@ -107,11 +105,11 @@ public partial class HomeController : MonoBehaviour
         InitMenu3();
         InitMenu4();
         PlayBgm();
+        crossfade.Play("crossfade_start");
     }
 
     private void Update()
     {
         Control();
-        RotateCube();
     }
 }

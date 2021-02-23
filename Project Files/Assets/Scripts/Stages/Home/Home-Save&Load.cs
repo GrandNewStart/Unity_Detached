@@ -53,22 +53,4 @@ public partial class HomeController
         GameManager.isLoadingSaveData = true;
         StartLoadingRoutine();
     }
-
-    private void StartLoadingRoutine()
-    {
-        loadingScreen.SetActive(true);
-        background.SetActive(false);
-        splashArt.SetActive(false);
-        text.SetActive(false);
-        cube.SetActive(true);
-        menuIndex = -1;
-        StartCoroutine(TransitionIn(() => {
-            StartCoroutine(ShowObject(splashArt, () => { }));
-            StartCoroutine(ShowObject(text, () =>
-            {
-                StartCoroutine(WaitForInput());
-            }));
-        }));
-    }
-
 }
