@@ -2,11 +2,6 @@
 
 public partial class GameManager
 {
-    private void InitTransition()
-    {
-        transition = new Transition(this, background);
-    }
-
     private void RotateCube()
     {
         cube.transform.Rotate(new Vector3(1, 1, 1));

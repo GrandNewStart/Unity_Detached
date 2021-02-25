@@ -20,28 +20,29 @@ public partial class GameManager : MonoBehaviour
     public const int        PAUSE       = 0;
     public const int        SETTINGS    = 1;
     public const int        TUTORIALS   = 2;
-
-    private int                 controlIndex        = 0;
-    private int                 tempControlIndex    = 0;
-    private float               cameraSpeed         = 200;
+    
     public bool                 isPaused;
-    private bool                cameraMoving = false;
     public GameObject           cube;
+    public Image                mask;
     public PlayerController     player;
     public ArmController        firstArm;
     public ArmController        secondArm;
     public new Camera           camera;
-    private Transform           cameraTarget;
     public AudioSource          pageSound;
     public AudioSource          clickSound;
     public AudioSource          bgm;
     public Sprite               checkbox_checked;
     public Sprite               checkbox_unchecked;
-    public TMPro.TMP_FontAsset  font_english;
-    public TMPro.TMP_FontAsset  font_korean;
-    private List<Resolution>    resolutions = new List<Resolution>();
-    private int                 resolutionIndex = 0;
-    private int                 menuIndex = 0;
+    public TMP_FontAsset        font_english;
+    public TMP_FontAsset        font_korean;
+    private List<Resolution>    resolutions;
+    private Transform           cameraTarget;
+    private bool                cameraMoving        = false;
+    private int                 controlIndex        = 0;
+    private int                 tempControlIndex    = 0;
+    private float               cameraSpeed         = 130;
+    private int                 resolutionIndex     = 0;
+    private int                 menuIndex           = 0;
 
     [Header("Game Settings")]
     private MenuController  settings_controller;
@@ -66,43 +67,38 @@ public partial class GameManager : MonoBehaviour
     public Slider           settings_master_volume_slider;
     public Slider           settings_music_volume_slider;
     public Slider           settings_game_volume_slider;
-    private bool    isFullScreen = false;
-    private bool    tempIsFullScreen = false;
-    private int     resolution = GameSettings.FHD;
-    private int     tempResolution = GameSettings.FHD;
-    private int     language = GameSettings.ENGLISH;
-    private int     tempLanguage = GameSettings.ENGLISH;
-    private float   masterVolume = 0.5f;
-    private float   tempMasterVolume = 0.5f;
-    private float   musicVolume = 0.5f;
-    private float   tempMusicVolume = 0.5f;
-    private float   gameVolume = 0.5f;
-    private float   tempGameVolume = 0.5f;
+    private bool    isFullScreen        = false;
+    private bool    tempIsFullScreen    = false;
+    private int     resolution          = GameSettings.FHD;
+    private int     tempResolution      = GameSettings.FHD;
+    protected int   language            = GameSettings.ENGLISH;
+    private int     tempLanguage        = GameSettings.ENGLISH;
+    private float   masterVolume        = 0.5f;
+    private float   tempMasterVolume    = 0.5f;
+    private float   musicVolume         = 0.5f;
+    private float   tempMusicVolume     = 0.5f;
+    private float   gameVolume          = 0.5f;
+    private float   tempGameVolume      = 0.5f;
 
     [Header("Checkpoints")]
     public List<Checkpoint> checkpoints;
     private bool            deathDetected = false;
 
-    [Header("Transition")]
-    protected Transition    transition;
-    public Image            background;
-
-    [Header("Loading Screen")]
-    public GameObject   loading_art;
-    public GameObject   loading_text;
-
     [Header("Cut Scenes")]
-    protected CutScene      cutScene;
     public TextMeshProUGUI  text_continue;
 
     [Header("Pause Menu")]
-    private MenuController  pause_controller;
     public GameObject       pauseMenu;
     public TextMeshProUGUI  pause_resume;
     public TextMeshProUGUI  pause_settings;
     public TextMeshProUGUI  pause_tutorials;
     public TextMeshProUGUI  pause_quit;
+    private MenuController  pause_controller;
     private bool            pauseMenuEnabled = true;
+
+    [Header("Loading Screens")]
+    public Image            splash_art;
+    public TextMeshProUGUI  press_any_key;
 
     protected virtual void Start()
     {
@@ -128,12 +124,10 @@ public partial class GameManager : MonoBehaviour
         InitGameSettings();
         InitPauseMenu();
         InitSettingsMenu();
-        InitTransition();
-        InitCutScene();
         InitCheckpoints();
         InitCamera();
         DisablePastCheckpoints();
-
+        
         if (isLoadingSaveData)
         {
             player.transform.position = position;

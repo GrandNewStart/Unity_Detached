@@ -1,9 +1,11 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 
 public partial class GameManager
 {
     private void DetectResolutions()
     {
+        resolutions = new List<Resolution>();
         Resolution[] possibleRes = Screen.resolutions;
         foreach (Resolution res in possibleRes)
         {
@@ -103,7 +105,7 @@ public partial class GameManager
         }
     }
 
-    private void ApplyLanguage()
+    protected virtual void ApplyLanguage()
     {
         if (language == GameSettings.ENGLISH)
         {
@@ -120,7 +122,9 @@ public partial class GameManager
             settings_game_volume.text = "game volume";
             settings_language.text = "language";
             settings_language_value.text = "english";
-            
+            press_any_key.text = "press any key";
+            text_continue.text = "press \"space\" to continue";
+
             pause_resume.font = font_english;
             pause_settings.font = font_english;
             pause_tutorials.font = font_english;
@@ -134,6 +138,8 @@ public partial class GameManager
             settings_game_volume.font = font_english;
             settings_language.font = font_english;
             settings_language_value.font = font_english;
+            press_any_key.font = font_english;
+            text_continue.font = font_english;
         }
         if (language == GameSettings.KOREAN)
         {
@@ -150,6 +156,8 @@ public partial class GameManager
             settings_game_volume.text = "게임 음량";
             settings_language.text = "언어";
             settings_language_value.text = "한국어";
+            press_any_key.text = "아무 키나 누르십시오";
+            text_continue.text = "스페이스 바를 눌러 계속";
 
             pause_resume.font = font_korean;
             pause_settings.font = font_korean;
@@ -164,6 +172,8 @@ public partial class GameManager
             settings_game_volume.font = font_korean;
             settings_language.font = font_korean;
             settings_language_value.font = font_korean;
+            press_any_key.font = font_korean;
+            text_continue.font = font_korean;
         }
     }
 

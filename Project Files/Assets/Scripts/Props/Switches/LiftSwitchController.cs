@@ -90,7 +90,7 @@ public class LiftSwitchController : SwitchController
         target.transform.Translate(new Vector3(0.0f, speed * dir, 0.0f));
     }
 
-    private void OnDrawGizmos()
+    protected override void OnDrawGizmos()
     {
         base.OnDrawGizmos();
         Gizmos.DrawLine(

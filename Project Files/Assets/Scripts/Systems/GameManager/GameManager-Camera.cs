@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public partial class GameManager
@@ -20,7 +19,6 @@ public partial class GameManager
                 if (cameraMoving) return;
                 cameraPos = cameraTarget.position;
                 cameraPos.z = -1;
-                //cameraPos.y += 7;
                 cameraPos.y += 2;
                 camera.transform.position = cameraPos;
                 break;
@@ -30,7 +28,6 @@ public partial class GameManager
                 if (cameraMoving) return;
                 cameraPos = cameraTarget.position;
                 cameraPos.z = -1;
-                //cameraPos.y += 7;
                 cameraPos.y += 2;
                 camera.transform.position = cameraPos;
                 break;
@@ -40,7 +37,6 @@ public partial class GameManager
                 if (cameraMoving) return;
                 cameraPos = cameraTarget.position;
                 cameraPos.z = -1;
-                //cameraPos.y += 7;
                 cameraPos.y += 2;
                 camera.transform.position = cameraPos;
                 break;
@@ -54,7 +50,6 @@ public partial class GameManager
         {
             Vector3 targetPos = cameraTarget.position;
             targetPos.z = -1;
-            //targetPos.y += 7;
             targetPos.y += 2;
             Vector3 currentPos = camera.transform.position;
             Vector3 diff = targetPos - currentPos;
@@ -63,7 +58,7 @@ public partial class GameManager
 
             camera.transform.Translate(movement, Space.World);
 
-            if (diff.magnitude < 10) cameraMoving = false;
+            if (diff.magnitude < 2) cameraMoving = false;
 
             yield return null;
         }

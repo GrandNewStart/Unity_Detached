@@ -34,23 +34,29 @@ public partial class HomeController
         StopBgm();
         SaveSystem.DeleteSaveFile();
         stage = 1;
+        menuIndex = -1;
         GameManager.stage = SaveSystem.defaultStage;
         GameManager.currentCheckpoint = SaveSystem.defaultIndex;
         GameManager.enabledArms = SaveSystem.defaultEnabledArms;
         GameManager.position = SaveSystem.defaultPosition;
         GameManager.isLoadingSaveData = false;
-        StartLoadingRoutine();
+        SceneFadeOut(0, 0, () => {
+            ShowLoadingScreen();
+        });
     }
 
     private void ContinueGame(SaveData data)
     {
         StopBgm();
+        menuIndex = -1;
         stage = data.GetStage();
         GameManager.stage = data.GetStage();
         GameManager.currentCheckpoint = data.GetIndex();
         GameManager.enabledArms = data.GetEnabledArms();
         GameManager.position = data.GetPosition();
         GameManager.isLoadingSaveData = true;
-        StartLoadingRoutine();
+        SceneFadeOut(0, 0, () => {
+            ShowLoadingScreen();
+        });
     }
 }

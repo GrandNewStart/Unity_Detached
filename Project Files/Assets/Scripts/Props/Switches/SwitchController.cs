@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class SwitchController : MonoBehaviour
 {
-    public float            width;
-    public float            height;
-    public BoxCollider2D    collider;
+    public float                width;
+    public float                height;
+    public new BoxCollider2D    collider;
 
     [Header("Target")]
     public GameObject   target;
@@ -229,7 +229,7 @@ public class SwitchController : MonoBehaviour
         return (isFirstArmPlugged || isSecondArmPlugged);
     }
 
-    protected void OnDrawGizmos()
+    protected virtual void OnDrawGizmos()
     {
         //Gizmos.DrawWireCube(transform.position, new Vector3(2.3f, 3.2f, 0));
         Gizmos.DrawWireCube(transform.position, new Vector3(width, height, 0));

@@ -80,7 +80,7 @@ public partial class StageManager01 : GameManager
         PlayBGM();
         if (isLoadingSaveData)
         {
-            StartCoroutine(transition.SceneFadeIn(0, 0, null));
+            SceneFadeStart(0, 0, null);
         }
         else
         {

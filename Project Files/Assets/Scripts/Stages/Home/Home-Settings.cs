@@ -140,7 +140,8 @@ public partial class HomeController
             menu_3_language_value.font = font_english;
             menu_4_message.text = "Do you want to quit to destktop?";
             menu_4_message.font = font_english;
-            
+            press_any_key.text = "press any key";
+            press_any_key.font = font_english;
         }
         if (language == GameSettings.KOREAN)
         {
@@ -176,6 +177,8 @@ public partial class HomeController
             menu_3_language_value.font = font_korean;
             menu_4_message.text = "게임을 종료하고\n데스크탑으로 나갑니다.";
             menu_4_message.font = font_korean;
+            press_any_key.text = "아무 키나 누르십시오";
+            press_any_key.font = font_korean;
         }
     }
 

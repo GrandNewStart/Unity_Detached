@@ -6,12 +6,14 @@ public partial class StageManager01
 {
     private void PlayCutScene1()
     {
-        ShowCutScene(cutScenes_1,
+        Color color = mask.color;
+        color.a     = 1;
+        mask.color  = color;
+        StopBGM();
+        ForcePauseGame();
+        PlayCutScene(
+            cutScenes_1,
             () => {
-                StopBGM();
-            },
-            () =>
-            {
                 PlayBGM();
                 cutScene_1_done = true;
             });
@@ -19,22 +21,36 @@ public partial class StageManager01
 
     private void PlayCutScene2()
     {
-        ShowCutScene(cutScenes_2,
-            null,
+        ForcePauseGame();
+        SceneFadeEnd(0, 0, () => {
+            PlayCutScene(
+            cutScenes_2,
             () => {
                 Invoke("ShowTutorial1", 1);
             });
+        });
     }
     private void PlayCutScene3()
     {
-        ShowCutScene(cutScenes_3, null, null);
+        ForcePauseGame();
+        SceneFadeEnd(0, 0, () =>
+        {
+            PlayCutScene(cutScenes_3, null);
+        });
     }
 
     private void PlayCutScene4()
     {
+        ForcePauseGame();
         cutScene_4_started = true;
-        ShowCutScene(cutScenes_4,
-            null,
-            () => { LoadNextStage(); });
+        SceneFadeEnd(0, 0, () =>
+        {
+            PlayCutScene(
+            cutScenes_4,
+            () =>
+            {
+                LoadNextStage();
+            });
+        });
     }
 }

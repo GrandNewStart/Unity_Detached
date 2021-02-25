@@ -13,6 +13,7 @@ public partial class HomeController : MonoBehaviour
     private const int       MENU_3      = 3;
     private const int       MENU_4      = 4;
 
+    public Image                background;
     public Animator             crossfade;
     public TMPro.TMP_FontAsset  font_english;
     public TMPro.TMP_FontAsset  font_korean;
@@ -86,8 +87,8 @@ public partial class HomeController : MonoBehaviour
     public TextMeshProUGUI  menu_4_no;
 
     [Header("Loading Screens")]
-    public Animator chap_1_splash;
-    public Animator press_any_key;
+    public Image            chap_1_splash;
+    public TextMeshProUGUI  press_any_key;
 
     [Header("Audios")]
     public AudioSource bgm;
@@ -105,7 +106,7 @@ public partial class HomeController : MonoBehaviour
         InitMenu3();
         InitMenu4();
         PlayBgm();
-        crossfade.Play("crossfade_start");
+        CrossfadeStart(0, 0, null);
     }
 
     private void Update()
