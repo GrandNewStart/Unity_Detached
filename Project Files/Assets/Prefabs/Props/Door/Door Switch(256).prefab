@@ -266,7 +266,7 @@ GameObject:
   - component: {fileID: 3544588451032733154}
   - component: {fileID: 3544588451032733153}
   m_Layer: 0
-  m_Name: Door Switch(new)
+  m_Name: Door Switch(256)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -328,8 +328,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cfdf1dd80044f40f4aa10c69494db81f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  width: 1.7
-  height: 2.3
+  width: 1.5
+  height: 2
   collider: {fileID: 3544588451032733154}
   target: {fileID: 0}
   unpluggedSprite: {fileID: 3544588452032426967}
@@ -369,7 +369,7 @@ Transform:
   m_GameObject: {fileID: 3544588451145433336}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.9, y: 0.9, z: 1}
   m_Children: []
   m_Father: {fileID: 3544588451032733152}
   m_RootOrder: 1
@@ -448,7 +448,7 @@ Transform:
   m_GameObject: {fileID: 3544588451235150280}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.9, y: 0.9, z: 1}
   m_Children: []
   m_Father: {fileID: 3544588451032733152}
   m_RootOrder: 2
@@ -527,7 +527,7 @@ Transform:
   m_GameObject: {fileID: 3544588452032426967}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.9, y: 0.9, z: 1}
   m_Children: []
   m_Father: {fileID: 3544588451032733152}
   m_RootOrder: 0
