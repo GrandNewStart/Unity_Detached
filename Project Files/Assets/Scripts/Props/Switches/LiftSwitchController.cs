@@ -18,8 +18,6 @@ public class LiftSwitchController : SwitchController
         targetPosition  = target.transform.position;
         maxHeight       = maxHeightCheck.transform.position.y;
         minHeight       = minHeightCheck.transform.position.y;
-        maxHeightCheck.transform.parent = null;
-        minHeightCheck.transform.parent = null;
         operationSound.transform.parent     = target.transform;
         operationSound.transform.position   = target.transform.position;
     }

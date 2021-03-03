@@ -104,7 +104,7 @@ public partial class StageManager01 : GameManager
     {
         bool arm_1_achieved = Physics2D.OverlapCircle(arm_1.transform.position, 1.5f, LayerMask.GetMask("Player"));
         bool arm_2_achieved = Physics2D.OverlapCircle(arm_2.transform.position, 1.5f, LayerMask.GetMask("Player"));
-        bool truck_reached = Physics2D.OverlapBox(truck.transform.position, new Vector2(15, 6), 0, LayerMask.GetMask("Player"));
+        bool truck_reached = Physics2D.OverlapBox(truck.transform.position, new Vector2(8, 4), 0, LayerMask.GetMask("Player"));
 
         if (arm_1_achieved && arm_1.activeSelf)
         {
@@ -132,7 +132,7 @@ public partial class StageManager01 : GameManager
         Gizmos.DrawWireSphere(jump_end_point.transform.position, 4);
         Gizmos.DrawWireSphere(arm_1.transform.position, 1.5f);
         Gizmos.DrawWireSphere(arm_2.transform.position, 1.5f);
-        Gizmos.DrawWireCube(truck.transform.position, new Vector2(15, 6));
+        Gizmos.DrawWireCube(truck.transform.position, new Vector2(8, 4));
     }
 
 }

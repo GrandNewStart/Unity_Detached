@@ -15,7 +15,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &5396514025759286253
 Transform:
   m_ObjectHideFlags: 0
@@ -350,7 +350,7 @@ GameObject:
   - component: {fileID: 8517774234136111270}
   - component: {fileID: 1107662846179033685}
   m_Layer: 11
-  m_Name: Left Arm'
+  m_Name: Left Arm
   m_TagString: Arm
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

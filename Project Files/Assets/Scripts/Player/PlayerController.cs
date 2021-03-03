@@ -74,7 +74,7 @@ public partial class PlayerController : PhysicalObject
         InitMovementAttributes();
         InitShootingAttributes();
         InitAnimationAttributes();
-        InitSoundAttributes();
+        InitAudioAttributes();
     }
 
     protected override void Update()
@@ -117,27 +117,21 @@ public partial class PlayerController : PhysicalObject
         leftArmRB   .AddForce(new Vector2(-10.0f, 15.0f), ForceMode2D.Impulse);
         rightArmRB  .AddForce(new Vector2(10.0f, 15.0f), ForceMode2D.Impulse);
         
-        if (arms == 0)
+        if (enabledArms == 0)
         {
             left_arm.SetActive(false);
             right_arm.SetActive(false);
         }
-        if (arms == 1)
+        else
         {
-            if (enabledArms == 1)
+            if (arms == 1)
             {
                 right_arm.SetActive(false);
             }
-            if (enabledArms == 2)
+            if (arms == 0)
             {
-                if (isFirstArmOut)
-                {
-                    left_arm.SetActive(false);
-                }
-                if (isSecondArmOut)
-                {
-                    right_arm.SetActive(false);
-                }
+                left_arm.SetActive(false);
+                right_arm.SetActive(false);
             }
         }
     }

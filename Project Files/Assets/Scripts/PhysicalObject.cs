@@ -49,12 +49,16 @@ public class PhysicalObject : MonoBehaviour
     public void DestroyObject()
     {
         isDestroyed = true;
+        normalSprite.SetActive(false);
+        destroyedSprite.SetActive(true);
         OnDestruction();
     }
 
     public void RecoverObject()
     {
         isDestroyed = false;
+        normalSprite.SetActive(true);
+        destroyedSprite.SetActive(false);
         OnRestoration();
     }
 

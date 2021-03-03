@@ -4,8 +4,7 @@ using UnityEngine;
 
 public partial class PlayerController
 {
-
-    private void InitSoundAttributes()
+    private void InitAudioAttributes()
     {
         chargePitch = chargeSound.pitch;
         chargeSoundOriginalPitch = chargeSound.pitch;

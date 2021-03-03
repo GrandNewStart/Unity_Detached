@@ -21,9 +21,9 @@ public class BackgroundScroller : MonoBehaviour
 
     void LateUpdate()
     {
-        Vector3 deltaMovement = cameraTransform.position - lastCameraPosition;
-        transform.position += new Vector3(deltaMovement.x * parallax, 0);
-        lastCameraPosition = cameraTransform.position;
+        Vector3 deltaMovement   = cameraTransform.position - lastCameraPosition;
+        transform.position      += new Vector3(deltaMovement.x * parallax, 0);
+        lastCameraPosition      = cameraTransform.position;
 
         if (Mathf.Abs(cameraTransform.position.x - transform.position.x) >= textureUnitSizeX)
         {
