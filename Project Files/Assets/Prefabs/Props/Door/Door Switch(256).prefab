@@ -314,7 +314,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 1.5, y: 2}
   m_EdgeRadius: 0
 --- !u!114 &3544588451032733153
 MonoBehaviour:
@@ -331,6 +331,7 @@ MonoBehaviour:
   width: 1.5
   height: 2
   collider: {fileID: 3544588451032733154}
+  gameManager: {fileID: 0}
   target: {fileID: 0}
   unpluggedSprite: {fileID: 3544588452032426967}
   pluggedSpriteRed: {fileID: 3544588451145433336}

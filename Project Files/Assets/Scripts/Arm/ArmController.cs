@@ -36,7 +36,7 @@ public partial class ArmController : PhysicalObject
 
     [Header("Sound Attributes")]
     public AudioSource  moveSound;
-    private float       moveVolume;
+    public float        moveVolume;
     private int         moveSoundDelay = 0;
 
     [Header("Animation Attributes")]

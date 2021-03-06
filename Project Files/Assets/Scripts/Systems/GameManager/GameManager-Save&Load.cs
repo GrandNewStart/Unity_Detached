@@ -33,11 +33,9 @@ public partial class GameManager
             DisableControl();
             EnablePause(false);
 
-            SceneFadeEnd(2, 2, () => {
+            SceneFadeEnd(1, 1, () => {
                 player.RecoverObject();
                 LoadCheckpoint(currentCheckpoint);
-                camera.transform.position = player.transform.position;
-                camera.transform.position += new Vector3(0, 2, -1);
                 SceneFadeStart(0, 0, () => {
                     HideCube();
                     ForceResumeGame();

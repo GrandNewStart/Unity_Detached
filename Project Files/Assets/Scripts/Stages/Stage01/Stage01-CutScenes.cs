@@ -13,7 +13,7 @@ public partial class StageManager01
             cutScenes_1,
             () => {
                 PlayBGM();
-                cutScene_1_done = true;
+                //cutScene_1_done = true;
             });
     }
 
@@ -48,6 +48,7 @@ public partial class StageManager01
             () =>
             {
                 LoadNextStage();
+                cutScene_4_done = true;
             });
         });
     }

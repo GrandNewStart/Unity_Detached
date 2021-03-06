@@ -15,8 +15,9 @@ public partial class StageManager01 : GameManager
     public List<GameObject>     cutScenes_2;
     public List<GameObject>     cutScenes_3;
     public List<GameObject>     cutScenes_4;
-    private bool cutScene_1_done    = false;
+    //private bool cutScene_1_done    = false;
     private bool cutScene_4_started = false;
+    private bool cutScene_4_done = false;
 
     //[Header("Tutorial Texts")]
     public TextMeshProUGUI  text_jump;
@@ -80,6 +81,7 @@ public partial class StageManager01 : GameManager
         PlayBGM();
         if (isLoadingSaveData)
         {
+            EnablePause(false);
             SceneFadeStart(0, 0, () => { ForceResumeGame(); });
         }
         else
@@ -123,6 +125,12 @@ public partial class StageManager01 : GameManager
         if (truck_reached && !cutScene_4_started)
         {
             PlayCutScene4();
+        }
+
+        if (cutScene_4_done)
+        {
+            EnablePause(false);
+            DisableControl();
         }
     }
 

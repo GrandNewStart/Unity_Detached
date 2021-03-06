@@ -57,12 +57,12 @@ public partial class PlayerController : PhysicalObject
     public AudioSource  fireSound;
     public AudioSource  retrieveSound;
     public AudioSource  retrieveCompleteSound;
-    private float       footStepVolume;
-    private float       jumpVolume;
-    private float       chargeVolume;
-    private float       fireVolume;
-    private float       retrieveVolume;
-    private float       retrieveCompleteVolume;
+    public float        footStepVolume;
+    public float        jumpVolume;
+    public float        chargeVolume;
+    public float        fireVolume;
+    public float        retrieveVolume;
+    public float        retrieveCompleteVolume;
     private float       footStepDelay;
     private float       chargePitch;
     private float       chargeSoundOriginalPitch;
@@ -233,7 +233,7 @@ public partial class PlayerController : PhysicalObject
         if (isDestroyed) return;
         if (deathCollider.IsTouchingLayers(LayerMask.GetMask("Ground")))
         {
-            isDestroyed = true;
+            DestroyObject();
         }
     }
 

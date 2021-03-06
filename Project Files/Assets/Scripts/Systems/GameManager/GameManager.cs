@@ -35,6 +35,10 @@ public partial class GameManager : MonoBehaviour
     public Sprite               checkbox_unchecked;
     public TMP_FontAsset        font_english;
     public TMP_FontAsset        font_korean;
+    public List<DoorSwitchController> doors = new List<DoorSwitchController>();
+    public List<LiftSwitchController> lifts = new List<LiftSwitchController>();
+    public List<CrusherController> crushers = new List<CrusherController>();
+    public List<TreadmillController> treadmills = new List<TreadmillController>();
     private List<Resolution>    resolutions;
     private Transform           cameraTarget;
     private bool                cameraMoving        = false;
@@ -73,11 +77,11 @@ public partial class GameManager : MonoBehaviour
     private int     tempResolution      = GameSettings.FHD;
     protected int   language            = GameSettings.ENGLISH;
     private int     tempLanguage        = GameSettings.ENGLISH;
-    private float   masterVolume        = 0.5f;
+    public float    masterVolume        = 0.5f;
     private float   tempMasterVolume    = 0.5f;
-    private float   musicVolume         = 0.5f;
+    public float    musicVolume         = 0.5f;
     private float   tempMusicVolume     = 0.5f;
-    private float   gameVolume          = 0.5f;
+    public float    gameVolume          = 0.5f;
     private float   tempGameVolume      = 0.5f;
 
     [Header("Checkpoints")]

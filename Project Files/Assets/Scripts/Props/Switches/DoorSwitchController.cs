@@ -4,6 +4,12 @@ using UnityEngine;
 
 public class DoorSwitchController : SwitchController
 {
+    protected override void Start()
+    {
+        base.Start();
+        gameManager.doors.Add(this);
+    }
+
     protected override void OnActivation()
     {
         base.OnActivation();

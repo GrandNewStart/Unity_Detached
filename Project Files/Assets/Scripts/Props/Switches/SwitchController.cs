@@ -7,6 +7,7 @@ public class SwitchController : MonoBehaviour
     public float                width;
     public float                height;
     public new BoxCollider2D    collider;
+    public GameManager          gameManager;
 
     [Header("Target")]
     public GameObject   target;

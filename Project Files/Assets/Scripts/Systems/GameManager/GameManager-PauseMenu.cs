@@ -38,6 +38,7 @@ public partial class GameManager : MenuInterface
 
     private void QuitGame()
     {
+        controlIndex = DISABLED;
         SceneFadeEnd(0, 0, () => {
             SceneManager.LoadScene(0);
         });

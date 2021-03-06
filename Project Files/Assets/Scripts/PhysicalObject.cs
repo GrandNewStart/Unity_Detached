@@ -20,24 +20,7 @@ public class PhysicalObject : MonoBehaviour
         destroyedSprite .SetActive(false);
     }
 
-    protected virtual void Update()
-    {
-        SpriteControl();
-    }
-
-    private void SpriteControl()
-    {
-        if (isDestroyed)
-        {
-            normalSprite.SetActive(false);
-            destroyedSprite.SetActive(true);
-        }
-        else
-        {
-            normalSprite.SetActive(true);
-            destroyedSprite.SetActive(false);
-        }
-    }
+    protected virtual void Update() { }
 
     public void MoveObject(int dir, float speed)
     {

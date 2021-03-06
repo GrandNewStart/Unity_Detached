@@ -20,6 +20,7 @@ public class LiftSwitchController : SwitchController
         minHeight       = minHeightCheck.transform.position.y;
         operationSound.transform.parent     = target.transform;
         operationSound.transform.position   = target.transform.position;
+        gameManager.lifts.Add(this);
     }
 
     private void FixedUpdate()

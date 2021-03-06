@@ -17,10 +17,10 @@ public partial class GameManager
         ShowCube(INFINITE);
         Checkpoint checkpoint = checkpoints[index];
         player.transform.position = checkpoint.transform.position;
-        Vector3 cameraPosition = player.transform.position;
-        cameraPosition.z -= 1;
-        cameraPosition.y += 7;
-        camera.transform.position = cameraPosition;
+        position = player.transform.position;
+        position.y += 2;
+        position.z = -1;
+        camera.transform.position = position;
     }
 
     protected void DisablePastCheckpoints()

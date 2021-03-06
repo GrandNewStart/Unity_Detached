@@ -27,7 +27,8 @@ public partial class StageManager01
     private void ManageTexts()
     {
         // Jump text
-        if (cutScene_1_done && !jump_done)
+        //if (cutScene_1_done && !jump_done)
+        if (!jump_done)
         {
             Show(text_jump, null);
             jump_done = true;

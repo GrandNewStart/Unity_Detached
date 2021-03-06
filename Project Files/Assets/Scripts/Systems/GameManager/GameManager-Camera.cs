@@ -18,7 +18,8 @@ public partial class GameManager
                 if (player.isDestroyed) return;
                 if (cameraMoving) return;
                 cameraPos = cameraTarget.position;
-                cameraPos += new Vector3(0, 2, -1);
+                cameraPos.y += 2;
+                cameraPos.z = -1;
                 camera.transform.position = cameraPos;
                 break;
             case FIRST_ARM:
@@ -26,7 +27,8 @@ public partial class GameManager
                 if (player.isDestroyed) cameraTarget = player.transform;
                 if (cameraMoving) return;
                 cameraPos = cameraTarget.position;
-                cameraPos += new Vector3(0, 2, -1);
+                cameraPos.y += 2;
+                cameraPos.z = -1;
                 camera.transform.position = cameraPos;
                 break;
             case SECOND_ARM:
@@ -34,7 +36,8 @@ public partial class GameManager
                 if (player.isDestroyed) cameraTarget = player.transform;
                 if (cameraMoving) return;
                 cameraPos = cameraTarget.position;
-                cameraPos += new Vector3(0, 2, -1);
+                cameraPos.y += 2;
+                cameraPos.z = -1;
                 camera.transform.position = cameraPos;
                 break;
         }
@@ -46,7 +49,8 @@ public partial class GameManager
         while(cameraMoving)
         {
             Vector3 targetPos = cameraTarget.position;
-            targetPos += new Vector3(0, 2, -1);
+            targetPos.y += 2;
+            targetPos.z = -1;
             Vector3 currentPos = camera.transform.position;
             Vector3 diff = targetPos - currentPos;
             Vector3 direction = diff.normalized;
@@ -58,7 +62,8 @@ public partial class GameManager
             {
                 cameraMoving = false;
                 targetPos = cameraTarget.position;
-                targetPos += new Vector3(0, 2, -1);
+                targetPos.y += 2;
+                targetPos.z = -1;
                 camera.transform.position = targetPos;
                 break;
             }

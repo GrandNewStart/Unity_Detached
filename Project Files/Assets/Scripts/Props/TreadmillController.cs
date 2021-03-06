@@ -10,26 +10,37 @@ public class TreadmillController : MonoBehaviour
     public List<AudioSource>    motorSounds;
     public GameObject           player;
     private List<float>         originalVolumes;
+    private bool                isPaused = false;
+    private bool                pauseStateChanged;
 
     private void Start()
     {
-        originalVolumes = new List<float>();
+        pauseStateChanged   = gameManager.isPaused;
+        originalVolumes     = new List<float>();
+
         foreach (AudioSource source in motorSounds)
         {
             originalVolumes.Add(source.volume);
         }
         PlayOperationSound();
+        gameManager.treadmills.Add(this);
     }
 
     private void Update()
     {
-        if (gameManager.isPaused)
+        pauseStateChanged = (isPaused != gameManager.isPaused);
+        if (pauseStateChanged)
         {
-            PauseOperationSound();
-        }
-        else
-        {
-            ResumeOperationSound();
+            if (gameManager.isPaused)
+            {
+                PauseOperationSound();
+                isPaused = true;
+            }
+            else
+            {
+                ResumeOperationSound();
+                isPaused = false;
+            }
         }
     }
 
@@ -46,7 +57,7 @@ public class TreadmillController : MonoBehaviour
     {
         foreach (AudioSource source in motorSounds)
         {
-            source.volume = 0;
+            source.Pause();
         }
     }
 
@@ -55,8 +66,7 @@ public class TreadmillController : MonoBehaviour
         for (int i = 0; i < motorSounds.Count; i++)
         {
             AudioSource source = motorSounds[i];
-            float originalVolume = originalVolumes[i];
-            source.volume = originalVolume;
+            source.Play();
         }
     }
 
@@ -65,6 +75,18 @@ public class TreadmillController : MonoBehaviour
         foreach (AudioSource source in motorSounds)
         {
             source.mute = mute;
+        }
+    }
+
+    public void AdjustAudio(float volume)
+    {
+        foreach (AudioSource source in motorSounds)
+        {
+            source.volume = volume;
+        }
+        for (int i = 0; i < originalVolumes.Count; i++)
+        {
+            originalVolumes[i] = volume;
         }
     }
 
