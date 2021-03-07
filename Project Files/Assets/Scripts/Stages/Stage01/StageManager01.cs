@@ -15,9 +15,8 @@ public partial class StageManager01 : GameManager
     public List<GameObject>     cutScenes_2;
     public List<GameObject>     cutScenes_3;
     public List<GameObject>     cutScenes_4;
-    //private bool cutScene_1_done    = false;
     private bool cutScene_4_started = false;
-    private bool cutScene_4_done = false;
+    private bool cutScene_4_done    = false;
 
     //[Header("Tutorial Texts")]
     public TextMeshProUGUI  text_jump;

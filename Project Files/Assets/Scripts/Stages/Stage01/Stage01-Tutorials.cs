@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public partial class StageManager01
@@ -27,7 +26,6 @@ public partial class StageManager01
     private void ManageTexts()
     {
         // Jump text
-        //if (cutScene_1_done && !jump_done)
         if (!jump_done)
         {
             Show(text_jump, null);
@@ -78,7 +76,7 @@ public partial class StageManager01
         Hide(text_continue, null);
         ForceResumeGame();
         while (player.GetArms() == player.GetEnabledArms()) { yield return null; }
-        Invoke("ShowTutorial2", 1);
+        Invoke(nameof(ShowTutorial2), 1);
     }
 
     private IEnumerator DetectTutorial2Done()
@@ -89,7 +87,7 @@ public partial class StageManager01
         Hide(text_continue, null);
         ForceResumeGame();
         while (!firstArm.IsControlling()) { yield return null; }
-        Invoke("ShowTutorial3", 1);
+        Invoke(nameof(ShowTutorial3), 1);
     }
 
     private IEnumerator DetectTutorial3Done()

@@ -14,6 +14,7 @@ public partial class PlayerController : PhysicalObject
     private bool        isOnTreadmill;
     private bool        isGrounded;
     private bool        isMovable;
+    private bool        jumped;
     private bool        hasControl;
 
     [Header("Shoot Attributes")]

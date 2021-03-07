@@ -4,90 +4,31 @@ using UnityEngine;
 
 public class TreadmillController : MonoBehaviour
 {
-    public GameManager          gameManager;
-    public short                dir;
-    public float                speed;
-    public List<AudioSource>    motorSounds;
-    public GameObject           player;
-    private List<float>         originalVolumes;
-    private bool                isPaused = false;
-    private bool                pauseStateChanged;
+    public GameManager  gameManager;
+    public AudioSource  motorSound;
+    public GameObject   player;
+    public short        dir;
+    public float        speed;
 
     private void Start()
     {
-        pauseStateChanged   = gameManager.isPaused;
-        originalVolumes     = new List<float>();
-
-        foreach (AudioSource source in motorSounds)
-        {
-            originalVolumes.Add(source.volume);
-        }
-        PlayOperationSound();
         gameManager.treadmills.Add(this);
     }
 
-    private void Update()
+    public void PlayOperationSound()
     {
-        pauseStateChanged = (isPaused != gameManager.isPaused);
-        if (pauseStateChanged)
-        {
-            if (gameManager.isPaused)
-            {
-                PauseOperationSound();
-                isPaused = true;
-            }
-            else
-            {
-                ResumeOperationSound();
-                isPaused = false;
-            }
-        }
+        motorSound.loop = true;
+        motorSound.Play();
     }
 
-    private void PlayOperationSound()
+    public void PauseOperationSound()
     {
-        foreach (AudioSource source in motorSounds)
-        {
-            source.loop = true;
-            source.Play();
-        }
-    }
-
-    private void PauseOperationSound()
-    {
-        foreach (AudioSource source in motorSounds)
-        {
-            source.Pause();
-        }
-    }
-
-    private void ResumeOperationSound()
-    {
-        for (int i = 0; i < motorSounds.Count; i++)
-        {
-            AudioSource source = motorSounds[i];
-            source.Play();
-        }
-    }
-
-    public void MuteSound(bool mute)
-    {
-        foreach (AudioSource source in motorSounds)
-        {
-            source.mute = mute;
-        }
+        motorSound.Pause();
     }
 
     public void AdjustAudio(float volume)
     {
-        foreach (AudioSource source in motorSounds)
-        {
-            source.volume = volume;
-        }
-        for (int i = 0; i < originalVolumes.Count; i++)
-        {
-            originalVolumes[i] = volume;
-        }
+        motorSound.volume = volume;
     }
 
     private void OnCollisionStay2D(Collision2D collision)

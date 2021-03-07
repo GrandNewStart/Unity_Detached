@@ -7,6 +7,7 @@ public partial class PlayerController
         treadmillVelocity = 0;
         isOnTreadmill = false;
         isMovable = true;
+        jumped = false;
         hasControl = true;
     }
 
@@ -96,12 +97,14 @@ public partial class PlayerController
     private void Jump()
     {
         // Jump only when player is on ground and movable
-        if (isGrounded && isMovable)
+        if (isGrounded && isMovable && !jumped)
         {
-            if (Input.GetKeyDown(KeyCode.Space) ||
+            if (Input.GetKeyDown(KeyCode.UpArrow) ||
                 Input.GetKeyDown(KeyCode.W) ||
-                Input.GetKeyDown(KeyCode.UpArrow))
+                Input.GetKeyDown(KeyCode.Space))
             {
+                jumped = true;
+                Invoke(nameof(EnableJump), 0.3f);
                 // Do jump by adjusting the rigidbody's velocity
                 float horizontal = rigidbody.velocity.x * Time.deltaTime;
                 float vertical = rigidbody.velocity.y + jumpHeight;
@@ -110,6 +113,11 @@ public partial class PlayerController
                 jumpSound.Play();
             }
         }
+    }
+
+    private void EnableJump()
+    {
+        jumped = false;
     }
 
 }

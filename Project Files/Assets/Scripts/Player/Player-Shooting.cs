@@ -86,7 +86,7 @@ public partial class PlayerController
             // Firing start.
             state = State.fire;
             // Wait for the fire animation to finish.
-            Invoke("FinishFire", 0.3f);
+            Invoke(nameof(FinishFire), 0.3f);
             // Player's state is fixed while the animation is playing
             isStateFixed = true;
             // Call HandController class's function to actually fire
@@ -145,26 +145,6 @@ public partial class PlayerController
                 PlayRetrieveSound();
             }
         }
-
-        //if (Input.GetKeyDown(KeyCode.G)
-        //    && isMovable
-        //    && !isFirstArmRetrieving
-        //    && isFirstArmOut)
-        //{
-        //    isFirstArmRetrieving = true;
-        //    firstArm.StartRetrieve();
-        //    PlayRetrieveSound();
-        //}
-
-        //if (Input.GetKeyDown(KeyCode.H)
-        //    && isMovable
-        //    && !isSecondArmRetrieving
-        //    && isSecondArmOut)
-        //{
-        //    isSecondArmRetrieving = true;
-        //    secondArm.StartRetrieve();
-        //    PlayRetrieveSound();
-        //}
 
         // Check if retreiving is all done
         if (isFirstArmRetrieving)

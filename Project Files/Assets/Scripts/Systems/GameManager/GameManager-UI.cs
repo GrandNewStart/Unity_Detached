@@ -12,7 +12,7 @@ public partial class GameManager
         cube.SetActive(true);
         if (seconds != INFINITE)
         {
-            Invoke("HideCube", seconds);
+            Invoke(nameof(HideCube), seconds);
         }
     }
 

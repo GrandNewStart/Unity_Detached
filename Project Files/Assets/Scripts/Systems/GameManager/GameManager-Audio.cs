@@ -65,6 +65,22 @@ public partial class GameManager
         }
     }
 
+    private void PauseAudio()
+    {
+        foreach (TreadmillController treadmill in treadmills)
+        {
+            treadmill.PauseOperationSound();
+        }
+    }
+
+    private void ResumeAudio()
+    {
+        foreach (TreadmillController treadmill in treadmills)
+        {
+            treadmill.PlayOperationSound();
+        }
+    }
+
     public void PlayBGM()
     {
         bgm.loop = true;

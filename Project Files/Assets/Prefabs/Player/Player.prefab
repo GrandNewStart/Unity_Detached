@@ -848,7 +848,7 @@ MonoBehaviour:
   powerIncrement: 0.15
   enabledArms: 2
   groundCheck: {fileID: 2714851829839212853}
-  groundCheckWidth: 0.45
+  groundCheckWidth: 0.4
   resolution: 1
   deathCollider: {fileID: 1396581221633676552}
   head: {fileID: 2082184147418542847}
@@ -861,6 +861,12 @@ MonoBehaviour:
   fireSound: {fileID: 8883837840942883856}
   retrieveSound: {fileID: 2799766147908091103}
   retrieveCompleteSound: {fileID: 7774493566484997069}
+  footStepVolume: 0
+  jumpVolume: 0
+  chargeVolume: 0
+  fireVolume: 0
+  retrieveVolume: 0
+  retrieveCompleteVolume: 0
 --- !u!50 &6888627453961791285
 Rigidbody2D:
   serializedVersion: 4
@@ -973,7 +979,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2714851829839212853}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.1, y: -1, z: 0}
+  m_LocalPosition: {x: 0.15, y: -1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2714851829121961611}

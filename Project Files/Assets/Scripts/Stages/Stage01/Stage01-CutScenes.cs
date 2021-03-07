@@ -13,7 +13,6 @@ public partial class StageManager01
             cutScenes_1,
             () => {
                 PlayBGM();
-                //cutScene_1_done = true;
             });
     }
 
@@ -24,7 +23,7 @@ public partial class StageManager01
             PlayCutScene(
             cutScenes_2,
             () => {
-                Invoke("ShowTutorial1", 1);
+                Invoke(nameof(ShowTutorial1), 1);
             });
         });
     }

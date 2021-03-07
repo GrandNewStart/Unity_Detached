@@ -149,6 +149,7 @@ public partial class GameManager : MonoBehaviour
         player.OnPause();
         firstArm.OnPause();
         secondArm.OnPause();
+        PauseAudio();
     }
 
     // Called both in Resume & ForceResume
@@ -161,6 +162,7 @@ public partial class GameManager : MonoBehaviour
         player.OnResume();
         firstArm.OnResume();
         secondArm.OnResume();
+        ResumeAudio();
     }
 
     // Pause game with pause menu
