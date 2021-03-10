@@ -4,9 +4,8 @@ using UnityEngine;
 
 public class DoorSwitchController : SwitchController
 {
-    protected override void Start()
+    private void Awake()
     {
-        base.Start();
         gameManager.doors.Add(this);
     }
 

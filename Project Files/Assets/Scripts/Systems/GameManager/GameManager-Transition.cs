@@ -40,6 +40,11 @@ public partial class GameManager
         StartCoroutine(ShowFadeIn(sprite, callback));
     }
 
+    protected void Show(CanvasGroup group, Action callback)
+    {
+        StartCoroutine(ShowFadeIn(group, callback));
+    }
+
     protected void Hide(TextMeshProUGUI text, Action callback)
     {
         StartCoroutine(HideFadeOut(text, callback));
@@ -53,6 +58,11 @@ public partial class GameManager
     protected void Hide(SpriteRenderer sprite, Action callback)
     {
         StartCoroutine(HideFadeOut(sprite, callback));
+    }
+
+    protected void Hide(CanvasGroup group, Action callback)
+    {
+        StartCoroutine(HideFadeOut(group, callback));
     }
 
     private IEnumerator PlayAnimation(
@@ -177,6 +187,18 @@ public partial class GameManager
         callback?.Invoke();
     }
 
+    private IEnumerator ShowFadeIn(CanvasGroup group, Action callback)
+    {
+        while(group.alpha < 0.98f)
+        {
+            group.alpha += 0.02f;
+            yield return null;
+        }
+
+        group.alpha = 1.0f;
+        callback?.Invoke();
+    }
+
     private IEnumerator HideFadeOut(TextMeshProUGUI text, Action callback)
     {
         Color color = text.color;
@@ -231,6 +253,17 @@ public partial class GameManager
 
         color.a         = 0;
         sprite.color    = color;
+        callback?.Invoke();
+    }
+
+    private IEnumerator HideFadeOut(CanvasGroup group, Action callback)
+    {
+        while(group.alpha > 0.02f)
+        {
+            group.alpha -= 0.02f;
+            yield return null;
+        }
+        group.alpha = 0;
         callback?.Invoke();
     }
 

@@ -12,6 +12,11 @@ public class LiftSwitchController : SwitchController
     private float       maxHeight;
     private float       minHeight;
 
+    private void Awake()
+    {
+        gameManager.lifts.Add(this);
+    }
+
     protected override void Start()
     {
         base.Start();
@@ -20,7 +25,6 @@ public class LiftSwitchController : SwitchController
         minHeight       = minHeightCheck.transform.position.y;
         operationSound.transform.parent     = target.transform;
         operationSound.transform.position   = target.transform.position;
-        gameManager.lifts.Add(this);
     }
 
     private void FixedUpdate()

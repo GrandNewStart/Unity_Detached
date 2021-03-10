@@ -20,6 +20,11 @@ public class CrusherController : MonoBehaviour
     private bool    isActivated;
     private State   state = State.down;
 
+    private void Awake()
+    {
+        gameManager.crushers.Add(this);
+    }
+
     private void Start()
     {
         crusherPosition = column.transform.position;
@@ -28,8 +33,6 @@ public class CrusherController : MonoBehaviour
 
         crushSound.loop         = false;
         crushSound.playOnAwake  = false;
-
-        gameManager.crushers.Add(this);
     }
 
     private void Update()

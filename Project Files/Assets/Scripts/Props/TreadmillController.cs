@@ -10,9 +10,14 @@ public class TreadmillController : MonoBehaviour
     public short        dir;
     public float        speed;
 
-    private void Start()
+    private void Awake()
     {
         gameManager.treadmills.Add(this);
+    }
+
+    private void Start()
+    {
+        PlayOperationSound();
     }
 
     public void PlayOperationSound()

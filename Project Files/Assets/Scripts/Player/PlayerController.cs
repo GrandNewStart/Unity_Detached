@@ -4,7 +4,7 @@ using UnityEngine;
 public partial class PlayerController : PhysicalObject
 {
     public enum Resolution { _1024, _512, _256, _128 };
-    private enum State { idle, walk, jump, charge, fire };
+    public enum State { idle, walk, jump, charge, fire };
 
     [Header("Movement Attributes")]
     public  GameObject  normal;
@@ -214,7 +214,6 @@ public partial class PlayerController : PhysicalObject
         if (Input.GetKeyDown(KeyCode.P)) DestroyObject();
     }
 
-
     public int ChangeControl()
     {
         if (hasControl)
@@ -256,6 +255,9 @@ public partial class PlayerController : PhysicalObject
     public int GetEnabledArms()
     { return enabledArms; }
 
+    public void SetDir(short dir)
+    { this.dir = dir; }
+
     public short GetDir()
     { return lastDir; }
 
@@ -279,5 +281,8 @@ public partial class PlayerController : PhysicalObject
 
     public int GetArms()
     { return arms; }
+
+    public void SetState(State state)
+    { this.state = state; }
 
 }

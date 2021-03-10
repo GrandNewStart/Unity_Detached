@@ -16,6 +16,7 @@ public partial class GameManager : MonoBehaviour
     public const int        FIRST_ARM   = 1;
     public const int        SECOND_ARM  = 2;
     public const int        UI          = 3;
+    public const int        CONVERSATION = 4;
     public const int        DISABLED    = -1;
     public const int        PAUSE       = 0;
     public const int        SETTINGS    = 1;
@@ -83,6 +84,15 @@ public partial class GameManager : MonoBehaviour
     private float   tempMusicVolume     = 0.5f;
     public float    gameVolume          = 0.5f;
     private float   tempGameVolume      = 0.5f;
+
+    [Header("Conversation")]
+    protected List<LineNode> conversations = new List<LineNode>();
+    public CanvasGroup          conversationBox;
+    public CanvasGroup          responseBox;
+    public TextMeshProUGUI      conversation_text;
+    public TextMeshProUGUI      response_text_1;
+    public TextMeshProUGUI      response_text_2;
+    public TextMeshProUGUI      response_text_3;
 
     [Header("Checkpoints")]
     public List<Checkpoint> checkpoints;
