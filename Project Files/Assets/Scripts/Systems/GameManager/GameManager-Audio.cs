@@ -6,8 +6,9 @@ public partial class GameManager
 {
     private void SetVolumes()
     {
-        float musicVol = masterVolume * musicVolume;
-        float gameVol = masterVolume * gameVolume;
+        float musicVol  = Common.masterVolume * Common.musicVolume;
+        float gameVol   = Common.masterVolume * Common.gameVolume;
+        Debug.Log("SET VOLUMES: " + gameVol);
         bgm.volume = musicVol;
         clickSound.volume = gameVol;
         pageSound.volume = gameVol;

@@ -1,34 +1,38 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
+using System;
 
 public partial class HomeController
 {
     private void DetectResolutions()
     {
+        if (Common.resolutions.Count != 0) { return; }
+
         Resolution[] possibleRes = Screen.resolutions;
         foreach (Resolution res in possibleRes)
         {
-            Debug.Log(res.width + " x " + res.height);
             if (res.width == 1280 && res.height == 720)
             {
-                resolutions.Add(res);
+                Common.resolutions.Add(res);
             }
             if (res.width == 1600 && res.height == 900)
             {
-                resolutions.Add(res);
+                Common.resolutions.Add(res);
             }
             if (res.width == 1920 && res.height == 1080)
             {
-                resolutions.Add(res);
+                Common.resolutions.Add(res);
             }
             if (res.width == 2560 && res.height == 1440)
             {
-                resolutions.Add(res);
+                Common.resolutions.Add(res);
             }
             if (res.width == 3840 && res.height == 2160)
             {
-                resolutions.Add(res);
+                Common.resolutions.Add(res);
             }
         }
+        Debug.Log("POSSIBLE RESOLUTIONS: " + Common.resolutions.Count);
     }
 
     private void InitGameSettings()
@@ -36,50 +40,51 @@ public partial class HomeController
         GameSettings settings = SaveSystem.LoadSettings();
         if (settings != null)
         {
-            isFullScreen    = settings.IsFullScreen();
-            language        = settings.GetLanguage();
-            resolution      = settings.GetResolution();
-            masterVolume    = settings.GetMasterVolume();
-            musicVolume     = settings.GetMusicVolume();
-            gameVolume      = settings.GetGameVolume();
 
-            tempIsFullScreen    = isFullScreen;
-            tempLanguage        = language;
-            tempResolution      = resolution;
-            tempMasterVolume    = masterVolume;
-            tempMusicVolume     = musicVolume;
-            tempGameVolume      = gameVolume;
+            Common.isFullScreen = settings.IsFullScreen();
+            Common.language     = settings.GetLanguage();
+            Common.resolution   = settings.GetResolution();
+            Common.masterVolume = settings.GetMasterVolume();
+            Common.musicVolume  = settings.GetMusicVolume();
+            Common.gameVolume   = settings.GetGameVolume();
 
-            if (resolution == GameSettings.HD)
+            tempIsFullScreen    = Common.isFullScreen;
+            tempLanguage        = Common.language;
+            tempResolution      = Common.resolution;
+            tempMasterVolume    = Common.masterVolume;
+            tempMusicVolume     = Common.musicVolume;
+            tempGameVolume      = Common.gameVolume;
+
+            if (Common.resolution == GameSettings.HD)
             {
-                resolutionIndex = 0;
+                Common.resolutionIndex = 0;
             }
-            if (resolution == GameSettings.SHD)
+            if (Common.resolution == GameSettings.SHD)
             {
-                resolutionIndex = 1;
+                Common.resolutionIndex = 1;
             }
-            if (resolution == GameSettings.FHD)
+            if (Common.resolution == GameSettings.FHD)
             {
-                resolutionIndex = 2;
+                Common.resolutionIndex = 2;
             }
-            if (resolution == GameSettings.QHD)
+            if (Common.resolution == GameSettings.QHD)
             {
-                resolutionIndex = 3;
+                Common.resolutionIndex = 3;
             }
-            if (resolution == GameSettings.UHD)
+            if (Common.resolution == GameSettings.UHD)
             {
-                resolutionIndex = 4;
+                Common.resolutionIndex = 4;
             }
         }
         else
         {
             GameSettings defaultSettings = new GameSettings(
-                isFullScreen,
-                language,
-                resolution,
-                masterVolume,
-                musicVolume,
-                gameVolume);
+                Common.isFullScreen,
+                Common.language,
+                Common.resolution,
+                Common.masterVolume,
+                Common.musicVolume,
+                Common.gameVolume);
             SaveSystem.SaveSettings(defaultSettings);
         }
 
@@ -92,7 +97,7 @@ public partial class HomeController
 
     private void ApplyScreenMode()
     {
-        if (isFullScreen)
+        if (Common.isFullScreen)
         {
             menu_3_full_screen_checkbox.sprite  = checkbox_checked;
             menu_3_windowed_checkbox.sprite     = checkbox_unchecked;
@@ -106,7 +111,7 @@ public partial class HomeController
 
     private void ApplyLanguage()
     {
-        if (language == GameSettings.ENGLISH)
+        if (Common.language == GameSettings.ENGLISH)
         {
             loadGame.text = "continue";
             loadGame.font = font_english;
@@ -143,7 +148,7 @@ public partial class HomeController
             press_any_key.text = "press any key";
             press_any_key.font = font_english;
         }
-        if (language == GameSettings.KOREAN)
+        if (Common.language == GameSettings.KOREAN)
         {
             loadGame.text = "계속하기";
             loadGame.font = font_korean;
@@ -184,21 +189,21 @@ public partial class HomeController
 
     private void ApplyVolumes()
     {
-        int master  = (int)(masterVolume * 100);
-        int music   = (int)(musicVolume * 100);
-        int game    = (int)(gameVolume * 100);
-        menu_3_master_volume_slider.value   = masterVolume;
+        int master  = (int)(Common.masterVolume * 100);
+        int music   = (int)(Common.musicVolume * 100);
+        int game    = (int)(Common.gameVolume * 100);
+        menu_3_master_volume_slider.value   = Common.masterVolume;
         menu_3_master_volume_value.text     = master.ToString();
-        menu_3_music_volume_slider.value    = musicVolume;
+        menu_3_music_volume_slider.value    = Common.musicVolume;
         menu_3_music_volume_value.text      = music.ToString();
-        menu_3_game_volume_slider.value     = gameVolume;
+        menu_3_game_volume_slider.value     = Common.gameVolume;
         menu_3_game_volume_value.text       = game.ToString();
         SetVolumes();
     }
 
     private void ApplyResolution()
     {
-        Resolution res = resolutions[resolutionIndex];
+        Resolution res = Common.resolutions[Common.resolutionIndex];
         menu_3_resolution_value.text = res.width + " x " + res.height;
         SetResolution(res);
     }
@@ -206,19 +211,19 @@ public partial class HomeController
     private void ApplyGameSettings()
     {
         PlayPageSound();
-        isFullScreen    = tempIsFullScreen;
-        resolution      = tempResolution;
-        masterVolume    = tempMasterVolume;
-        musicVolume     = tempMusicVolume;
-        gameVolume      = tempGameVolume;
-        language        = tempLanguage;
+        Common.isFullScreen    = tempIsFullScreen;
+        Common.resolution      = tempResolution;
+        Common.masterVolume    = tempMasterVolume;
+        Common.musicVolume     = tempMusicVolume;
+        Common.gameVolume      = tempGameVolume;
+        Common.language        = tempLanguage;
         SaveSystem.SaveSettings(new GameSettings(
-            isFullScreen,
-            language,
-            resolution,
-            masterVolume,
-            musicVolume,
-            gameVolume)
+            Common.isFullScreen,
+            Common.language,
+            Common.resolution,
+            Common.masterVolume,
+            Common.musicVolume,
+            Common.gameVolume)
             );
         SetFullScreen();
         ApplyResolution();
@@ -229,7 +234,7 @@ public partial class HomeController
 
     private void SetFullScreen()
     {
-        Screen.fullScreen = isFullScreen;
+        Screen.fullScreen = Common.isFullScreen;
     }
 
     private void SetResolution(Resolution res)
@@ -237,6 +242,6 @@ public partial class HomeController
         Screen.SetResolution(
                 res.width,
                 res.height,
-                isFullScreen);
+                Common.isFullScreen);
     }
 }

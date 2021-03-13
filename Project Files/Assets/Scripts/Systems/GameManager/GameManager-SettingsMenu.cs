@@ -54,9 +54,9 @@ public partial class GameManager
         if (Input.GetKeyDown(KeyCode.LeftArrow) ||
             Input.GetKeyDown(KeyCode.A))
         {
-            if (resolutionIndex == 0) { return; }
-            resolutionIndex--;
-            Resolution res = resolutions[resolutionIndex];
+            if (Common.resolutionIndex == 0) { return; }
+            Common.resolutionIndex--;
+            Resolution res = Common.resolutions[Common.resolutionIndex];
             if (res.width == 1280 && res.height == 720)
             {
                 tempResolution = GameSettings.HD;
@@ -80,9 +80,9 @@ public partial class GameManager
         if (Input.GetKeyDown(KeyCode.RightArrow) ||
             Input.GetKeyDown(KeyCode.D))
         {
-            if (resolutionIndex == resolutions.Count - 1) { return; }
-            resolutionIndex++;
-            Resolution res = resolutions[resolutionIndex];
+            if (Common.resolutionIndex == Common.resolutions.Count - 1) { return; }
+            Common.resolutionIndex++;
+            Resolution res = Common.resolutions[Common.resolutionIndex];
             if (res.width == 1600 && res.height == 900)
             {
                 tempResolution = GameSettings.SHD;

@@ -40,10 +40,18 @@ public partial class GameManager
                 cameraPos.z = -1;
                 camera.transform.position = cameraPos;
                 break;
+            default:
+                if (player.isDestroyed) cameraTarget = player.transform;
+                if (cameraMoving) return;
+                cameraPos = cameraTarget.position;
+                cameraPos.y += 2;
+                cameraPos.z = -1;
+                camera.transform.position = cameraPos;
+                break;
         }
     }
 
-    private IEnumerator MoveCamera()
+    public IEnumerator MoveCamera()
     {
         cameraMoving = true;
         while(cameraMoving)

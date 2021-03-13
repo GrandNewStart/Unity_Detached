@@ -49,6 +49,7 @@ public partial class GameManager
                     {
                         if (Input.GetKeyDown(KeyCode.Space))
                         {
+                            PlayPageSound();
                             spaceKeyUp = false;
                             break;
                         }
@@ -118,6 +119,7 @@ public partial class GameManager
                     {
                         if (responseIndex > 0)
                         {
+                            PlayClickSound();
                             responseIndex--;
                             SelectResponse(responseIndex);
                             conversation = nextLines[responseIndex];
@@ -128,6 +130,7 @@ public partial class GameManager
                     {
                         if (responseIndex < maxIndex)
                         {
+                            PlayClickSound();
                             responseIndex++;
                             SelectResponse(responseIndex);
                             conversation = nextLines[responseIndex];
@@ -136,6 +139,7 @@ public partial class GameManager
 
                     if (Input.GetKeyDown(KeyCode.Space) && spaceKeyUp)
                     {
+                        PlayPageSound();
                         responseSelected = true;
                         Hide(responseBox, null);
                     }

@@ -17,6 +17,7 @@ public class TreadmillController : MonoBehaviour
 
     private void Start()
     {
+        if (gameManager.isPaused) { return; }
         PlayOperationSound();
     }
 

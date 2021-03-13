@@ -5,6 +5,7 @@ using UnityEngine;
 public class TestStageManager : GameManager
 {
     [SerializeField] private GameObject truck;
+    [SerializeField] private TelescopeController telescope;
     private bool conversationBegan = false;
 
     protected override void Start()
@@ -92,15 +93,18 @@ public class TestStageManager : GameManager
 
     private void DetectEventTrigger()
     {
-        bool truckReached = Physics2D.OverlapBox(
-            truck.transform.position,
-            new Vector2(14, 6),
-            0,
-            LayerMask.GetMask("Player"));
-        if (!conversationBegan && truckReached)
+        if (!conversationBegan)
         {
-            conversationBegan = true;
-            StartConversation(0);
+            bool truckReached = Physics2D.OverlapBox(
+                truck.transform.position,
+                new Vector2(14, 6),
+                0,
+                LayerMask.GetMask("Player"));
+            if (truckReached)
+            {
+                conversationBegan = true;
+                StartConversation(0);
+            }
         }
     }
 

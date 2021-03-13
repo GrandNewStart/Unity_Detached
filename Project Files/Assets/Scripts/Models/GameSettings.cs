@@ -3,13 +3,13 @@
 [Serializable]
 public class GameSettings
 {
-    public static int KOREAN = 0;
-    public static int ENGLISH = 1;
-    public static int HD = 0;
-    public static int SHD = 1;
-    public static int FHD = 2;
-    public static int QHD = 3;
-    public static int UHD = 4;
+    public const int KOREAN = 0;
+    public const int ENGLISH = 1;
+    public const int HD = 0;
+    public const int SHD = 1;
+    public const int FHD = 2;
+    public const int QHD = 3;
+    public const int UHD = 4;
 
     private bool isFullScreen;
     private int language;

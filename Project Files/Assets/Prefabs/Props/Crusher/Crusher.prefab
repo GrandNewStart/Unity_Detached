@@ -52,7 +52,7 @@ AudioSource:
   Priority: 128
   DopplerLevel: 0
   MinDistance: 0
-  MaxDistance: 15
+  MaxDistance: 30
   Pan2D: 0
   rolloffMode: 1
   BypassEffects: 0
@@ -411,7 +411,7 @@ GameObject:
   - component: {fileID: 5354780244389431835}
   - component: {fileID: 4744662949759716788}
   m_Layer: 9
-  m_Name: Crusher(new)
+  m_Name: Crusher
   m_TagString: Crusher
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

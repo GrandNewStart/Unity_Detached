@@ -139,12 +139,12 @@ public partial class GameManager
         }
     }
 
-    protected void EnableControl()
+    public void EnableControl()
     {
         controlIndex = tempControlIndex;
     }
 
-    protected void DisableControl()
+    public void DisableControl()
     {
         if (controlIndex == UI) return;
         if (controlIndex == DISABLED) return;

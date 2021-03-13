@@ -51,7 +51,7 @@ public class SwitchController : MonoBehaviour
     {
         HandCheck();
         PlugCheck();
-        ActivateSwitch();
+        OperateSwitch();
         SpriteControl();
         DetectPlayerDeath();
     }
@@ -76,7 +76,7 @@ public class SwitchController : MonoBehaviour
         }
     }
 
-    virtual protected void ActivateSwitch()
+    virtual protected void OperateSwitch()
     {
         if (!isFirstArmPlugged && !isSecondArmPlugged)
         {

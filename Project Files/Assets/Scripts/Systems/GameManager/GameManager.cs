@@ -40,13 +40,12 @@ public partial class GameManager : MonoBehaviour
     public List<LiftSwitchController> lifts = new List<LiftSwitchController>();
     public List<CrusherController> crushers = new List<CrusherController>();
     public List<TreadmillController> treadmills = new List<TreadmillController>();
-    private List<Resolution>    resolutions;
-    private Transform           cameraTarget;
+    public List<TelescopeController> telescopes = new List<TelescopeController>();
+    public Transform            cameraTarget;
     private bool                cameraMoving        = false;
-    private int                 controlIndex        = 0;
+    public int                  controlIndex        = 0;
     private int                 tempControlIndex    = 0;
     private float               cameraSpeed         = 130;
-    private int                 resolutionIndex     = 0;
     private int                 menuIndex           = 0;
 
     [Header("Game Settings")]
@@ -72,17 +71,11 @@ public partial class GameManager : MonoBehaviour
     public Slider           settings_master_volume_slider;
     public Slider           settings_music_volume_slider;
     public Slider           settings_game_volume_slider;
-    private bool    isFullScreen        = false;
     private bool    tempIsFullScreen    = false;
-    private int     resolution          = GameSettings.FHD;
     private int     tempResolution      = GameSettings.FHD;
-    protected int   language            = GameSettings.ENGLISH;
     private int     tempLanguage        = GameSettings.ENGLISH;
-    public float    masterVolume        = 0.5f;
     private float   tempMasterVolume    = 0.5f;
-    public float    musicVolume         = 0.5f;
     private float   tempMusicVolume     = 0.5f;
-    public float    gameVolume          = 0.5f;
     private float   tempGameVolume      = 0.5f;
 
     [Header("Conversation")]
@@ -134,7 +127,6 @@ public partial class GameManager : MonoBehaviour
 
     protected virtual void OnStageStarted()
     {
-        DetectResolutions();
         InitGameSettings();
         InitPauseMenu();
         InitSettingsMenu();

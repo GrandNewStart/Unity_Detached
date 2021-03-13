@@ -69,9 +69,8 @@ public partial class PlayerController : PhysicalObject
     private float       chargeSoundOriginalPitch;
     private bool        isChargeSoundPlaying;
 
-    protected override void Start()
+    private void Awake()
     {
-        base.Start();
         InitMovementAttributes();
         InitShootingAttributes();
         InitAnimationAttributes();

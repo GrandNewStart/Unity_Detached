@@ -14,7 +14,6 @@ public partial class HomeController : MonoBehaviour
     private const int       MENU_4      = 4;
 
     public Image                background;
-    public Animator             crossfade;
     public TMPro.TMP_FontAsset  font_english;
     public TMPro.TMP_FontAsset  font_korean;
     public Sprite               checkbox_unchecked;
@@ -64,20 +63,12 @@ public partial class HomeController : MonoBehaviour
     public Slider           menu_3_master_volume_slider;
     public Slider           menu_3_music_volume_slider;
     public Slider           menu_3_game_volume_slider;
-    private bool            isFullScreen = true;
     private bool            tempIsFullScreen = true;
-    private int             language = GameSettings.ENGLISH;
     private int             tempLanguage = GameSettings.ENGLISH;
-    private int             resolution = GameSettings.FHD;
-    private int             resolutionIndex = 0;
     private int             tempResolution = GameSettings.FHD;
-    private float           masterVolume = 0.5f;
     private float           tempMasterVolume = 0.5f;
-    private float           musicVolume = 0.5f;
     private float           tempMusicVolume = 0.5f;
-    private float           gameVolume = 0.5f;
     private float           tempGameVolume = 0.5f;
-    private List<Resolution> resolutions = new List<Resolution>();
 
     [Header("Quit")]
     private MenuController  menu_4_controller;

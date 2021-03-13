@@ -13,8 +13,8 @@ public partial class HomeController
 
     private void SetVolumes()
     {
-        float musicVol = masterVolume * musicVolume;
-        float gameVol = masterVolume * gameVolume;
+        float musicVol = Common.masterVolume * Common.musicVolume;
+        float gameVol = Common.masterVolume * Common.gameVolume;
         bgm.volume = musicVol;
         click.volume = gameVol;
         page.volume = gameVol;

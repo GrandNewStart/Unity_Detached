@@ -44,9 +44,8 @@ public partial class ArmController : PhysicalObject
     public Resolution   resolution = Resolution._1024;
     public bool         isLeft = false;
 
-    protected override void Start()
+    private void Awake()
     {
-        base.Start();
         gameObject.SetActive(false);
         InitMovementAttributes();
         InitRetrievalAttributes();
