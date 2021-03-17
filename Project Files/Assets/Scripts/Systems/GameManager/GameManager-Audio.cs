@@ -8,13 +8,12 @@ public partial class GameManager
     {
         float musicVol  = Common.masterVolume * Common.musicVolume;
         float gameVol   = Common.masterVolume * Common.gameVolume;
-        Debug.Log("SET VOLUMES: " + gameVol);
         bgm.volume = musicVol;
         clickSound.volume = gameVol;
         pageSound.volume = gameVol;
-        player.chargeVolume = gameVol * 0.5f;
+        player.chargeVolume = gameVol * 0.7f;
         player.fireVolume = gameVol;
-        player.footStepVolume = gameVol * 0.4f;
+        player.footStepVolume = gameVol * 0.5f;
         player.jumpVolume = gameVol;
         player.retrieveCompleteVolume = gameVol * 0.8f;
         player.retrieveVolume = gameVol * 0.2f;
@@ -63,22 +62,6 @@ public partial class GameManager
         foreach (TreadmillController treadmill in treadmills)
         {
             treadmill.AdjustAudio(volume);
-        }
-    }
-
-    private void PauseAudio()
-    {
-        foreach (TreadmillController treadmill in treadmills)
-        {
-            treadmill.PauseOperationSound();
-        }
-    }
-
-    private void ResumeAudio()
-    {
-        foreach (TreadmillController treadmill in treadmills)
-        {
-            treadmill.PlayOperationSound();
         }
     }
 

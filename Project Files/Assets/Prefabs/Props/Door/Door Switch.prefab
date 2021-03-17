@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1994390107801347878}
   - component: {fileID: 1554216580526490868}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: switch_deactivate
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -137,7 +137,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4012598635688352845}
   - component: {fileID: 7323425547894331151}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: switch_plug_in
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -265,9 +265,9 @@ GameObject:
   - component: {fileID: 3544588451032733152}
   - component: {fileID: 3544588451032733154}
   - component: {fileID: 3544588451032733153}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Door Switch
-  m_TagString: Untagged
+  m_TagString: Switch
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -314,7 +314,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 1.3, y: 2.2}
   m_EdgeRadius: 0
 --- !u!114 &3544588451032733153
 MonoBehaviour:
@@ -328,22 +328,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cfdf1dd80044f40f4aa10c69494db81f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  width: 1.3
-  height: 2.2
-  collider: {fileID: 3544588451032733154}
   gameManager: {fileID: 0}
+  cameraTarget: {fileID: 0}
+  waitToPlugOut: 50
   target: {fileID: 0}
   unpluggedSprite: {fileID: 3544588452032426967}
   pluggedSpriteRed: {fileID: 3544588451145433336}
   pluggedSpriteGreen: {fileID: 3544588451235150280}
-  leftArm: {fileID: 0}
-  rightArm: {fileID: 0}
-  player: {fileID: 0}
+  isFirstArmPlugged: 0
+  isSecondArmPlugged: 0
   plugInSound: {fileID: 7323425547894331151}
   plugOutSound: {fileID: 6872258777875807879}
   activationSound: {fileID: 8021956811884352873}
   deactivationSound: {fileID: 1554216580526490868}
-  waitToPlugOut: 50
 --- !u!1 &3544588451145433336
 GameObject:
   m_ObjectHideFlags: 0
@@ -354,7 +351,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3544588451145433337}
   - component: {fileID: 3544588451145433338}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Plugged_Red
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -412,12 +409,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: -1
-  m_Sprite: {fileID: 21300000, guid: 2cb2eafe382176340bde8448e6566627, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 177f4e83209bbeb409a108c6b5ea6641, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 35.079998, y: 24.8}
+  m_Size: {x: 1.28, y: 1.28}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -433,7 +430,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3544588451235150281}
   - component: {fileID: 3544588451235150282}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Plugged_Green
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -491,12 +488,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: -1
-  m_Sprite: {fileID: 21300000, guid: eb275f4be1cda9041a5177a6328cbcec, type: 3}
+  m_Sprite: {fileID: 21300000, guid: df9ab10f1be64de4da5ef21ac2402f03, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 35.079998, y: 24.8}
+  m_Size: {x: 1.28, y: 1.28}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -512,7 +509,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3544588452032426968}
   - component: {fileID: 3544588452032426969}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Unplugged
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -590,7 +587,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2138923831666294407}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Audio
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -625,7 +622,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8830212096016508215}
   - component: {fileID: 6872258777875807879}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: switch_plug_out
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -752,7 +749,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1042977736251533607}
   - component: {fileID: 8021956811884352873}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: switch_activate
   m_TagString: Untagged
   m_Icon: {fileID: 0}

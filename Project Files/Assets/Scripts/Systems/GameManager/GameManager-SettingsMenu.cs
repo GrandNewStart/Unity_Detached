@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public partial class GameManager
 {
-    private void InitSettingsMenu()
+    protected void InitSettingsMenu()
     {
         List<Menu> menus = new List<Menu>();
         menus.Add(new Menu(4, settings_full_screen, "full screen"));

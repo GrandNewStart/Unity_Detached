@@ -13,21 +13,19 @@ public partial class GameManager
             switch (controlIndex)
             {
                 case PLAYER:
-                    player.ControlPlayer();
-                    if (!player.isDestroyed) ChangeControl();
+                    if (player.isDestroyed) return;
+                    player.Control();
+                    ChangeControl();
                     break;
                 case FIRST_ARM:
-                    if (!player.isDestroyed) {
-                        firstArm.ControlArm();
-                        ChangeControl();
-                    }
+                    if (player.isDestroyed) return;
+                    firstArm.Control();
+                    ChangeControl();
                     break;
                 case SECOND_ARM:
-                    if (!player.isDestroyed)
-                    {
-                        secondArm.ControlArm();
-                        ChangeControl();
-                    }
+                    if (player.isDestroyed) return;
+                    secondArm.Control();
+                    ChangeControl();
                     break;
                 case UI:
                     UIControl();
@@ -123,13 +121,13 @@ public partial class GameManager
                     secondArm.EnableControl(false);
                     break;
                 case FIRST_ARM:
-                    cameraTarget = firstArm.transform;
+                    cameraTarget = firstArm.cameraTarget;
                     player.EnableControl(false);
                     firstArm.EnableControl(true);
                     secondArm.EnableControl(false);
                     break;
                 case SECOND_ARM:
-                    cameraTarget = secondArm.transform;
+                    cameraTarget = secondArm.cameraTarget;
                     player.EnableControl(false);
                     firstArm.EnableControl(false);
                     secondArm.EnableControl(true);

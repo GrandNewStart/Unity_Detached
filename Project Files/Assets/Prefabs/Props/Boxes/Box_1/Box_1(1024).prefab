@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6880515500111640004}
   - component: {fileID: 2965682969691676006}
   - component: {fileID: 6211265588214519065}
-  m_Layer: 13
+  m_Layer: 12
   m_Name: Normal
   m_TagString: Physical Object
   m_Icon: {fileID: 0}
@@ -172,7 +172,7 @@ GameObject:
   - component: {fileID: 572535645567974564}
   - component: {fileID: 3321762847193648036}
   - component: {fileID: 2467306018415109299}
-  m_Layer: 13
+  m_Layer: 12
   m_Name: Crushed
   m_TagString: Physical Object
   m_Icon: {fileID: 0}
@@ -342,7 +342,7 @@ GameObject:
   - component: {fileID: 840954306815723812}
   - component: {fileID: 530644726432471453}
   - component: {fileID: 3160995925990295200}
-  m_Layer: 13
+  m_Layer: 12
   m_Name: Box_1(1024)
   m_TagString: Physical Object
   m_Icon: {fileID: 0}

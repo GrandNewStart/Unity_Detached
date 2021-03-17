@@ -19,7 +19,11 @@ public partial class ArmController
         if (!isFireComplete)
         {
             isMovable = false;
-            isFireComplete = Physics2D.OverlapBox(transform.position, new Vector2(checkRectX, checkRectY), 0.0f, LayerMask.GetMask("Ground"));
+            isFireComplete = Physics2D.OverlapBox(
+                transform.position, 
+                new Vector2(checkRectX, checkRectY), 
+                0.0f, 
+                LayerMask.GetMask("Ground"));
             if (isFireComplete)
             {
                 isMovable = true;

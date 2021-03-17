@@ -12,15 +12,13 @@ public class PhysicalObject : MonoBehaviour
     
     protected virtual void Start()
     {
-        isDestroyed = false;
+        isDestroyed     = false;
         rigidbody       = GetComponent<Rigidbody2D>();
         gravityScale    = rigidbody.gravityScale;
         mass            = rigidbody.mass;
         normalSprite    .SetActive(true);
         destroyedSprite .SetActive(false);
     }
-
-    protected virtual void Update() { }
 
     public void MoveObject(int dir, float speed)
     {

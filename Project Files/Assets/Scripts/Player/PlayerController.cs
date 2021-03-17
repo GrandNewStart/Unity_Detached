@@ -5,6 +5,7 @@ public partial class PlayerController : PhysicalObject
 {
     public enum Resolution { _1024, _512, _256, _128 };
     public enum State { idle, walk, jump, charge, fire };
+    public GameManager gameManager;
 
     [Header("Movement Attributes")]
     public  GameObject  normal;
@@ -23,10 +24,10 @@ public partial class PlayerController : PhysicalObject
     public  GameObject[]    gauges;
     public  float           powerLimit;
     public  float           powerIncrement;
+    [SerializeField] private int enabledArms;
     private float           power;
     private float           tempPower;
     private int             arms;
-    public  int             enabledArms;
     private bool            isFirstArmRetrieving;
     private bool            isSecondArmRetrieving;
     private bool            isFirstArmOut;
@@ -45,6 +46,8 @@ public partial class PlayerController : PhysicalObject
     private bool        isStateFixed;
 
     [Header("Destruction Attributes")]
+    public CapsuleCollider2D    collider_1;
+    public CircleCollider2D     collider_2;
     public  CapsuleCollider2D   deathCollider;
     public  GameObject          head;
     public  GameObject          body;
@@ -77,9 +80,8 @@ public partial class PlayerController : PhysicalObject
         InitAudioAttributes();
     }
 
-    protected override void Update()
+    private void Update()
     {
-        base.Update();
         GroundCheck();
         DeathCollisionCheck();
         AnimationControl();
@@ -197,47 +199,8 @@ public partial class PlayerController : PhysicalObject
         RecoverPower();
     }
 
-    public void ControlPlayer()
-    {
-        if (!isDestroyed)
-        {
-            Move();
-            Jump();
-            Shoot();
-            Retrieve();
-        }
-    }
-
-    private void DIE()
-    {
-        if (Input.GetKeyDown(KeyCode.P)) DestroyObject();
-    }
-
-    public int ChangeControl()
-    {
-        if (hasControl)
-        {
-            if (isFirstArmOut) return GameManager.FIRST_ARM;
-            if (isSecondArmOut) return GameManager.SECOND_ARM;
-        }
-        else
-        {
-            if (firstArm.IsControlling() && isSecondArmOut) return GameManager.SECOND_ARM;
-        }
-        return GameManager.PLAYER;
-    }
-
-    private void DeathCollisionCheck()
-    {
-        if (isDestroyed) return;
-        if (deathCollider.IsTouchingLayers(LayerMask.GetMask("Ground")))
-        {
-            DestroyObject();
-        }
-    }
-
     private void OnDrawGizmos()
-    { Gizmos.DrawWireCube(groundCheck.transform.position, new Vector2(2.2f * groundCheckWidth, 0.5f)); }
+    { Gizmos.DrawWireCube(groundCheck.transform.position, new Vector2(groundCheckWidth, 0.5f)); }
 
     public void SetTreadmillVelocity(float treadmillVelocity)
     { this.treadmillVelocity = treadmillVelocity; }

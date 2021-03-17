@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SwitchController : MonoBehaviour
+public class SwitchController: MonoBehaviour
 {
-    public float                width;
-    public float                height;
-    public new BoxCollider2D    collider;
     public GameManager          gameManager;
+    protected ArmController     arm;
+    protected PlayerController  player;
+    [HideInInspector] public Transform cameraTarget;
 
     [Header("Target")]
     public GameObject   target;
@@ -16,178 +16,64 @@ public class SwitchController : MonoBehaviour
     public GameObject   unpluggedSprite;
     public GameObject   pluggedSpriteRed;
     public GameObject   pluggedSpriteGreen;
-    protected bool      isFirstArmAround;
-    protected bool      isSecondArmAround;
-    protected bool      isFirstArmPlugged;
-    protected bool      isSecondArmPlugged;
+    public bool         isFirstArmPlugged;
+    public bool         isSecondArmPlugged;
 
-    [Header("Player")]
-    public ArmController    leftArm;
-    public ArmController    rightArm;
-    public PlayerController player;
-    private bool            deathDetected = false;
-
-    [Header("Sound")]
+    [Header("Sounds")]
     public AudioSource plugInSound;
     public AudioSource plugOutSound;
     public AudioSource activationSound;
     public AudioSource deactivationSound;
 
-    [Header("Others")]
-    public int      waitToPlugOut;
-    protected int   counter;
-    protected bool  isPlugOutEnabled = false;
-
-    virtual protected void Start()
+    protected virtual void Start()
     {
-        collider.size       = new Vector2(width, height);
-        unpluggedSprite     .SetActive(true);
-        pluggedSpriteGreen  .SetActive(false);
-        pluggedSpriteRed    .SetActive(false);
-        counter             = waitToPlugOut;
+        cameraTarget = gameObject.transform;
+        player = gameManager.player;
     }
 
-    virtual protected void Update()
-    {
-        HandCheck();
-        PlugCheck();
-        OperateSwitch();
-        SpriteControl();
-        DetectPlayerDeath();
-    }
+    public virtual void Control() { }
 
-    virtual protected void HandCheck()
+    public void Activate(ArmController arm)
     {
-        isFirstArmAround  = Physics2D.OverlapBox(transform.position, new Vector3(width, height, 0), 0.0f, LayerMask.GetMask("Left Arm"));
-        isSecondArmAround = Physics2D.OverlapBox(transform.position, new Vector3(width, height, 0), 0.0f, LayerMask.GetMask("Right Arm"));
-    }
-
-    virtual protected void PlugCheck()
-    {
-        if (isFirstArmPlugged && !isFirstArmAround)
+        OnActivation();
+        if (arm.IsControlling())
         {
-            isFirstArmPlugged = false;
-            OnDeactivation();
+            gameManager.cameraTarget = cameraTarget;
+            StartCoroutine(gameManager.MoveCamera());
         }
-        if (isSecondArmPlugged && !isSecondArmAround)
-        {
-            isSecondArmPlugged = false;
-            OnDeactivation();
-        }
-    }
-
-    virtual protected void OperateSwitch()
-    {
-        if (!isFirstArmPlugged && !isSecondArmPlugged)
-        {
-            // Plug in
-            if (Input.GetKeyDown(KeyCode.Q))
-            {
-                // Left hand ready to plug in
-                // Right hand ready to plug out
-                if (isFirstArmAround && leftArm.IsControlling() ||
-                    isSecondArmAround && rightArm.IsControlling())
-                {
-                    OnActivation();
-                    return;
-                }
-            }
-            if (Input.GetKeyDown(KeyCode.R) && player.HasControl())
-            {
-                if(isFirstArmPlugged || isSecondArmPlugged)
-                {
-                    OnDeactivation();
-                    isFirstArmAround = false;
-                    isSecondArmAround = false;
-                    isPlugOutEnabled = true;
-                }
-            }
-        }
-        // Start plugging out
-        if (Input.GetKey(KeyCode.Q) && isPlugOutEnabled)
-        {
-            // If left hand must come out
-            if (isFirstArmPlugged && leftArm.IsControlling())
-            {
-                if (counter++ > waitToPlugOut)
-                {
-                    OnDeactivation();
-                }
-            }
-            // If right hand must come out
-            if (isSecondArmPlugged && rightArm.IsControlling())
-            {
-                if (counter++ > waitToPlugOut)
-                {
-                    OnDeactivation();
-                }
-            }
-        }
-        // Plug out
-        if (Input.GetKeyUp(KeyCode.Q))
-        {
-            counter = 0;
-            if ((isFirstArmPlugged && leftArm.IsControlling()) ||
-                (isSecondArmPlugged && rightArm.IsControlling()))
-            {
-                isPlugOutEnabled = true;
-            }
-        }
-    }
-
-    virtual protected void OnActivation() {
+        this.arm = arm;
+        isFirstArmPlugged = arm.isLeft;
+        isSecondArmPlugged = !arm.isLeft;
+        unpluggedSprite.SetActive(false);
+        pluggedSpriteGreen.SetActive(true);
+        pluggedSpriteRed.SetActive(false);
         PlayPlugInSound();
-
-        if (isFirstArmAround)
-        {
-            isFirstArmPlugged = true;
-            leftArm.OnPlugIn();
-            return;
-        }
-        if (isSecondArmAround)
-        {
-            isSecondArmPlugged = true;
-            rightArm.OnPlugIn();
-            return;
-        }
     }
 
-    virtual protected void OnDeactivation() 
+    public void Deactivate()
     {
-        counter = 0;
+        OnDeactivation();
+        if (arm.IsControlling())
+        {
+            gameManager.cameraTarget = arm.transform;
+            StartCoroutine(gameManager.MoveCamera());
+        }
+        isFirstArmPlugged = false;
+        isSecondArmPlugged = false;
+        unpluggedSprite.SetActive(true);
+        pluggedSpriteGreen.SetActive(false);
+        pluggedSpriteRed.SetActive(false);
         PlayPlugOutSound();
-
-        if (isFirstArmPlugged)
-        {
-            isFirstArmPlugged   = false;
-            isPlugOutEnabled    = false;
-            leftArm.OnPlugOut();
-            return;
-        }
-        if (isSecondArmPlugged)
-        {
-            isSecondArmPlugged  = false;
-            isPlugOutEnabled    = false;
-            rightArm.OnPlugOut();
-            return;
-        }
+        //arm = null;
     }
 
-    private void DetectPlayerDeath()
-    {
-        if (isFirstArmPlugged || isSecondArmPlugged)
-        {
-            if (player.isDestroyed && !deathDetected)
-            {
-                deathDetected = true;
-                OnDeactivation();
-            }
-            if (!player.isDestroyed && deathDetected)
-            {
-                deathDetected = false;
-            }
-        }
-    }
+    public virtual void ChangeControl() {}
+
+    public virtual void MoveCamera() {}
+
+    virtual public void OnActivation() {}
+
+    virtual public void OnDeactivation() {}
 
     protected void PlayPlugInSound()
     {
@@ -209,27 +95,9 @@ public class SwitchController : MonoBehaviour
         deactivationSound.Play();
     }
 
-    virtual protected void SpriteControl()
-    {
-        if (isFirstArmPlugged || isSecondArmPlugged)
-        {
-            pluggedSpriteGreen  .SetActive(true);
-            unpluggedSprite     .SetActive(false);
-        }
-        else
-        {
-            pluggedSpriteGreen  .SetActive(false);
-            unpluggedSprite     .SetActive(true);
-        }
-    }
-
     public bool IsPluggedIn()
     {
         return (isFirstArmPlugged || isSecondArmPlugged);
     }
 
-    protected virtual void OnDrawGizmos()
-    {
-        Gizmos.DrawWireCube(transform.position, new Vector3(width, height, 0));
-    }
 }

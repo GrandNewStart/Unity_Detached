@@ -4,7 +4,7 @@ using UnityEngine;
 
 public partial class GameManager
 {
-    private void InitCheckpoints()
+    protected void InitCheckpoints()
     {
         for (int i = 0; i < checkpoints.Count; i++)
         {

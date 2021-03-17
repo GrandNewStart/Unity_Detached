@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8578247685846382797}
   - component: {fileID: 1641335682381330400}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Gauge_4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -89,7 +89,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8030768174332359701}
   - component: {fileID: 1823938170358441757}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Gauge_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -170,7 +170,7 @@ GameObject:
   - component: {fileID: 3734595829449453969}
   - component: {fileID: 6467692155210377338}
   - component: {fileID: 7394354737682012216}
-  m_Layer: 13
+  m_Layer: 9
   m_Name: left_arm
   m_TagString: Physical Object
   m_Icon: {fileID: 0}
@@ -287,7 +287,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1165259884929955696}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: Audio
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -323,7 +323,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4021792716394826090}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: Gauges
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -361,7 +361,7 @@ GameObject:
   - component: {fileID: 6027694099452250148}
   - component: {fileID: 846744610144612514}
   - component: {fileID: 4776710424022050843}
-  m_Layer: 13
+  m_Layer: 9
   m_Name: head
   m_TagString: Physical Object
   m_Icon: {fileID: 0}
@@ -481,7 +481,7 @@ GameObject:
   - component: {fileID: 2297292982259909061}
   - component: {fileID: 2297292982259909058}
   - component: {fileID: 1396581221633676552}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: Normal
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -582,8 +582,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.2, y: 0}
-  m_Size: {x: 1.45, y: 3.3}
+  m_Offset: {x: 0, y: 0}
+  m_Size: {x: 1.5, y: 3.3}
   m_Direction: 0
 --- !u!58 &2297292982259909058
 CircleCollider2D:
@@ -598,9 +598,9 @@ CircleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.2, y: -1.05}
+  m_Offset: {x: 0, y: -1.05}
   serializedVersion: 2
-  m_Radius: 0.65
+  m_Radius: 0.7
 --- !u!70 &1396581221633676552
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -611,11 +611,11 @@ CapsuleCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.2, y: 0}
-  m_Size: {x: 0.9, y: 2.5}
+  m_Offset: {x: 0, y: 0}
+  m_Size: {x: 1, y: 2.7}
   m_Direction: 0
 --- !u!1 &2297292982611826061
 GameObject:
@@ -626,7 +626,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2297292982611826060}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: Destroyed
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -661,7 +661,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4587222803694485687}
   - component: {fileID: 2799766147908091103}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: retrieve
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -791,7 +791,7 @@ GameObject:
   - component: {fileID: 6888627453961791285}
   - component: {fileID: 1065704052513233353}
   - component: {fileID: 3356501656205818772}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -833,6 +833,7 @@ MonoBehaviour:
   normalSprite: {fileID: 2297292982259909056}
   destroyedSprite: {fileID: 2297292982611826061}
   rigidbody: {fileID: 0}
+  gameManager: {fileID: 0}
   normal: {fileID: 2297292982259909056}
   moveSpeed: 500
   jumpHeight: 20
@@ -848,8 +849,10 @@ MonoBehaviour:
   powerIncrement: 0.15
   enabledArms: 2
   groundCheck: {fileID: 2714851829839212853}
-  groundCheckWidth: 0.4
+  groundCheckWidth: 1
   resolution: 1
+  collider_1: {fileID: 2297292982259909061}
+  collider_2: {fileID: 2297292982259909058}
   deathCollider: {fileID: 1396581221633676552}
   head: {fileID: 2082184147418542847}
   body: {fileID: 7639071026128059942}
@@ -964,7 +967,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2714851829839212854}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: GroundCheck
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -979,7 +982,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2714851829839212853}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.15, y: -1, z: 0}
+  m_LocalPosition: {x: 0, y: -1.11, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2714851829121961611}
@@ -995,7 +998,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8492675092791760362}
   - component: {fileID: 7774493566484997069}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: retrieve_complete
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1122,7 +1125,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6706527455202483129}
   - component: {fileID: 8883837840942883856}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: fire
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1249,7 +1252,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5877488885986512877}
   - component: {fileID: 1899946213512001008}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Gauge_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1330,7 +1333,7 @@ GameObject:
   - component: {fileID: 2594165925931381935}
   - component: {fileID: 5942661293004838550}
   - component: {fileID: 3975626073442928065}
-  m_Layer: 13
+  m_Layer: 9
   m_Name: right_arm
   m_TagString: Physical Object
   m_Icon: {fileID: 0}
@@ -1448,7 +1451,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5939149738434854559}
   - component: {fileID: 6034865867342171431}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: charge
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1481,7 +1484,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 3c81fcc335e3dd34e928c1be06fefee1, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.3
+  m_Volume: 0.7
   m_Pitch: 0.5
   Loop: 0
   Mute: 0
@@ -1575,7 +1578,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3426407809859646344}
   - component: {fileID: 1440576349604999076}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: jump
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1702,7 +1705,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7782478840802780087}
   - component: {fileID: 9033024840750425967}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Gauge_5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1783,7 +1786,7 @@ GameObject:
   - component: {fileID: 7157543396843419571}
   - component: {fileID: 2714625735802485225}
   - component: {fileID: 5102904182952100532}
-  m_Layer: 13
+  m_Layer: 9
   m_Name: body
   m_TagString: Physical Object
   m_Icon: {fileID: 0}
@@ -1899,7 +1902,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3614604072577216046}
   - component: {fileID: 4879363469544101208}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: step
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2098,7 +2101,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9221322457775006723}
   - component: {fileID: 6458991947395557279}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Gauge_3
   m_TagString: Untagged
   m_Icon: {fileID: 0}

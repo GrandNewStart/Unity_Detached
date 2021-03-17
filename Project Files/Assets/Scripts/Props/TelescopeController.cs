@@ -100,6 +100,7 @@ public class TelescopeController: MonoBehaviour
     {
         isActive = false;
         gameManager.EnableControl();
+        gameManager.controlIndex = GameManager.PLAYER;
         gameManager.cameraTarget = gameManager.player.transform;
         StartCoroutine(DecreaseCameraSize());
         StartCoroutine(gameManager.MoveCamera());

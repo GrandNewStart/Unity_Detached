@@ -8,8 +8,8 @@ public partial class ArmController
     // This function is called by PlayerController
     public void Fire(float power)
     {
-        PrepareFire();
         Vector3 fireVector = CalculateVector(power);
+        PrepareFire();
         rigidbody.AddForce(fireVector, ForceMode2D.Impulse);
     }
 
@@ -18,8 +18,6 @@ public partial class ArmController
         rigidbody.gravityScale = normalScale;
         rigidbody.mass = normalMass;
         isRetrieveComplete = false;
-        playerPosition = player.transform.position;
-        //playerPosition.z = gameObject.transform.position.z;
         gameObject.transform.position = playerPosition;
         gameObject.SetActive(true);
         dir = 0;
@@ -28,16 +26,17 @@ public partial class ArmController
     private Vector3 CalculateVector(float power)
     {
         Vector3 fireVector = Vector3.zero;
+        playerPosition = player.transform.position;
         switch (playerController.GetDir())
         {
             case 1:
                 lastDir = 1;
-                playerPosition.x += 2;
+                playerPosition.x += 1;
                 fireVector = new Vector3(5 + power, 15 + power, 0);
                 break;
             case -1:
                 lastDir = -1;
-                playerPosition.x -= 2;
+                playerPosition.x -= 1;
                 fireVector = new Vector3(-5 - power, 15 + power, 0);
                 break;
         }

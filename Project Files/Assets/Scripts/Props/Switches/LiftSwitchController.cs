@@ -7,10 +7,11 @@ public class LiftSwitchController : SwitchController
     public GameObject   maxHeightCheck;
     public GameObject   minHeightCheck;
     public AudioSource  operationSound;
-    private Vector3     targetPosition;
     public float        speed;
+    private Vector3     targetPosition;
     private float       maxHeight;
     private float       minHeight;
+    private bool        isGoingUp = true;
 
     private void Awake()
     {
@@ -27,49 +28,60 @@ public class LiftSwitchController : SwitchController
         operationSound.transform.position   = target.transform.position;
     }
 
-    private void FixedUpdate()
+    public override void OnActivation()
     {
-        Operate();
+        StartCoroutine(RaiseLift());
     }
 
-    private void Operate()
+    public override void OnDeactivation()
     {
-        targetPosition = target.transform.position;
-
-        if (isFirstArmPlugged || isSecondArmPlugged)
-        {
-            MoveUp();
-        }
-        else
-        {
-            MoveDown();
-        }
+        StartCoroutine(LowerLift());
     }
 
-    private void MoveUp()
+    private IEnumerator RaiseLift()
     {
-        if (targetPosition.y <= maxHeight)
+        isGoingUp = true;
+
+        while (targetPosition.y <= maxHeight && isGoingUp)
         {
+            targetPosition = target.transform.position;
             Move(1);
-            PlayOperationSound();
+
+            if (gameManager.isPaused)
+            {
+                StopOperationSound();
+            }
+            else
+            {
+                PlayOperationSound();
+            }
+            yield return null;
         }
-        else
-        {
-            StopOperationSound();
-        }
+
+        StopOperationSound();
     }
 
-    private void MoveDown()
+    private IEnumerator LowerLift()
     {
-        if (targetPosition.y > minHeight)
+        isGoingUp = false;
+
+        while (targetPosition.y > minHeight && !isGoingUp)
         {
+            targetPosition = target.transform.position;
             Move(-2);
-            PlayOperationSound();
+
+            if (gameManager.isPaused)
+            {
+                StopOperationSound();
+            }
+            else
+            {
+                PlayOperationSound();
+            }
+            yield return null;
         }
-        else
-        {
-            StopOperationSound();
-        }
+
+        StopOperationSound();
     }
 
     private void PlayOperationSound()
@@ -90,16 +102,16 @@ public class LiftSwitchController : SwitchController
 
     private void Move(short dir)
     {
-        target.transform.Translate(new Vector3(0.0f, speed * dir, 0.0f));
+        float y = speed * dir * Time.deltaTime;
+        target.transform.Translate(new Vector3(0, y, 0));
     }
 
-    protected override void OnDrawGizmos()
+    private void OnDrawGizmos()
     {
-        base.OnDrawGizmos();
         Gizmos.DrawLine(
             new Vector3(minHeightCheck.transform.position.x, minHeightCheck.transform.position.y, 0.0f), 
             new Vector3(maxHeightCheck.transform.position.x, maxHeightCheck.transform.position.y, 0.0f));
-        Gizmos.DrawWireSphere(minHeightCheck.transform.position, 1.0f);
-        Gizmos.DrawWireSphere(maxHeightCheck.transform.position, 1.0f);
+        Gizmos.DrawWireSphere(minHeightCheck.transform.position, 0.5f);
+        Gizmos.DrawWireSphere(maxHeightCheck.transform.position, 0.5f);
     }
 }

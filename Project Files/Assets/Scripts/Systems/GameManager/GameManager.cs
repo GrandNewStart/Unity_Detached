@@ -2,6 +2,7 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using System;
 
 public partial class GameManager : MonoBehaviour
 {
@@ -16,6 +17,7 @@ public partial class GameManager : MonoBehaviour
     public const int        FIRST_ARM   = 1;
     public const int        SECOND_ARM  = 2;
     public const int        UI          = 3;
+    public const int        OTHERS      = 4;
     public const int        CONVERSATION = 4;
     public const int        DISABLED    = -1;
     public const int        PAUSE       = 0;
@@ -42,11 +44,20 @@ public partial class GameManager : MonoBehaviour
     public List<TreadmillController> treadmills = new List<TreadmillController>();
     public List<TelescopeController> telescopes = new List<TelescopeController>();
     public Transform            cameraTarget;
-    private bool                cameraMoving        = false;
+    public bool                 cameraMoving                = false;
+    public bool                 overrideBodyControl         = false;
+    public bool                 overrideFirstArmControl     = false;
+    public bool                 overrideSecondArmControl    = false;
     public int                  controlIndex        = 0;
     private int                 tempControlIndex    = 0;
     private float               cameraSpeed         = 130;
     private int                 menuIndex           = 0;
+    public Action               firstArmControl;
+    public Action               firstArmCameraControl;
+    public Action               firstArmChangeControl;
+    public Action               secondArmControl;
+    public Action               secondArmCameraControl;
+    public Action               secondArmChangeControl;
 
     [Header("Game Settings")]
     private MenuController  settings_controller;
@@ -151,7 +162,6 @@ public partial class GameManager : MonoBehaviour
         player.OnPause();
         firstArm.OnPause();
         secondArm.OnPause();
-        PauseAudio();
     }
 
     // Called both in Resume & ForceResume
@@ -164,7 +174,6 @@ public partial class GameManager : MonoBehaviour
         player.OnResume();
         firstArm.OnResume();
         secondArm.OnResume();
-        ResumeAudio();
     }
 
     // Pause game with pause menu

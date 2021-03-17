@@ -8,6 +8,7 @@ TagManager:
   - Physical Object
   - Platform
   - Crusher
+  - Switch
   layers:
   - Default
   - TransparentFX
@@ -18,11 +19,11 @@ TagManager:
   - 
   - 
   - Ground
-  - Wall
   - Player
   - Left Arm
   - Right Arm
   - Physical Object
+  - Switch
   - 
   - 
   - 

@@ -10,10 +10,26 @@ public class TestStageManager : GameManager
 
     protected override void Start()
     {
-        base.Start();
+        cube.SetActive(false);
+        OnTestStageStarted();
         currentCheckpoint = 0;
         SceneFadeStart(0, 0, null);
         InitConversation();
+    }
+    private void OnTestStageStarted()
+    {
+        InitTestSettings();
+        InitPauseMenu();
+        InitSettingsMenu();
+        InitCheckpoints();
+        InitCamera();
+        DisablePastCheckpoints();
+
+        if (isLoadingSaveData)
+        {
+            player.transform.position = position;
+            player.EnableArms(enabledArms);
+        }
     }
 
     private void InitConversation()

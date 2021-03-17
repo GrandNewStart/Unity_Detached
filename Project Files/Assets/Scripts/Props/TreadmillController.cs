@@ -21,13 +21,25 @@ public class TreadmillController : MonoBehaviour
         PlayOperationSound();
     }
 
+    private void Update()
+    {
+        if (gameManager.isPaused)
+        {
+            PlayOperationSound();
+        }
+        else
+        {
+            StopOperationSound();
+        }
+    }
+
     public void PlayOperationSound()
     {
         motorSound.loop = true;
         motorSound.Play();
     }
 
-    public void PauseOperationSound()
+    public void StopOperationSound()
     {
         motorSound.Pause();
     }

@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 
 public partial class GameManager : MenuInterface
 {
-    private void InitPauseMenu()
+    protected void InitPauseMenu()
     {
         menuIndex = PAUSE;
         List<Menu> menus = new List<Menu>();

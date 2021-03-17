@@ -9,15 +9,13 @@ public class DoorSwitchController : SwitchController
         gameManager.doors.Add(this);
     }
 
-    protected override void OnActivation()
+    public override void OnActivation()
     {
-        base.OnActivation();
         target.SetActive(false);
     }
 
-    protected override void OnDeactivation()
+    public override void OnDeactivation()
     {
-        base.OnDeactivation();
         target.SetActive(true);
     }
 }

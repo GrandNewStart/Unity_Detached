@@ -3,7 +3,7 @@ using UnityEngine;
 
 public partial class GameManager
 {
-    private void InitCamera()
+    protected void InitCamera()
     {
         cameraTarget = player.transform;
     }
@@ -14,31 +14,13 @@ public partial class GameManager
         switch (controlIndex)
         {
             case PLAYER:
-                cameraTarget = player.transform;
-                if (player.isDestroyed) return;
-                if (cameraMoving) return;
-                cameraPos = cameraTarget.position;
-                cameraPos.y += 2;
-                cameraPos.z = -1;
-                camera.transform.position = cameraPos;
+                player.CameraControl();
                 break;
             case FIRST_ARM:
-                cameraTarget = firstArm.transform;
-                if (player.isDestroyed) cameraTarget = player.transform;
-                if (cameraMoving) return;
-                cameraPos = cameraTarget.position;
-                cameraPos.y += 2;
-                cameraPos.z = -1;
-                camera.transform.position = cameraPos;
+                firstArm.CameraControl();
                 break;
             case SECOND_ARM:
-                cameraTarget = secondArm.transform;
-                if (player.isDestroyed) cameraTarget = player.transform;
-                if (cameraMoving) return;
-                cameraPos = cameraTarget.position;
-                cameraPos.y += 2;
-                cameraPos.z = -1;
-                camera.transform.position = cameraPos;
+                secondArm.CameraControl();
                 break;
             default:
                 if (player.isDestroyed) cameraTarget = player.transform;

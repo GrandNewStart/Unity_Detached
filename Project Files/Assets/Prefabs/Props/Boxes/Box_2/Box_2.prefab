@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5479967881478791197}
   - component: {fileID: 4682142915515969700}
   - component: {fileID: 7816410232771981209}
-  m_Layer: 13
+  m_Layer: 12
   m_Name: Box_2
   m_TagString: Physical Object
   m_Icon: {fileID: 0}
@@ -67,6 +67,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2c97500023c56b419e72ec1bef75a71, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isDestroyed: 0
   normalSprite: {fileID: 8117550042484187521}
   destroyedSprite: {fileID: 3848644517233870829}
   rigidbody: {fileID: 4682142915515969700}
@@ -84,7 +85,7 @@ GameObject:
   - component: {fileID: 6312539393535490971}
   - component: {fileID: 1782305396498287033}
   - component: {fileID: 2682979754090112896}
-  m_Layer: 13
+  m_Layer: 12
   m_Name: Crushed
   m_TagString: Physical Object
   m_Icon: {fileID: 0}
@@ -241,7 +242,7 @@ GameObject:
   - component: {fileID: 7728607258715316843}
   - component: {fileID: 9056234950542594670}
   - component: {fileID: 8830905560622080209}
-  m_Layer: 13
+  m_Layer: 12
   m_Name: Normal
   m_TagString: Physical Object
   m_Icon: {fileID: 0}

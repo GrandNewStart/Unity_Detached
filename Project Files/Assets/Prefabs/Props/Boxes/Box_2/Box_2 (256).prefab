@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6012135135977071210}
   - component: {fileID: 6888806351429563091}
   - component: {fileID: 8294174201649245678}
-  m_Layer: 13
+  m_Layer: 12
   m_Name: Box_2 (256)
   m_TagString: Physical Object
   m_Icon: {fileID: 0}
@@ -85,7 +85,7 @@ GameObject:
   - component: {fileID: 5115790023273847272}
   - component: {fileID: 3888540178532797633}
   - component: {fileID: 6511104639218386783}
-  m_Layer: 13
+  m_Layer: 12
   m_Name: Crushed
   m_TagString: Physical Object
   m_Icon: {fileID: 0}
@@ -242,7 +242,7 @@ GameObject:
   - component: {fileID: 1654466326050252549}
   - component: {fileID: 3406220190106107998}
   - component: {fileID: 150757150754066316}
-  m_Layer: 13
+  m_Layer: 12
   m_Name: Normal
   m_TagString: Physical Object
   m_Icon: {fileID: 0}
@@ -320,7 +320,7 @@ BoxCollider2D:
   m_GameObject: {fileID: 8053825973162025974}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 6200000, guid: 55256bddb15bc5b4c927667d4177347a, type: 2}
+  m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0

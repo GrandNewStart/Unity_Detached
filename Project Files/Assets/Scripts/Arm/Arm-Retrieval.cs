@@ -21,15 +21,19 @@ public partial class ArmController
         rigidbody.velocity = Vector3.zero;
         rigidbody.gravityScale = 0f;
         rigidbody.mass = 0f;
+        isOnTreadmill = false;
         isMovable = false;
-        isRetrieving = true;
-        OnPlugOut();
-
+        if (isPlugged)
+        {
+            PlugOut();
+        }
         StartCoroutine(Retrieve());
     }
 
     private IEnumerator Retrieve()
     {
+        isRetrieving = true;
+
         while (isRetrieving)
         {
             // Player's position is the target position.
@@ -47,6 +51,7 @@ public partial class ArmController
             if (diff.magnitude < retreiveRadius)
             {
                 gameObject.SetActive(false);
+                transform.parent = null;
                 transform.position = origin;
                 rigidbody.gravityScale = normalScale;
                 rigidbody.mass = normalMass;

@@ -4,17 +4,19 @@ public partial class PlayerController
 {
     private void InitMovementAttributes()
     {
-        treadmillVelocity = 0;
-        isOnTreadmill = false;
-        isMovable = true;
-        jumped = false;
-        hasControl = true;
+        treadmillVelocity   = 0;
+        isOnTreadmill       = false;
+        isMovable           = true;
+        jumped              = false;
+        hasControl          = true;
     }
 
     private void GroundCheck()
     {
-        isGrounded = Physics2D.OverlapBox(groundCheck.transform.position, new Vector2(2.2f * groundCheckWidth, 0.5f), 0.0f, LayerMask.GetMask("Physical Object")) ||
-                    Physics2D.OverlapBox(groundCheck.transform.position, new Vector2(2.2f * groundCheckWidth, 0.5f), 0.0f, LayerMask.GetMask("Ground"));
+        Vector2 origin = groundCheck.transform.position;
+        Vector2 vector = new Vector2(groundCheckWidth, 0.5f);
+        isGrounded = Physics2D.OverlapBox(origin, vector, 0.0f, LayerMask.GetMask("Physical Object")) ||
+                    Physics2D.OverlapBox(origin, vector, 0.0f, LayerMask.GetMask("Ground"));
         if (!isGrounded)
         {
             state = State.jump;

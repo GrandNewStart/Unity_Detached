@@ -2,7 +2,7 @@
 
 public partial class GameManager
 {
-    private void InitGameSettings()
+    protected void InitGameSettings()
     {
         tempIsFullScreen = Common.isFullScreen;
         tempResolution = Common.resolution;
@@ -15,10 +15,9 @@ public partial class GameManager
         ApplyLanguage();
         ApplyVolumes();
         ApplyResolution();
-        //InitTestSettings();
     }
 
-    // For text only
+    // For test only
     protected void InitTestSettings()
     {
         if (Common.resolutions.Count == 0)
