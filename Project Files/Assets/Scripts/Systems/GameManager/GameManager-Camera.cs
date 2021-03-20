@@ -36,6 +36,7 @@ public partial class GameManager
     public IEnumerator MoveCamera()
     {
         cameraMoving = true;
+
         while(cameraMoving)
         {
             Vector3 targetPos = cameraTarget.position;

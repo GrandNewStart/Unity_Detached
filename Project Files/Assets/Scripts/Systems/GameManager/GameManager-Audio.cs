@@ -11,14 +11,9 @@ public partial class GameManager
         bgm.volume = musicVol;
         clickSound.volume = gameVol;
         pageSound.volume = gameVol;
-        player.chargeVolume = gameVol * 0.7f;
-        player.fireVolume = gameVol;
-        player.footStepVolume = gameVol * 0.5f;
-        player.jumpVolume = gameVol;
-        player.retrieveCompleteVolume = gameVol * 0.8f;
-        player.retrieveVolume = gameVol * 0.2f;
-        firstArm.moveVolume = gameVol * 0.2f;
-        secondArm.moveVolume = gameVol * 0.2f;
+        player.AdjustAudio(gameVol);
+        firstArm.AdjustAudio(gameVol);
+        secondArm.AdjustAudio(gameVol);
 
         SetDoorVolume(gameVol);
         SetLiftVolume(gameVol);
@@ -28,24 +23,17 @@ public partial class GameManager
 
     private void SetDoorVolume(float volume)
     {
-        foreach (DoorSwitchController door in doors)
+        foreach (DoorController door in doors)
         {
-            door.plugInSound.volume = volume;
-            door.plugOutSound.volume = volume;
-            door.activationSound.volume = volume;
-            door.deactivationSound.volume = volume;
+            door.AdjustAudio(volume);
         }
     }
 
     private void SetLiftVolume(float volume)
     {
-        foreach (LiftSwitchController lift in lifts)
+        foreach (LiftController lift in lifts)
         {
-            lift.plugInSound.volume = volume;
-            lift.plugOutSound.volume = volume;
-            lift.activationSound.volume = volume;
-            lift.deactivationSound.volume = volume;
-            lift.operationSound.volume = volume;
+            lift.AdjustAudio(volume);
         }
     }
 
@@ -53,7 +41,7 @@ public partial class GameManager
     {
         foreach (CrusherController crusher in crushers)
         {
-            crusher.crushSound.volume = volume;
+            crusher.AdjustAudio(volume);
         }
     }
 

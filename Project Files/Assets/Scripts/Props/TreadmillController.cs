@@ -25,11 +25,11 @@ public class TreadmillController : MonoBehaviour
     {
         if (gameManager.isPaused)
         {
-            PlayOperationSound();
+            StopOperationSound();
         }
         else
         {
-            StopOperationSound();
+            PlayOperationSound();
         }
     }
 

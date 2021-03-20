@@ -23,7 +23,7 @@ public partial class ArmController : PhysicalObject
     private bool    isFireComplete  = false;
     private bool    isControlling   = false;
     private bool    isPlugged       = false;
-    private bool    isMovable       = true;
+    [HideInInspector] public bool isMovable = true;
     private bool    isOnTreadmill   = false;
     [HideInInspector] public float treadmillVelocity;
 

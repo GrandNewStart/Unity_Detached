@@ -24,6 +24,16 @@ public partial class PlayerController
         isChargeSoundPlaying = false;
     }
 
+    public void AdjustAudio(float volume)
+    {
+        chargeVolume = volume * 0.7f;
+        fireVolume = volume;
+        footStepVolume = volume * 0.5f;
+        jumpVolume = volume;
+        retrieveCompleteVolume = volume * 0.8f;
+        retrieveVolume = volume * 0.2f;
+    }
+
     private void PlayFootStepSound()
     {
         if (footStepDelay++ > 20)

@@ -17,6 +17,15 @@ public partial class PlayerController
         foreach (GameObject gauge in gauges) gauge.SetActive(false);
     }
 
+    public void CancelFire()
+    {
+        power = 0.0f;
+        tempPower = power;
+        foreach (GameObject gauge in gauges) gauge.SetActive(false);
+        state = State.idle;
+        isMovable = true;
+    }
+
     private void Shoot()
     {
         if (isFirstArmRetrieving) return;

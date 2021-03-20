@@ -8,7 +8,6 @@ public partial class PlayerController
     public void CameraControl()
     {
         Vector3 cameraPos;
-        gameManager.cameraTarget = transform;
         if (isDestroyed) return;
         if (gameManager.cameraMoving) return;
         cameraPos = gameManager.cameraTarget.position;

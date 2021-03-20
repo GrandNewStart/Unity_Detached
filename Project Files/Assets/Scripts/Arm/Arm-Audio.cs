@@ -10,6 +10,11 @@ public partial class ArmController
         moveVolume = moveSound.volume;
     }
 
+    public void AdjustAudio(float volume)
+    {
+        moveVolume = volume * 0.2f;
+    }
+
     private void PlayMoveSound()
     {
         if (moveSoundDelay++ > 20 && isMovable)

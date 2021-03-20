@@ -29,7 +29,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2138923831666294407}
-  m_RootOrder: 1
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!82 &1554216580526490868
 AudioSource:
@@ -156,7 +156,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2138923831666294407}
-  m_RootOrder: 2
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!82 &7323425547894331151
 AudioSource:
@@ -264,7 +264,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3544588451032733152}
   - component: {fileID: 3544588451032733154}
-  - component: {fileID: 3544588451032733153}
+  - component: {fileID: 6176791582022730499}
   m_Layer: 13
   m_Name: Door Switch
   m_TagString: Switch
@@ -316,7 +316,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.3, y: 2.2}
   m_EdgeRadius: 0
---- !u!114 &3544588451032733153
+--- !u!114 &6176791582022730499
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -330,7 +330,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
   cameraTarget: {fileID: 0}
-  waitToPlugOut: 50
   target: {fileID: 0}
   unpluggedSprite: {fileID: 3544588452032426967}
   pluggedSpriteRed: {fileID: 3544588451145433336}
@@ -605,10 +604,10 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 1042977736251533607}
-  - {fileID: 1994390107801347878}
   - {fileID: 4012598635688352845}
   - {fileID: 8830212096016508215}
+  - {fileID: 1042977736251533607}
+  - {fileID: 1994390107801347878}
   m_Father: {fileID: 3544588451032733152}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -641,7 +640,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2138923831666294407}
-  m_RootOrder: 3
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!82 &6872258777875807879
 AudioSource:
@@ -768,7 +767,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2138923831666294407}
-  m_RootOrder: 0
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!82 &8021956811884352873
 AudioSource:

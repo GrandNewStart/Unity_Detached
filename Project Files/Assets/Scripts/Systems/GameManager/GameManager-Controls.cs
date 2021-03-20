@@ -18,11 +18,13 @@ public partial class GameManager
                     ChangeControl();
                     break;
                 case FIRST_ARM:
+                    player.CancelFire();
                     if (player.isDestroyed) return;
                     firstArm.Control();
                     ChangeControl();
                     break;
                 case SECOND_ARM:
+                    player.CancelFire();
                     if (player.isDestroyed) return;
                     secondArm.Control();
                     ChangeControl();

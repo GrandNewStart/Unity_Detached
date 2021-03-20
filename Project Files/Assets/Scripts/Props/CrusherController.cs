@@ -100,6 +100,11 @@ public class CrusherController : MonoBehaviour
         }
     }
 
+    public void AdjustAudio(float volume)
+    {
+        crushSound.volume = volume;
+    }
+
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireSphere(maxHeight.transform.position, 0.5f);

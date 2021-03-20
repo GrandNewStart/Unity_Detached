@@ -28,7 +28,7 @@ public partial class StageManager01 : GameManager
     private bool            jump_done = false;
 
     //[Header("ETC")]
-    public DoorSwitchController firstSwitch;
+    public DoorController firstSwitch;
 
     protected void Awake()
     {

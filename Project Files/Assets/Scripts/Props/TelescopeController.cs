@@ -12,8 +12,6 @@ public class TelescopeController: MonoBehaviour
     private new BoxCollider2D collider;
     private bool isActive = false;
     private bool isPlayerAround = false;
-    public int waitToPlugOut;
-    private int counter = 0;
     public float width;
     public float height;
 
@@ -48,6 +46,7 @@ public class TelescopeController: MonoBehaviour
         if (collision.CompareTag("Player"))
         {
             isPlayerAround = false;
+            DeactivateTelescope();
         }
     }
 
@@ -63,35 +62,19 @@ public class TelescopeController: MonoBehaviour
         if (gameManager.controlIndex == GameManager.FIRST_ARM) return;
         if (gameManager.controlIndex == GameManager.SECOND_ARM) return;
         if (gameManager.controlIndex == GameManager.UI) return;
-        if (isPlayerAround)
+        if (isPlayerAround && !isActive)
         {
             if (Input.GetKeyDown(KeyCode.Q))
             {
                 ActivateTelescope();
             }
         }
-        if (isActive)
-        {
-            if (Input.GetKey(KeyCode.Q))
-            {
-                if (counter++ > waitToPlugOut)
-                {
-                    DeactivateTelescope();
-                }
-            }
-        }
-        if (Input.GetKeyUp(KeyCode.Q))
-        {
-            counter = 0;
-        }
     }
 
     private void ActivateTelescope()
     {
         isActive = true;
-        gameManager.DisableControl();
         gameManager.cameraTarget = viewPoint.transform;
-        player.SetState(PlayerController.State.idle);
         StartCoroutine(gameManager.MoveCamera());
         StartCoroutine(IncreaseCameraSize());
     }
@@ -99,8 +82,6 @@ public class TelescopeController: MonoBehaviour
     private void DeactivateTelescope()
     {
         isActive = false;
-        gameManager.EnableControl();
-        gameManager.controlIndex = GameManager.PLAYER;
         gameManager.cameraTarget = gameManager.player.transform;
         StartCoroutine(DecreaseCameraSize());
         StartCoroutine(gameManager.MoveCamera());

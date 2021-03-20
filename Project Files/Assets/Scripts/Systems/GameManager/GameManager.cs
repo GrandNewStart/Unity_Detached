@@ -38,8 +38,8 @@ public partial class GameManager : MonoBehaviour
     public Sprite               checkbox_unchecked;
     public TMP_FontAsset        font_english;
     public TMP_FontAsset        font_korean;
-    public List<DoorSwitchController> doors = new List<DoorSwitchController>();
-    public List<LiftSwitchController> lifts = new List<LiftSwitchController>();
+    public List<DoorController> doors = new List<DoorController>();
+    public List<LiftController> lifts = new List<LiftController>();
     public List<CrusherController> crushers = new List<CrusherController>();
     public List<TreadmillController> treadmills = new List<TreadmillController>();
     public List<TelescopeController> telescopes = new List<TelescopeController>();
