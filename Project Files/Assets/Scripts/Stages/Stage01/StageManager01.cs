@@ -5,30 +5,33 @@ using TMPro;
 
 public partial class StageManager01 : GameManager
 {
-    //[Header("Event Triggers")]
+    [Header("Event Triggers")]
     public GameObject           arm_1;
     public GameObject           arm_2;
     public GameObject           truck;
+    public DoorController       firstSwitch;
 
-    //[Header("Cut Scenes")]
+    [Header("CutScenes")]
     public List<GameObject>     cutScenes_1;
     public List<GameObject>     cutScenes_2;
     public List<GameObject>     cutScenes_3;
     public List<GameObject>     cutScenes_4;
+    private bool cutScene_2_done    = false;
     private bool cutScene_4_started = false;
     private bool cutScene_4_done    = false;
 
-    //[Header("Tutorial Texts")]
+    [Header("Tutorial Texts")]
+    public TextMeshProUGUI  text_show_hints;
     public TextMeshProUGUI  text_jump;
+    public TextMeshProUGUI  text_fire;
+    public TextMeshProUGUI  text_shift_control;
+    public TextMeshProUGUI  text_retrieve;
+    public TextMeshProUGUI  text_plug_in;
+    public TextMeshProUGUI  text_plug_out;
+    public TextMeshProUGUI  text_hide_hints;
     public GameObject       jump_end_point;
-    public GameObject       tutorial_background;
-    public Image            tutorial_1;
-    public Image            tutorial_2;
-    public Image            tutorial_3;
-    private bool            jump_done = false;
-
-    //[Header("ETC")]
-    public DoorController firstSwitch;
+    public CanvasGroup      tutorial;
+    private bool            hintsShown = false;
 
     protected void Awake()
     {
@@ -46,6 +49,7 @@ public partial class StageManager01 : GameManager
         base.Update();
         DetectEventTriggers();
         ManageTexts();
+        ShowTutorial();
     }
 
     protected override void OnGamePaused()
@@ -92,6 +96,11 @@ public partial class StageManager01 : GameManager
         if (currentCheckpoint > 3)
         {
             arm_1.SetActive(false);
+            cutScene_2_done = true;
+            hintsShown = true;
+            Color color = text_show_hints.color;
+            color.a = 0;
+            text_show_hints.color = color;
         }
         // After second arm achievement
         if (currentCheckpoint > 10)
@@ -136,7 +145,8 @@ public partial class StageManager01 : GameManager
     
     private void OnDrawGizmos()
     {
-        Gizmos.DrawWireSphere(jump_end_point.transform.position, 4);
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(jump_end_point.transform.position, 1.5f);
         Gizmos.DrawWireSphere(arm_1.transform.position, 1.5f);
         Gizmos.DrawWireSphere(arm_2.transform.position, 1.5f);
         Gizmos.DrawWireCube(truck.transform.position, new Vector2(8, 4));

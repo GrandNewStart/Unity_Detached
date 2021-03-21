@@ -19,7 +19,7 @@ public partial class GameManager
     protected void ShowLoadingScreen()
     {
         Show(splash_art, () => {
-            Show(press_any_key, () => {
+            Show(text_press_any, () => {
                 StartCoroutine(PressAnyKeyToLoadNextLevel());
             });
         });
@@ -89,20 +89,20 @@ public partial class GameManager
     private IEnumerator CrossfadeStart(int before, int after, Action callback)
     {
         yield return new WaitForSeconds(before);
-        Color color = mask.color;
+        Color color = screenMask.color;
         color.a     = 0f;
-        mask.color  = color;
+        screenMask.color  = color;
 
-        while (mask.color.a < 0.95f)
+        while (screenMask.color.a < 0.95f)
         {
-            color       = mask.color;
+            color       = screenMask.color;
             color.a     += 0.02f;
-            mask.color  = color;
+            screenMask.color  = color;
             yield return null;
         }
 
         color.a     = 1;
-        mask.color  = color;
+        screenMask.color  = color;
 
         yield return new WaitForSeconds(after);
         callback?.Invoke();
@@ -111,20 +111,20 @@ public partial class GameManager
     private IEnumerator CrossfadeEnd(int before, int after, Action callback)
     {
         yield return new WaitForSeconds(before);
-        Color color = mask.color;
+        Color color = screenMask.color;
         color.a     = 1f;
-        mask.color  = color;
+        screenMask.color  = color;
 
-        while (mask.color.a > 0.05f)
+        while (screenMask.color.a > 0.05f)
         {
-            color       = mask.color;
+            color       = screenMask.color;
             color.a     -= 0.02f;
-            mask.color  = color;
+            screenMask.color  = color;
             yield return null;
         }
 
         color.a     = 0;
-        mask.color  = color;
+        screenMask.color  = color;
 
         yield return new WaitForSeconds(after);
         callback?.Invoke();

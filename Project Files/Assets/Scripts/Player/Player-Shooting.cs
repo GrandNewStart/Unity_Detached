@@ -178,6 +178,20 @@ public partial class PlayerController
         }
     }
 
+    public void RetrieveFirstArm()
+    {
+        isFirstArmRetrieving = true;
+        firstArm.StartRetrieve();
+        PlayRetrieveSound();
+    }
+
+    public void RetrieveSecondArm()
+    {
+        isSecondArmRetrieving = true;
+        secondArm.StartRetrieve();
+        PlayRetrieveSound();
+    }
+
     public void ResetPower()
     {
         tempPower = power;

@@ -12,55 +12,52 @@ public partial class GameManager : MonoBehaviour
     public static int       currentCheckpoint;
     public static Vector3   position;
 
-    public const int        INFINITE    = 0;
-    public const int        PLAYER      = 0;
-    public const int        FIRST_ARM   = 1;
-    public const int        SECOND_ARM  = 2;
-    public const int        UI          = 3;
-    public const int        OTHERS      = 4;
-    public const int        CONVERSATION = 4;
-    public const int        DISABLED    = -1;
-    public const int        PAUSE       = 0;
-    public const int        SETTINGS    = 1;
-    public const int        TUTORIALS   = 2;
+    public const int INFINITE       = 0;
+    public const int PLAYER         = 0;
+    public const int FIRST_ARM      = 1;
+    public const int SECOND_ARM     = 2;
+    public const int UI             = 3;
+    public const int OTHERS         = 4;
+    public const int CONVERSATION   = 4;
+    public const int DISABLED       = -1;
+    public const int PAUSE          = 0;
+    public const int SETTINGS       = 1;
+    public const int TUTORIALS      = 2;
     
     public bool                 isPaused;
     public GameObject           cube;
-    public Image                mask;
+    public Image                screenMask;
     public PlayerController     player;
     public ArmController        firstArm;
     public ArmController        secondArm;
-    public new Camera           camera;
-    public AudioSource          pageSound;
-    public AudioSource          clickSound;
-    public AudioSource          bgm;
-    public Sprite               checkbox_checked;
-    public Sprite               checkbox_unchecked;
-    public TMP_FontAsset        font_english;
-    public TMP_FontAsset        font_korean;
-    public List<DoorController> doors = new List<DoorController>();
-    public List<LiftController> lifts = new List<LiftController>();
+
+    [Header("Audios")]
+    public AudioSource pageSound;
+    public AudioSource clickSound;
+    public AudioSource bgm;
+
+    [Header("Props")]
+    public List<SwitchController> switches = new List<SwitchController>();
     public List<CrusherController> crushers = new List<CrusherController>();
     public List<TreadmillController> treadmills = new List<TreadmillController>();
     public List<TelescopeController> telescopes = new List<TelescopeController>();
-    public Transform            cameraTarget;
-    public bool                 cameraMoving                = false;
-    public bool                 overrideBodyControl         = false;
-    public bool                 overrideFirstArmControl     = false;
-    public bool                 overrideSecondArmControl    = false;
-    public int                  controlIndex        = 0;
-    private int                 tempControlIndex    = 0;
-    private float               cameraSpeed         = 130;
-    private int                 menuIndex           = 0;
-    public Action               firstArmControl;
-    public Action               firstArmCameraControl;
-    public Action               firstArmChangeControl;
-    public Action               secondArmControl;
-    public Action               secondArmCameraControl;
-    public Action               secondArmChangeControl;
+
+    [Header("Control")]
+    public int controlIndex = 0;
+    private int tempControlIndex = 0;
+    private int menuIndex = 0;
+
+    [Header("Camera")]
+    public new Camera camera;
+    public Transform cameraTarget;
+    public bool cameraMoving = false;
+    private float cameraSpeed = 130;
 
     [Header("Game Settings")]
-    private MenuController  settings_controller;
+    public Sprite           checkbox_checked;
+    public Sprite           checkbox_unchecked;
+    public TMP_FontAsset    font_english;
+    public TMP_FontAsset    font_korean;
     public GameObject       settings_screen;
     public TextMeshProUGUI  settings_title;
     public TextMeshProUGUI  settings_full_screen;
@@ -82,6 +79,7 @@ public partial class GameManager : MonoBehaviour
     public Slider           settings_master_volume_slider;
     public Slider           settings_music_volume_slider;
     public Slider           settings_game_volume_slider;
+    private MenuController  settings_controller;
     private bool    tempIsFullScreen    = false;
     private int     tempResolution      = GameSettings.FHD;
     private int     tempLanguage        = GameSettings.ENGLISH;
@@ -102,7 +100,7 @@ public partial class GameManager : MonoBehaviour
     public List<Checkpoint> checkpoints;
     private bool            deathDetected = false;
 
-    [Header("Cut Scenes")]
+    [Header("UI")]
     public TextMeshProUGUI  text_continue;
 
     [Header("Pause Menu")]
@@ -116,11 +114,10 @@ public partial class GameManager : MonoBehaviour
 
     [Header("Loading Screens")]
     public Image            splash_art;
-    public TextMeshProUGUI  press_any_key;
+    public TextMeshProUGUI  text_press_any;
 
     protected virtual void Start()
     {
-        cube.SetActive(false);
         OnStageStarted();
     }
 
@@ -138,8 +135,9 @@ public partial class GameManager : MonoBehaviour
 
     protected virtual void OnStageStarted()
     {
-        InitGameSettings();
+        cube.SetActive(false);
         InitPauseMenu();
+        InitGameSettings();
         InitSettingsMenu();
         InitCheckpoints();
         InitCamera();
@@ -162,6 +160,7 @@ public partial class GameManager : MonoBehaviour
         player.OnPause();
         firstArm.OnPause();
         secondArm.OnPause();
+        PauseAudio();
     }
 
     // Called both in Resume & ForceResume
@@ -174,6 +173,7 @@ public partial class GameManager : MonoBehaviour
         player.OnResume();
         firstArm.OnResume();
         secondArm.OnResume();
+        ResumeAudio();
     }
 
     // Pause game with pause menu

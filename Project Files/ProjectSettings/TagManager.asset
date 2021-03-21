@@ -9,6 +9,7 @@ TagManager:
   - Platform
   - Crusher
   - Switch
+  - Trap
   layers:
   - Default
   - TransparentFX

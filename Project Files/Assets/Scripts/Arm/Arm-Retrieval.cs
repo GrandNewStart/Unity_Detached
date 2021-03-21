@@ -30,6 +30,25 @@ public partial class ArmController
         StartCoroutine(Retrieve());
     }
 
+    private void ForceRetrieve()
+    {
+        if (isLeft)
+        {
+            player.RetrieveFirstArm();
+        }
+        else
+        {
+            player.RetrieveSecondArm();
+        }
+        gameManager.controlIndex = GameManager.PLAYER;
+        gameManager.cameraTarget = player.transform;
+        player.EnableControl(true);
+        gameManager.firstArm.EnableControl(false);
+        gameManager.secondArm.EnableControl(false);
+        StartCoroutine(gameManager.MoveCamera());
+        trapped = false;
+    }
+
     private IEnumerator Retrieve()
     {
         isRetrieving = true;

@@ -199,6 +199,16 @@ public partial class PlayerController : PhysicalObject
         RecoverPower();
     }
 
+    protected override void OnCollisionEnter2D(Collision2D collision)
+    {
+        base.OnCollisionEnter2D(collision);
+        if (collision.collider.CompareTag("Trap"))
+        {
+            if (isDestroyed) return;
+            DestroyObject();
+        }
+    }
+
     private void OnDrawGizmos()
     { Gizmos.DrawWireCube(groundCheck.transform.position, new Vector2(groundCheckWidth, 0.5f)); }
 

@@ -7,6 +7,8 @@ public class SwitchController: MonoBehaviour
     public GameManager          gameManager;
     protected ArmController     arm;
     protected PlayerController  player;
+    protected ArmController     firstArm;
+    protected ArmController     secondArm;
     [HideInInspector] public Transform cameraTarget;
 
     [Header("Target")]
@@ -16,6 +18,7 @@ public class SwitchController: MonoBehaviour
     public GameObject   unpluggedSprite;
     public GameObject   pluggedSpriteRed;
     public GameObject   pluggedSpriteGreen;
+    public GameObject   letterBox;
     public bool         isFirstArmPlugged;
     public bool         isSecondArmPlugged;
 
@@ -25,10 +28,22 @@ public class SwitchController: MonoBehaviour
     public AudioSource activationSound;
     public AudioSource deactivationSound;
 
+    protected virtual void Awake()
+    {
+        gameManager.switches.Add(this);
+    }
+
     protected virtual void Start()
     {
         cameraTarget = gameObject.transform;
         player = gameManager.player;
+        firstArm = gameManager.firstArm;
+        secondArm = gameManager.secondArm;
+    }
+
+    protected virtual void Update()
+    {
+        ManageLetterBox();
     }
 
     public virtual void Control() { }
@@ -74,6 +89,48 @@ public class SwitchController: MonoBehaviour
     virtual public void OnActivation() {}
 
     virtual public void OnDeactivation() {}
+
+    virtual public void AdjustAudio(float volume) { }
+
+    private void ManageLetterBox()
+    {
+        if (letterBox.activeSelf)
+        {
+            if (player.HasControl())
+            {
+                letterBox.SetActive(false);
+            }
+        }
+        else
+        {
+            if (firstArm.HasControl())
+            {
+                StartCoroutine(ShowLetterBox());
+            }
+            if (secondArm.HasControl())
+            {
+                StartCoroutine(ShowLetterBox());
+            }
+        }
+    }
+
+    private IEnumerator ShowLetterBox()
+    {
+        if (letterBox.activeSelf) yield return null;
+
+        letterBox.SetActive(true);
+        float x = 0;
+
+        while(!isFirstArmPlugged && !isSecondArmPlugged)
+        {
+            float movement = Mathf.Sin(x) * Time.deltaTime * 0.5f;
+            letterBox.transform.Translate(new Vector2(0, movement));
+            x += 0.1f;
+            yield return null;
+        }
+
+        letterBox.SetActive(false);
+    }
 
     protected void PlayPlugInSound()
     {

@@ -22,8 +22,6 @@ public class MagnetController : SwitchController
     private new Rigidbody2D rigidbody;
     private Vector3 pullPointOrigin;
     private Rigidbody2D pullTargetRigidbody;
-    private ArmController firstArm;
-    private ArmController secondArm;
     private float pullTargetGravityScale = 0;
     private bool isActivated = false;
     private bool isPulling = false;
@@ -112,6 +110,11 @@ public class MagnetController : SwitchController
                     break;
             }
         }
+    }
+
+    public override void AdjustAudio(float volume)
+    {
+        
     }
 
     public override void MoveCamera()

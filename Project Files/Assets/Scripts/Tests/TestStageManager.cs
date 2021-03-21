@@ -8,6 +8,11 @@ public class TestStageManager : GameManager
     [SerializeField] private TelescopeController telescope;
     private bool conversationBegan = false;
 
+    private void Awake()
+    {
+        cameraTarget = player.transform;
+    }
+
     protected override void Start()
     {
         cube.SetActive(false);

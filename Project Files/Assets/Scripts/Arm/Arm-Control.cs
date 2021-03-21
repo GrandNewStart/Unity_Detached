@@ -6,6 +6,7 @@ public partial class ArmController
 {
     public void Control()
     {
+        if (trapped) return;
         if (isPlugged)
         {
             if (currentSwitch == null)

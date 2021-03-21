@@ -4,9 +4,9 @@ public partial class StageManager01
 {
     private void PlayCutScene1()
     {
-        Color color = mask.color;
+        Color color = screenMask.color;
         color.a     = 1;
-        mask.color  = color;
+        screenMask.color  = color;
         StopBGM();
         ForcePauseGame();
         PlayCutScene(
@@ -22,9 +22,7 @@ public partial class StageManager01
         SceneFadeEnd(0, 0, () => {
             PlayCutScene(
             cutScenes_2,
-            () => {
-                Invoke(nameof(ShowTutorial1), 1);
-            });
+            () => { cutScene_2_done = true; });
         });
     }
     private void PlayCutScene3()

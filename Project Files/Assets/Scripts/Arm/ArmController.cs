@@ -6,12 +6,12 @@ public partial class ArmController : PhysicalObject
     public enum Resolution { _1024, _512, _256, _128 };
 
     public GameManager          gameManager;
-    public GameObject           player;
     public GameObject           normal;
+    public PlayerController     player;
     public int                  waitToPlugOut;
-    private PlayerController    playerController;
     private Vector3             origin;
     private int                 counter = 0;
+    private bool                trapped = false;
     [HideInInspector] public Transform cameraTarget;
 
     [Header("Movement Attributes")]
@@ -63,24 +63,18 @@ public partial class ArmController : PhysicalObject
         InitAudioAttributes();
     }
 
-    protected override void Start()
-    {
-        base.Start();
-        
-    }
-
     private void Update()
     {
         GroundCheck();
         AnimationControl();
         MoveOnTreadmill();
 
-        Physics2D.IgnoreCollision(playerController.collider_1, capsuleCollider);
-        Physics2D.IgnoreCollision(playerController.collider_1, circleCollider_1);
-        Physics2D.IgnoreCollision(playerController.collider_1, circleCollider_2);
-        Physics2D.IgnoreCollision(playerController.collider_2, capsuleCollider);
-        Physics2D.IgnoreCollision(playerController.collider_2, circleCollider_1);
-        Physics2D.IgnoreCollision(playerController.collider_2, circleCollider_2);
+        Physics2D.IgnoreCollision(player.collider_1, capsuleCollider);
+        Physics2D.IgnoreCollision(player.collider_1, circleCollider_1);
+        Physics2D.IgnoreCollision(player.collider_1, circleCollider_2);
+        Physics2D.IgnoreCollision(player.collider_2, capsuleCollider);
+        Physics2D.IgnoreCollision(player.collider_2, circleCollider_1);
+        Physics2D.IgnoreCollision(player.collider_2, circleCollider_2);
     }
 
     public override void OnPause()
@@ -113,6 +107,18 @@ public partial class ArmController : PhysicalObject
         {
             currentSwitch = null;
             isSwitchAround = false;
+        }
+    }
+
+    protected override void OnCollisionEnter2D(Collision2D collision)
+    {
+        base.OnCollisionEnter2D(collision);
+        if (collision.collider.CompareTag("Trap"))
+        {
+            if (trapped) return;
+            trapped = true;
+            rigidbody.AddForce(new Vector2(0, 500));
+            Invoke(nameof(ForceRetrieve), 0.3f);
         }
     }
 
@@ -154,5 +160,8 @@ public partial class ArmController : PhysicalObject
 
     public void SetSwitch(SwitchController currentSwitch)
     { this.currentSwitch = currentSwitch; }
+
+    public bool HasControl() 
+    { return isControlling; }
 
 }

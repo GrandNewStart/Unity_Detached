@@ -4,12 +4,7 @@ using UnityEngine;
 
 public class DoorController : SwitchController
 {
-    private void Awake()
-    {
-        gameManager.doors.Add(this);
-    }
-
-    public void AdjustAudio(float volume)
+    public override void AdjustAudio(float volume)
     {
         plugInSound.volume = volume;
         plugOutSound.volume = volume;

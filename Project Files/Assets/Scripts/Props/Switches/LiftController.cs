@@ -13,11 +13,6 @@ public class LiftController : SwitchController
     private float       minHeight;
     private bool        isGoingUp = true;
 
-    private void Awake()
-    {
-        gameManager.lifts.Add(this);
-    }
-
     protected override void Start()
     {
         base.Start();
@@ -36,6 +31,15 @@ public class LiftController : SwitchController
     public override void OnDeactivation()
     {
         StartCoroutine(LowerLift());
+    }
+
+    public override void AdjustAudio(float volume)
+    {
+        plugInSound.volume = volume;
+        plugOutSound.volume = volume;
+        activationSound.volume = volume;
+        deactivationSound.volume = volume;
+        motorSound.volume = volume;
     }
 
     private IEnumerator RaiseLift()
@@ -106,15 +110,6 @@ public class LiftController : SwitchController
     {
         float y = speed * dir * Time.deltaTime;
         target.transform.Translate(new Vector3(0, y, 0));
-    }
-
-    public void AdjustAudio(float volume)
-    {
-        plugInSound.volume = volume;
-        plugOutSound.volume = volume;
-        activationSound.volume = volume;
-        deactivationSound.volume = volume;
-        motorSound.volume = volume;
     }
 
     private void OnDrawGizmos()

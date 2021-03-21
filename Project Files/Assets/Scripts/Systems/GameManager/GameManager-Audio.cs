@@ -15,25 +15,41 @@ public partial class GameManager
         firstArm.AdjustAudio(gameVol);
         secondArm.AdjustAudio(gameVol);
 
-        SetDoorVolume(gameVol);
-        SetLiftVolume(gameVol);
+        Debug.Log("gameVol: " + gameVol);
+        SetSwitchVolume(gameVol);
         SetCrusherVolume(gameVol);
         SetTreadmillVolume(gameVol);
     }
 
-    private void SetDoorVolume(float volume)
+    private void PauseAudio()
     {
-        foreach (DoorController door in doors)
+        SetSwitchVolume(0);
+        SetCrusherVolume(0);
+        SetTreadmillVolume(0);
+    }
+
+    private void ResumeAudio()
+    {
+        float gameVol = Common.masterVolume * Common.gameVolume;
+        SetSwitchVolume(gameVol);
+        SetCrusherVolume(gameVol);
+        PlayTreadmillAudio();
+        SetTreadmillVolume(gameVol);
+    }
+
+    private void PlayTreadmillAudio()
+    {
+        foreach (TreadmillController treadmill in treadmills)
         {
-            door.AdjustAudio(volume);
+            treadmill.PlayOperationSound();
         }
     }
 
-    private void SetLiftVolume(float volume)
+    private void SetSwitchVolume(float volume)
     {
-        foreach (LiftController lift in lifts)
+        foreach (SwitchController _switch in switches)
         {
-            lift.AdjustAudio(volume);
+            _switch.AdjustAudio(volume);
         }
     }
 

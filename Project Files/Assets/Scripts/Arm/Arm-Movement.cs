@@ -6,7 +6,6 @@ public partial class ArmController
 {
     private void InitMovementAttributes()
     {
-        playerController = player.GetComponent<PlayerController>();
         origin = transform.position;
         dir = 1;
         lastDir = 1;

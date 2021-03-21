@@ -380,18 +380,19 @@ MonoBehaviour:
   destroyedSprite: {fileID: 2912137508063495199}
   rigidbody: {fileID: 8519176175946045237}
   gameManager: {fileID: 0}
-  player: {fileID: 4200882710565440542, guid: 7de4a1535c057234c8018f9a2bfd536a, type: 3}
   normal: {fileID: 2031883000695011891}
-  cameraTarget: {fileID: 0}
+  player: {fileID: 4200882710565440542, guid: 7de4a1535c057234c8018f9a2bfd536a, type: 3}
   waitToPlugOut: 50
+  cameraTarget: {fileID: 0}
   moveSpeed: 500
   checkRectX: 1.55
   checkRectY: 0.8
+  isMovable: 1
   treadmillVelocity: 0
   capsuleCollider: {fileID: 6364153883646694885}
   circleCollider_1: {fileID: 8461392389994913860}
   circleCollider_2: {fileID: 7572228472302161749}
-  retrieveSpeed: 80
+  retrieveSpeed: 50
   retreiveRadius: 1.8
   moveSound: {fileID: 8225464803627867822}
   moveVolume: 0

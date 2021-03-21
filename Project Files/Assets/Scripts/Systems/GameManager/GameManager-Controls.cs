@@ -113,7 +113,9 @@ public partial class GameManager
 
         if (Input.GetKeyDown(KeyCode.Tab))
         {
-            controlIndex = player.ChangeControl();
+            int index = player.ChangeControl();
+            if (controlIndex == index) return;
+            controlIndex = index;
             switch (controlIndex)
             {
                 case PLAYER:

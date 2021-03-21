@@ -21,18 +21,6 @@ public class TreadmillController : MonoBehaviour
         PlayOperationSound();
     }
 
-    private void Update()
-    {
-        if (gameManager.isPaused)
-        {
-            StopOperationSound();
-        }
-        else
-        {
-            PlayOperationSound();
-        }
-    }
-
     public void PlayOperationSound()
     {
         motorSound.loop = true;

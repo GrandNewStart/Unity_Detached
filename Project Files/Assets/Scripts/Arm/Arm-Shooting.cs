@@ -27,7 +27,7 @@ public partial class ArmController
     {
         Vector3 fireVector = Vector3.zero;
         playerPosition = player.transform.position;
-        switch (playerController.GetDir())
+        switch (player.GetDir())
         {
             case 1:
                 lastDir = 1;
