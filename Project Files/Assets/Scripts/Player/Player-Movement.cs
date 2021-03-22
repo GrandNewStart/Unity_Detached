@@ -19,6 +19,11 @@ public partial class PlayerController
                     Physics2D.OverlapBox(origin, vector, 0.0f, LayerMask.GetMask("Ground"));
         if (!isGrounded)
         {
+            // if player falls off during Charge or Fire state, 'isMovable' should be returned to true
+            if (state == State.charge || state == State.fire)
+            {
+                isMovable = true;
+            }
             state = State.jump;
             footStepDelay = 10;
         }

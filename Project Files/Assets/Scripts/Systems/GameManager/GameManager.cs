@@ -116,6 +116,11 @@ public partial class GameManager : MonoBehaviour
     public Image            splash_art;
     public TextMeshProUGUI  text_press_any;
 
+    protected virtual void Awake()
+    {
+        cameraTarget = player.transform;
+    }
+
     protected virtual void Start()
     {
         OnStageStarted();

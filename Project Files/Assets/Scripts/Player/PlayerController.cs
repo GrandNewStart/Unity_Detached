@@ -14,7 +14,7 @@ public partial class PlayerController : PhysicalObject
     private float       treadmillVelocity;
     private bool        isOnTreadmill;
     private bool        isGrounded;
-    [HideInInspector]public bool isMovable;
+    public bool         isMovable;
     private bool        jumped;
     private bool        hasControl;
 
