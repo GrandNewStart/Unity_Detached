@@ -14,6 +14,7 @@ public partial class StageManager01
             text_plug_in.text = "press \"Q\" to plug into a switch\n(only when you are controlling arms)";
             text_plug_out.text = "Hold \"Q\" to plug out from a switch\n(only when you are controlling arms)";
             text_hide_hints.text = "Press \"H\" to hide hints";
+            text_telescope.text = "Activate telescope to get a wider view of the area";
 
             text_jump.font = font_english;
             text_show_hints.font = font_english;
@@ -23,6 +24,7 @@ public partial class StageManager01
             text_plug_in.font = font_english;
             text_plug_out.font = font_english;
             text_hide_hints.font = font_english;
+            text_telescope.font = font_english;
         }
         if (Common.language == GameSettings.KOREAN)
         {
@@ -34,6 +36,7 @@ public partial class StageManager01
             text_plug_in.text = "\"Q\" 를 눌러 스위치 플러그 인\n(팔 조종 중에만)";
             text_plug_out.text = "\"Q\" 를 길게 눌러 스위치 플러그 아웃\n(팔 조종 중에만)";
             text_hide_hints.text = "\"H\" 를 눌러 힌트 숨기기";
+            text_telescope.text = "망원경을 작동시켜 해당 지역을\n넓게 볼 수 있습니다";
 
             text_jump.font = font_korean;
             text_show_hints.font = font_korean;
@@ -43,6 +46,7 @@ public partial class StageManager01
             text_plug_in.font = font_korean;
             text_plug_out.font = font_korean;
             text_hide_hints.font = font_korean;
+            text_telescope.font = font_korean;
         }
     }
 }

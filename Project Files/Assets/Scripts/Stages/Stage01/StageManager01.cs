@@ -9,7 +9,7 @@ public partial class StageManager01 : GameManager
     public GameObject           arm_1;
     public GameObject           arm_2;
     public GameObject           truck;
-    public DoorController       firstSwitch;
+    public TelescopeController  firstTelescope;
 
     [Header("CutScenes")]
     public List<GameObject>     cutScenes_1;
@@ -29,12 +29,14 @@ public partial class StageManager01 : GameManager
     public TextMeshProUGUI  text_plug_in;
     public TextMeshProUGUI  text_plug_out;
     public TextMeshProUGUI  text_hide_hints;
+    public TextMeshProUGUI  text_telescope;
     public GameObject       jump_end_point;
     public CanvasGroup      tutorial;
     private bool            hintsShown = false;
 
-    protected void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         InitTutorials();
     }
 
@@ -139,6 +141,15 @@ public partial class StageManager01 : GameManager
         {
             EnablePause(false);
             DisableControl();
+        }
+
+        if (firstTelescope.IsActive() && text_telescope.color.a == 0)
+        {
+            Show(text_telescope, null);
+        }
+        if (!firstTelescope.IsActive() && text_telescope.color.a == 1)
+        {
+            Hide(text_telescope, null);
         }
     }
 

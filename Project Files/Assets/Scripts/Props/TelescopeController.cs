@@ -169,7 +169,7 @@ public class TelescopeController : MonoBehaviour
         this.isActive = isActive;
     }
 
-    public bool GetActive()
+    public bool IsActive()
     {
         return isActive;
     }
