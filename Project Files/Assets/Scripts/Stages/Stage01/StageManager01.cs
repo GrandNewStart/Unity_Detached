@@ -69,13 +69,13 @@ public partial class StageManager01 : GameManager
         base.LoadCheckpoint(index);
         if (index < 4)
         {
-            player.EnableArms(0);
+            player.enabledArms = 0;
             arm_1.SetActive(true);
             return;
         }
         if (index < 11)
         {
-            player.EnableArms(1);
+            player.enabledArms = 1;
             arm_2.SetActive(true);
             return;
         }
@@ -120,14 +120,14 @@ public partial class StageManager01 : GameManager
 
         if (arm_1_achieved && arm_1.activeSelf)
         {
-            player.EnableArms(1);
+            player.enabledArms = 1;
             arm_1.SetActive(false);
             PlayCutScene2();
         }
 
         if (arm_2_achieved && arm_2.activeSelf)
         {
-            player.EnableArms(2);
+            player.enabledArms = 2;
             arm_2.SetActive(false);
             PlayCutScene3();
         }

@@ -12,6 +12,7 @@ public partial class ArmController : PhysicalObject
     private Vector3             origin;
     private int                 counter = 0;
     private bool                trapped = false;
+    [HideInInspector] public bool isOut = false;
     [HideInInspector] public Transform cameraTarget;
 
     [Header("Movement Attributes")]
@@ -21,10 +22,9 @@ public partial class ArmController : PhysicalObject
     private short   dir;
     private short   lastDir;
     private bool    isFireComplete  = false;
-    private bool    isControlling   = false;
-    private bool    isPlugged       = false;
+    [HideInInspector] public bool hasControl = false;
     [HideInInspector] public bool isMovable = true;
-    private bool    isOnTreadmill   = false;
+    [HideInInspector] public bool isOnTreadmill   = false;
     [HideInInspector] public float treadmillVelocity;
 
     [Header("Retrieve Attributes")]
@@ -37,12 +37,12 @@ public partial class ArmController : PhysicalObject
     public float                retreiveRadius;
     private float               normalScale;
     private float               normalMass;
-    private bool                isRetrieving        = false;
-    private bool                isRetrieveComplete  = true;
+    [HideInInspector] public bool isRetrieving = false;
 
     [Header("Switch Attributes")]
     private bool isSwitchAround = false;
-    private SwitchController currentSwitch;
+    [HideInInspector] public bool isPlugged = false;
+    [HideInInspector] public SwitchController currentSwitch;
 
     [Header("Sound Attributes")]
     public AudioSource  moveSound;
@@ -115,6 +115,7 @@ public partial class ArmController : PhysicalObject
         base.OnCollisionEnter2D(collision);
         if (collision.collider.CompareTag("Trap"))
         {
+            if (isRetrieving) return;
             if (trapped) return;
             trapped = true;
             rigidbody.AddForce(new Vector2(0, 500));
@@ -127,41 +128,5 @@ public partial class ArmController : PhysicalObject
         Gizmos.DrawWireCube(transform.position, new Vector3(checkRectX, checkRectY, 0));
         Gizmos.DrawWireSphere(transform.position, retreiveRadius);
     }
-
-    public void SetTreadmillVelocity(float treadmillVelocity)
-    { this.treadmillVelocity = treadmillVelocity; }
-
-    public bool GetOnTreadMill()
-    { return isOnTreadmill; }
-
-    public void SetOnTreadmill(bool isOnTreadmill)
-    { this.isOnTreadmill = isOnTreadmill; }
-
-    public bool IsControlling() 
-    { return isControlling; }
-
-    public void EnableControl(bool enabled) 
-    { isControlling = enabled; }
-
-    public void SetMovable(bool isMovable) 
-    { this.isMovable = isMovable; }
-
-    public bool GetRetrieveComplete() 
-    { return isRetrieveComplete; }
-
-    public bool IsPlugged()
-    { return isPlugged; }
-
-    public bool IsRetrieving() 
-    { return isRetrieving; }
-
-    public SwitchController GetSwitch()
-    { return currentSwitch; }
-
-    public void SetSwitch(SwitchController currentSwitch)
-    { this.currentSwitch = currentSwitch; }
-
-    public bool HasControl() 
-    { return isControlling; }
 
 }

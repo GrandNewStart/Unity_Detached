@@ -46,12 +46,12 @@ public class SwitchController: MonoBehaviour
         ManageLetterBox();
     }
 
-    public virtual void Control() { }
+    public virtual void Control() {}
 
     public void Activate(ArmController arm)
     {
         OnActivation();
-        if (arm.IsControlling())
+        if (arm.hasControl)
         {
             gameManager.cameraTarget = cameraTarget;
             StartCoroutine(gameManager.MoveCamera());
@@ -68,7 +68,7 @@ public class SwitchController: MonoBehaviour
     public void Deactivate()
     {
         OnDeactivation();
-        if (arm.IsControlling())
+        if (arm.hasControl)
         {
             gameManager.cameraTarget = arm.transform;
             StartCoroutine(gameManager.MoveCamera());
@@ -82,7 +82,37 @@ public class SwitchController: MonoBehaviour
         //arm = null;
     }
 
-    public virtual void ChangeControl() {}
+    public virtual void ChangeControl() 
+    {
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            gameManager.controlIndex = gameManager.GetControlIndex();
+            switch (gameManager.controlIndex)
+            {
+                case GameManager.PLAYER:
+                    player.hasControl = true;
+                    firstArm.hasControl = false;
+                    secondArm.hasControl = false;
+                    gameManager.cameraTarget = player.transform;
+                    StartCoroutine(gameManager.MoveCamera());
+                    break;
+                case GameManager.FIRST_ARM:
+                    player.hasControl = false;
+                    firstArm.hasControl = true;
+                    secondArm.hasControl = false;
+                    gameManager.cameraTarget = firstArm.cameraTarget;
+                    StartCoroutine(gameManager.MoveCamera());
+                    break;
+                case GameManager.SECOND_ARM:
+                    player.hasControl = false;
+                    firstArm.hasControl = false;
+                    secondArm.hasControl = true;
+                    gameManager.cameraTarget = secondArm.cameraTarget;
+                    StartCoroutine(gameManager.MoveCamera());
+                    break;
+            }
+        }
+    }
 
     public virtual void MoveCamera() {}
 
@@ -96,18 +126,18 @@ public class SwitchController: MonoBehaviour
     {
         if (letterBox.activeSelf)
         {
-            if (player.HasControl())
+            if (player.hasControl)
             {
                 letterBox.SetActive(false);
             }
         }
         else
         {
-            if (firstArm.HasControl())
+            if (firstArm.hasControl)
             {
                 StartCoroutine(ShowLetterBox());
             }
-            if (secondArm.HasControl())
+            if (secondArm.hasControl)
             {
                 StartCoroutine(ShowLetterBox());
             }

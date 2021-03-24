@@ -55,19 +55,19 @@ public class TreadmillController : MonoBehaviour
         if (collision.collider.CompareTag("Player"))
         {
             PlayerController player = collision.gameObject.GetComponent<PlayerController>();
-            if (!player.IsOnTreadMill())
+            if (!player.isOnTreadmill)
             {
-                player.SetOnTreadmill(true);
-                player.SetTreadmillVelocity(dir * speed);
+                player.isOnTreadmill = true;
+                player.treadmillVelocity = (dir * speed);
             }
         }
         if (collision.collider.CompareTag("Arm"))
         {
             ArmController hand = collision.gameObject.GetComponent<ArmController>();
-            if (!hand.GetOnTreadMill())
+            if (!hand.isOnTreadmill)
             {
-                hand.SetOnTreadmill(true);
-                hand.SetTreadmillVelocity(dir * speed);
+                hand.isOnTreadmill = true;
+                hand.treadmillVelocity = (dir * speed);
             }
         }
     }
@@ -77,12 +77,12 @@ public class TreadmillController : MonoBehaviour
         if (collision.collider.CompareTag("Player"))
         {
             PlayerController player = collision.gameObject.GetComponent<PlayerController>();
-            player.SetOnTreadmill(false);
+            player.isOnTreadmill = false;
         }
         if (collision.collider.CompareTag("Arm"))
         {
             ArmController hand = collision.gameObject.GetComponent<ArmController>();
-            hand.SetOnTreadmill(false);
+            hand.isOnTreadmill = false;
         }
     }
 

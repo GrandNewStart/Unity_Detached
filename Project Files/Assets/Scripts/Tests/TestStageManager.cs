@@ -28,7 +28,7 @@ public class TestStageManager : GameManager
         if (isLoadingSaveData)
         {
             player.transform.position = position;
-            player.EnableArms(enabledArms);
+            player.enabledArms = enabledArms;
         }
     }
 

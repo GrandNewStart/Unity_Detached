@@ -11,12 +11,12 @@ public partial class PlayerController : PhysicalObject
     public  GameObject  normal;
     public  float       moveSpeed;
     public  float       jumpHeight;
-    private float       treadmillVelocity;
-    private bool        isOnTreadmill;
+    [HideInInspector] public float treadmillVelocity;
     private bool        isGrounded;
     public bool         isMovable;
     private bool        jumped;
-    private bool        hasControl;
+    [HideInInspector] public bool hasControl;
+    [HideInInspector] public bool isOnTreadmill;
 
     [Header("Shoot Attributes")]
     public  ArmController   firstArm;
@@ -24,14 +24,10 @@ public partial class PlayerController : PhysicalObject
     public  GameObject[]    gauges;
     public  float           powerLimit;
     public  float           powerIncrement;
-    [SerializeField] private int enabledArms;
+    public int              enabledArms;
     private float           power;
     private float           tempPower;
-    private int             arms;
-    private bool            isFirstArmRetrieving;
-    private bool            isSecondArmRetrieving;
-    private bool            isFirstArmOut;
-    private bool            isSecondArmOut;
+    [HideInInspector] public int arms;
 
     [Header("Ground Check Attributes")]
     public GameObject   groundCheck;
@@ -40,8 +36,8 @@ public partial class PlayerController : PhysicalObject
     [Header("Animation Attributes")]
     public Resolution   resolution = Resolution._1024;
     private Animator    animator;
-    private short       dir;
-    private short       lastDir;
+    [HideInInspector] public short dir;
+    [HideInInspector] public short lastDir;
     private State       state;
     private bool        isStateFixed;
 
@@ -91,7 +87,8 @@ public partial class PlayerController : PhysicalObject
     protected override void OnDestruction()
     {
         base.OnDestruction();
-        
+        if (firstArm.isPlugged) firstArm.PlugOut();
+        if (secondArm.isPlugged) secondArm.PlugOut();
         foreach(GameObject gauge in gauges) { gauge.SetActive(false); }
 
         head        .transform.parent = null;
@@ -162,10 +159,9 @@ public partial class PlayerController : PhysicalObject
         destroyedSprite.SetActive(false);
         firstArm.gameObject.SetActive(false);
         secondArm.gameObject.SetActive(false);
-        isFirstArmOut = false;
-        isSecondArmOut = false;
-        isFirstArmRetrieving = false;
-        isSecondArmRetrieving = false;
+
+        firstArm.isOut = false;
+        secondArm.isOut = false;
         arms = enabledArms;
     }
 
@@ -211,48 +207,6 @@ public partial class PlayerController : PhysicalObject
 
     private void OnDrawGizmos()
     { Gizmos.DrawWireCube(groundCheck.transform.position, new Vector2(groundCheckWidth, 0.5f)); }
-
-    public void SetTreadmillVelocity(float treadmillVelocity)
-    { this.treadmillVelocity = treadmillVelocity; }
-
-    public bool IsOnTreadMill()
-    { return isOnTreadmill; }
-
-    public void SetOnTreadmill(bool isOnTreadmill)
-    { this.isOnTreadmill = isOnTreadmill; }
-
-    public void EnableArms(int enabledArms)
-    { this.enabledArms = arms = enabledArms; }
-
-    public int GetEnabledArms()
-    { return enabledArms; }
-
-    public void SetDir(short dir)
-    { this.dir = dir; }
-
-    public short GetDir()
-    { return lastDir; }
-
-    public bool HasControl()
-    { return hasControl; }
-
-    public void EnableControl(bool enabled)
-    { hasControl = enabled; }
-
-    public bool IsLeftRetrieving()
-    { return isFirstArmRetrieving; }
-
-    public bool IsRightRetrieving()
-    { return isSecondArmRetrieving; }
-
-    public void SetLeftRetrieving(bool input)
-    { isFirstArmRetrieving = input; }
-
-    public void SetRightRetrieving(bool input)
-    { isSecondArmRetrieving = input; }
-
-    public int GetArms()
-    { return arms; }
 
     public void SetState(State state)
     { this.state = state; }

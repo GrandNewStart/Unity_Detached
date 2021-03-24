@@ -17,20 +17,6 @@ public partial class PlayerController
         if (Input.GetKeyDown(KeyCode.P)) DestroyObject();
     }
 
-    public int ChangeControl()
-    {
-        if (hasControl)
-        {
-            if (isFirstArmOut) return GameManager.FIRST_ARM;
-            if (isSecondArmOut) return GameManager.SECOND_ARM;
-        }
-        else
-        {
-            if (firstArm.IsControlling() && isSecondArmOut) return GameManager.SECOND_ARM;
-        }
-        return GameManager.PLAYER;
-    }
-
     private void DeathCollisionCheck()
     {
         if (isDestroyed) return;

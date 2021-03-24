@@ -6,7 +6,7 @@ public partial class ArmController
 {
     private void ActivateSwitch()
     {
-        if (!isControlling)     return;
+        if (!hasControl)     return;
         if (!isSwitchAround)    return;
         if (isPlugged)          return;
         if (Input.GetKeyDown(KeyCode.Q))

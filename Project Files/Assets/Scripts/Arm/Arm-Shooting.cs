@@ -17,27 +17,27 @@ public partial class ArmController
     {
         rigidbody.gravityScale = normalScale;
         rigidbody.mass = normalMass;
-        isRetrieveComplete = false;
         gameObject.transform.position = playerPosition;
         gameObject.SetActive(true);
+        isOut = true;
         dir = 0;
     }
 
-    private Vector3 CalculateVector(float power)
+    private Vector2 CalculateVector(float power)
     {
-        Vector3 fireVector = Vector3.zero;
+        Vector2 fireVector = Vector2.zero;
         playerPosition = player.transform.position;
-        switch (player.GetDir())
+        switch (player.lastDir)
         {
             case 1:
                 lastDir = 1;
                 playerPosition.x += 1;
-                fireVector = new Vector3(5 + power, 15 + power, 0);
+                fireVector = new Vector2(5 + power, 15 + power);
                 break;
             case -1:
                 lastDir = -1;
                 playerPosition.x -= 1;
-                fireVector = new Vector3(-5 - power, 15 + power, 0);
+                fireVector = new Vector2(-5 - power, 15 + power);
                 break;
         }
         return fireVector;

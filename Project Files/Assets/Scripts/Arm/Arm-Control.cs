@@ -22,6 +22,7 @@ public partial class ArmController
         else
         {
             Move();
+            gameManager.ChangeControl();
             ActivateSwitch();
         }
     }

@@ -24,7 +24,7 @@ public class StageManager02 : GameManager
         if (isLoadingSaveData)
         {
             player.transform.position = position;
-            player.EnableArms(enabledArms);
+            player.enabledArms = enabledArms;
         }
     }
 }

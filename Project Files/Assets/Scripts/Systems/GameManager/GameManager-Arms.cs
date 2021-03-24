@@ -6,15 +6,15 @@ public partial class GameManager
 {
     public void RetrieveArms()
     {
-        switch (player.GetArms())
+        switch (player.arms)
         {
             case 1:
-                switch (player.GetEnabledArms())
+                switch (player.enabledArms)
                 {
                     case 1:
                         break;
                     case 2:
-                        if (!player.IsLeftRetrieving())
+                        if (!firstArm.isRetrieving)
                         {
                             player.PlayRetrieveSound();
                             RetrieveLeftArm();
@@ -23,22 +23,22 @@ public partial class GameManager
                 }
                 break;
             case 0:
-                switch (player.GetEnabledArms())
+                switch (player.enabledArms)
                 {
                     case 1:
-                        if (!player.IsLeftRetrieving())
+                        if (!firstArm.isRetrieving)
                         {
                             player.PlayRetrieveSound();
                             RetrieveLeftArm();
                         }
                         break;
                     case 2:
-                        if (!player.IsLeftRetrieving())
+                        if (!firstArm.isRetrieving)
                         {
                             player.PlayRetrieveSound();
                             RetrieveLeftArm();
                         }
-                        if (!player.IsRightRetrieving())
+                        if (!secondArm.isRetrieving)
                         {
                             player.PlayRetrieveSound();
                             RetrieveRightArm();
@@ -51,13 +51,11 @@ public partial class GameManager
 
     public void RetrieveLeftArm()
     {
-        player.SetLeftRetrieving(true);
         firstArm.StartRetrieve();
     }
 
     public void RetrieveRightArm()
     {
-        player.SetRightRetrieving(true);
         secondArm.StartRetrieve();
     }
 }

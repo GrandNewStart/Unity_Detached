@@ -42,9 +42,9 @@ public partial class ArmController
         }
         gameManager.controlIndex = GameManager.PLAYER;
         gameManager.cameraTarget = player.transform;
-        player.EnableControl(true);
-        gameManager.firstArm.EnableControl(false);
-        gameManager.secondArm.EnableControl(false);
+        player.hasControl = true;
+        gameManager.firstArm.hasControl = false;
+        gameManager.secondArm.hasControl = false;
         StartCoroutine(gameManager.MoveCamera());
         trapped = false;
     }
@@ -77,9 +77,10 @@ public partial class ArmController
                 capsuleCollider.isTrigger = false;
                 circleCollider_1.isTrigger = false;
                 circleCollider_2.isTrigger = false;
+                isOut = false;
                 isFireComplete = false;
                 isRetrieving = false;
-                isRetrieveComplete = true;
+                player.OnArmRetrieved();
             }
             yield return null;
         }

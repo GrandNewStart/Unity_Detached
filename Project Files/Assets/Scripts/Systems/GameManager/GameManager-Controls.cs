@@ -21,13 +21,11 @@ public partial class GameManager
                     player.CancelFire();
                     if (player.isDestroyed) return;
                     firstArm.Control();
-                    ChangeControl();
                     break;
                 case SECOND_ARM:
                     player.CancelFire();
                     if (player.isDestroyed) return;
                     secondArm.Control();
-                    ChangeControl();
                     break;
                 case UI:
                     UIControl();
@@ -105,40 +103,54 @@ public partial class GameManager
         }
     }
 
-    private void ChangeControl()
+    public void ChangeControl()
     {
         if (cameraMoving) return;
-        if (player.IsLeftRetrieving()) return;
-        if (player.IsRightRetrieving()) return;
+        if (firstArm.isRetrieving) return;
+        if (secondArm.isRetrieving) return;
 
         if (Input.GetKeyDown(KeyCode.Tab))
         {
-            int index = player.ChangeControl();
+            int index = GetControlIndex();
             if (controlIndex == index) return;
             controlIndex = index;
             switch (controlIndex)
             {
                 case PLAYER:
                     cameraTarget = player.transform;
-                    player.EnableControl(true);
-                    firstArm.EnableControl(false);
-                    secondArm.EnableControl(false);
+                    player.hasControl = true;
+                    firstArm.hasControl = false;
+                    secondArm.hasControl = false;
                     break;
                 case FIRST_ARM:
                     cameraTarget = firstArm.cameraTarget;
-                    player.EnableControl(false);
-                    firstArm.EnableControl(true);
-                    secondArm.EnableControl(false);
+                    player.hasControl = false;
+                    firstArm.hasControl = true;
+                    secondArm.hasControl = false;
                     break;
                 case SECOND_ARM:
                     cameraTarget = secondArm.cameraTarget;
-                    player.EnableControl(false);
-                    firstArm.EnableControl(false);
-                    secondArm.EnableControl(true);
+                    player.hasControl = false;
+                    firstArm.hasControl = false;
+                    secondArm.hasControl = true;
                     break;
             }
             StartCoroutine(MoveCamera());
         }
+    }
+
+    public int GetControlIndex()
+    {
+        if (player.hasControl)
+        {
+            if (firstArm.isOut) return FIRST_ARM;
+            if (secondArm.isOut) return SECOND_ARM;
+        }
+        else
+        {
+            if (firstArm.hasControl && secondArm.isOut) return SECOND_ARM;
+        }
+        return PLAYER;
     }
 
     public void EnableControl()

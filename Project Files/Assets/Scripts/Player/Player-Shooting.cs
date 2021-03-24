@@ -9,11 +9,6 @@ public partial class PlayerController
         power = 0.0f;
         tempPower = power;
         arms = enabledArms;
-        isFirstArmRetrieving = false;
-        isSecondArmRetrieving = false;
-        isFirstArmOut = false;
-        isSecondArmOut = false;
-
         foreach (GameObject gauge in gauges) gauge.SetActive(false);
     }
 
@@ -28,8 +23,8 @@ public partial class PlayerController
 
     private void Shoot()
     {
-        if (isFirstArmRetrieving) return;
-        if (isSecondArmRetrieving) return;
+        if (firstArm.isRetrieving) return;
+        if (secondArm.isRetrieving) return;
         if (!isGrounded) return;
         if (isStateFixed) return;
 
@@ -102,19 +97,16 @@ public partial class PlayerController
             if (arms == 2)
             {
                 firstArm.Fire(power);
-                isFirstArmOut = true;
             }
             if (arms == 1)
             {
-                if (isFirstArmOut)
+                if (firstArm.isOut)
                 {
                     secondArm.Fire(power);
-                    isSecondArmOut = true;
                 }
                 else
                 {
                     firstArm.Fire(power);
-                    isFirstArmOut = true;
                 }
             }
             // Play Fire sound 
@@ -138,56 +130,35 @@ public partial class PlayerController
         // Retrieve
         if (Input.GetKeyDown(KeyCode.R)
             && isMovable
-            && !isFirstArmRetrieving
-            && !isSecondArmRetrieving)
+            && !firstArm.isRetrieving
+            && !secondArm.isRetrieving)
         {
-            if (isFirstArmOut)
+            if (firstArm.isOut)
             {
-                isFirstArmRetrieving = true;
-                firstArm.StartRetrieve();
-                PlayRetrieveSound();
+                RetrieveFirstArm();
             }
-            if (isSecondArmOut)
+            if (secondArm.isOut)
             {
-                isSecondArmRetrieving = true;
-                secondArm.StartRetrieve();
-                PlayRetrieveSound();
+                RetrieveSecondArm();
             }
         }
 
-        // Check if retreiving is all done
-        if (isFirstArmRetrieving)
-        {
-            isFirstArmRetrieving = !firstArm.GetRetrieveComplete();
-            if (!isFirstArmRetrieving)
-            {
-                arms++;
-                isFirstArmOut = false;
-                PlayRetrieveCompleteSound();
-            }
-        }
-        if (isSecondArmRetrieving)
-        {
-            isSecondArmRetrieving = !secondArm.GetRetrieveComplete();
-            if (!isSecondArmRetrieving)
-            {
-                arms++;
-                isSecondArmOut = false;
-                PlayRetrieveCompleteSound();
-            }
-        }
+    }
+
+    public void OnArmRetrieved()
+    {
+        arms++;
+        PlayRetrieveCompleteSound();
     }
 
     public void RetrieveFirstArm()
     {
-        isFirstArmRetrieving = true;
         firstArm.StartRetrieve();
         PlayRetrieveSound();
     }
 
     public void RetrieveSecondArm()
     {
-        isSecondArmRetrieving = true;
         secondArm.StartRetrieve();
         PlayRetrieveSound();
     }

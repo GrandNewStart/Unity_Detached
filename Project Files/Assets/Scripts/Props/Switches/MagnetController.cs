@@ -64,19 +64,21 @@ public class MagnetController : SwitchController
     {
         if (Input.GetKeyDown(KeyCode.Tab))
         {
-            gameManager.controlIndex = gameManager.player.ChangeControl();
+            gameManager.controlIndex = gameManager.GetControlIndex();
             switch (gameManager.controlIndex)
             {
                 case GameManager.PLAYER:
-                    player.EnableControl(true);
-                    firstArm.EnableControl(false);
-                    secondArm.EnableControl(false);
+                    Debug.Log("PLAYER");
+                    player.hasControl = true;
+                    firstArm.hasControl = false;
+                    secondArm.hasControl = false;
                     if (isPullingPlayer) player.isMovable = false;
                     rigidbody.velocity = Vector2.zero;
                     gameManager.cameraTarget = player.transform;
                     StartCoroutine(gameManager.MoveCamera());
                     break;
                 case GameManager.FIRST_ARM:
+                    Debug.Log("FIRST ARM");
                     if (isFirstArmPlugged)
                     {
                         gameManager.cameraTarget = cameraPivot.transform;
@@ -87,12 +89,13 @@ public class MagnetController : SwitchController
                         if (isPullingArm) firstArm.isMovable = false;
                         rigidbody.velocity = Vector2.zero;
                     }
-                    player.EnableControl(false);
-                    firstArm.EnableControl(true);
-                    secondArm.EnableControl(false);
+                    player.hasControl = false;
+                    firstArm.hasControl = true;
+                    secondArm.hasControl = false;
                     StartCoroutine(gameManager.MoveCamera());
                     break;
                 case GameManager.SECOND_ARM:
+                    Debug.Log("SECOND ARM");
                     if (isSecondArmPlugged)
                     {
                         gameManager.cameraTarget = cameraPivot.transform;
@@ -103,9 +106,9 @@ public class MagnetController : SwitchController
                         if (isPullingArm) secondArm.isMovable = false;
                         rigidbody.velocity = Vector2.zero;
                     }
-                    player.EnableControl(false);
-                    firstArm.EnableControl(false);
-                    secondArm.EnableControl(true);
+                    player.hasControl = false;
+                    firstArm.hasControl = false;
+                    secondArm.hasControl = true;
                     StartCoroutine(gameManager.MoveCamera());
                     break;
             }

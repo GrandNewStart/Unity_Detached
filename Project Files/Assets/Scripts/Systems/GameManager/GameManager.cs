@@ -151,7 +151,7 @@ public partial class GameManager : MonoBehaviour
         if (isLoadingSaveData)
         {
             player.transform.position = position;
-            player.EnableArms(enabledArms);
+            player.enabledArms = enabledArms;
         }
     }
 

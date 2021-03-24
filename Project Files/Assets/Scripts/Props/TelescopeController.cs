@@ -30,7 +30,7 @@ public class TelescopeController : MonoBehaviour
         collider        = GetComponent<BoxCollider2D>();
         collider.size   = new Vector2(width, height);
 
-        if (player.HasControl()) StartCoroutine(ShowLetterBox());
+        if (player.hasControl) StartCoroutine(ShowLetterBox());
         else letterBox.SetActive(false);
     }
 
@@ -103,18 +103,18 @@ public class TelescopeController : MonoBehaviour
     {
         if (letterBox.activeSelf)
         {
-            if (firstArm.HasControl())
+            if (firstArm.hasControl)
             {
                 letterBox.SetActive(false);
             }
-            if (secondArm.HasControl())
+            if (secondArm.hasControl)
             {
                 letterBox.SetActive(false);
             }
         }
         else
         {
-            if (player.HasControl() && !letterBox.activeSelf)
+            if (player.hasControl && !letterBox.activeSelf)
             {
                 StartCoroutine(ShowLetterBox());
             }

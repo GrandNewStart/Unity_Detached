@@ -72,7 +72,7 @@ public partial class ArmController
 
     private void MoveOnTreadmill()
     {
-        if (!isControlling)
+        if (!hasControl)
         {
             float horizontal;
             float vertical = rigidbody.velocity.y;
