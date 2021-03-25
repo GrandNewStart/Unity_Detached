@@ -152,6 +152,7 @@ public partial class GameManager : MonoBehaviour
         {
             player.transform.position = position;
             player.enabledArms = enabledArms;
+            player.arms = enabledArms;
         }
     }
 

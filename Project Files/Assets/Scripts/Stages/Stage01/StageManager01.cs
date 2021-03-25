@@ -121,6 +121,7 @@ public partial class StageManager01 : GameManager
         if (arm_1_achieved && arm_1.activeSelf)
         {
             player.enabledArms = 1;
+            player.arms++;
             arm_1.SetActive(false);
             PlayCutScene2();
         }
@@ -128,6 +129,7 @@ public partial class StageManager01 : GameManager
         if (arm_2_achieved && arm_2.activeSelf)
         {
             player.enabledArms = 2;
+            player.arms++;
             arm_2.SetActive(false);
             PlayCutScene3();
         }

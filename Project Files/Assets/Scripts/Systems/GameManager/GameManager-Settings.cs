@@ -184,21 +184,7 @@ public partial class GameManager
             text_continue.font = font_korean;
         }
     }
-
-    private void ApplyVolumes()
-    {
-        int master  = (int)(Common.masterVolume * 100);
-        int music   = (int)(Common.musicVolume * 100);
-        int game    = (int)(Common.gameVolume * 100);
-        settings_master_volume_slider.value = Common.masterVolume;
-        settings_master_volume_value.text   = master.ToString();
-        settings_music_volume_slider.value  = Common.musicVolume;
-        settings_music_volume_value.text    = music.ToString();
-        settings_game_volume_slider.value   = Common.gameVolume;
-        settings_game_volume_value.text     = game.ToString();
-        SetVolumes();
-    }
-
+    
     private void ApplyResolution()
     {
         Resolution res = Common.resolutions[Common.resolutionIndex];

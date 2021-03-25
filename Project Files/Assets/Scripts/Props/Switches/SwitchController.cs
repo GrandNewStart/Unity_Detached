@@ -10,6 +10,7 @@ public class SwitchController: MonoBehaviour
     protected ArmController     firstArm;
     protected ArmController     secondArm;
     [HideInInspector] public Transform cameraTarget;
+    private Vector3 letterBoxOrigin;
 
     [Header("Target")]
     public GameObject   target;
@@ -31,6 +32,7 @@ public class SwitchController: MonoBehaviour
     protected virtual void Awake()
     {
         gameManager.switches.Add(this);
+        letterBoxOrigin = letterBox.transform.position;
     }
 
     protected virtual void Start()
@@ -133,12 +135,9 @@ public class SwitchController: MonoBehaviour
         }
         else
         {
-            if (firstArm.hasControl)
+            if (firstArm.hasControl || secondArm.hasControl)
             {
-                StartCoroutine(ShowLetterBox());
-            }
-            if (secondArm.hasControl)
-            {
+                letterBox.SetActive(true);
                 StartCoroutine(ShowLetterBox());
             }
         }
@@ -146,9 +145,6 @@ public class SwitchController: MonoBehaviour
 
     private IEnumerator ShowLetterBox()
     {
-        if (letterBox.activeSelf) yield return null;
-
-        letterBox.SetActive(true);
         float x = 0;
 
         while(!isFirstArmPlugged && !isSecondArmPlugged)
@@ -160,6 +156,7 @@ public class SwitchController: MonoBehaviour
         }
 
         letterBox.SetActive(false);
+        letterBox.transform.position = letterBoxOrigin;
     }
 
     protected void PlayPlugInSound()

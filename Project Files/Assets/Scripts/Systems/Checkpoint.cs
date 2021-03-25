@@ -23,14 +23,22 @@ public class Checkpoint : MonoBehaviour
 
     private void PlayerCheck()
     {
-        isPlayerAround = Physics2D.OverlapCircle(origin, checkpointRadius, LayerMask.GetMask("Player"));
+        isPlayerAround = Physics2D.OverlapCircle(
+            origin, 
+            checkpointRadius, 
+            LayerMask.GetMask("Player"));
     }
 
     private void SaveGame()
     {
+        if (!gameObject.activeSelf) return;
         if (isPlayerAround)
         {
-            SaveData data = new SaveData(stage, index, enabledArms, gameObject.transform.position);
+            SaveData data = new SaveData(
+                stage,
+                index, 
+                enabledArms,
+                gameObject.transform.position);
             SaveSystem.SaveGame(data);
             GameManager.currentCheckpoint = index;
             gameManager.ShowCube(2);

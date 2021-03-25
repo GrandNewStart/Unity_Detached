@@ -45,6 +45,7 @@ public class MagnetController : SwitchController
         isPulling = false;
         isPullingArm = false;
         isPullingPlayer = false;
+        rigidbody.velocity = Vector2.zero;
         if (pullTargetRigidbody != null)
         {
             pullTargetRigidbody.gravityScale = pullTargetGravityScale;
@@ -68,7 +69,6 @@ public class MagnetController : SwitchController
             switch (gameManager.controlIndex)
             {
                 case GameManager.PLAYER:
-                    Debug.Log("PLAYER");
                     player.hasControl = true;
                     firstArm.hasControl = false;
                     secondArm.hasControl = false;
@@ -78,7 +78,6 @@ public class MagnetController : SwitchController
                     StartCoroutine(gameManager.MoveCamera());
                     break;
                 case GameManager.FIRST_ARM:
-                    Debug.Log("FIRST ARM");
                     if (isFirstArmPlugged)
                     {
                         gameManager.cameraTarget = cameraPivot.transform;
@@ -95,7 +94,6 @@ public class MagnetController : SwitchController
                     StartCoroutine(gameManager.MoveCamera());
                     break;
                 case GameManager.SECOND_ARM:
-                    Debug.Log("SECOND ARM");
                     if (isSecondArmPlugged)
                     {
                         gameManager.cameraTarget = cameraPivot.transform;

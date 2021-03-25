@@ -4,10 +4,36 @@ using UnityEngine;
 
 public partial class GameManager
 {
-    private void SetVolumes()
+    //private void SetVolumes()
+    //{
+    //    float musicVol  = Common.masterVolume * Common.musicVolume;
+    //    float gameVol   = Common.masterVolume * Common.gameVolume;
+    //    bgm.volume = musicVol;
+    //    clickSound.volume = gameVol;
+    //    pageSound.volume = gameVol;
+    //    player.AdjustAudio(gameVol);
+    //    firstArm.AdjustAudio(gameVol);
+    //    secondArm.AdjustAudio(gameVol);
+
+    //    SetSwitchVolume(gameVol);
+    //    SetCrusherVolume(gameVol);
+    //    SetTreadmillVolume(gameVol);
+    //}
+    private void ApplyVolumes()
     {
-        float musicVol  = Common.masterVolume * Common.musicVolume;
-        float gameVol   = Common.masterVolume * Common.gameVolume;
+        int master = (int)(Common.masterVolume * 100);
+        int music = (int)(Common.musicVolume * 100);
+        int game = (int)(Common.gameVolume * 100);
+
+        settings_master_volume_slider.value = Common.masterVolume;
+        settings_master_volume_value.text = master.ToString();
+        settings_music_volume_slider.value = Common.musicVolume;
+        settings_music_volume_value.text = music.ToString();
+        settings_game_volume_slider.value = Common.gameVolume;
+        settings_game_volume_value.text = game.ToString();
+
+        float musicVol = Common.masterVolume * Common.musicVolume;
+        float gameVol = Common.masterVolume * Common.gameVolume;
         bgm.volume = musicVol;
         clickSound.volume = gameVol;
         pageSound.volume = gameVol;
@@ -15,7 +41,6 @@ public partial class GameManager
         firstArm.AdjustAudio(gameVol);
         secondArm.AdjustAudio(gameVol);
 
-        Debug.Log("gameVol: " + gameVol);
         SetSwitchVolume(gameVol);
         SetCrusherVolume(gameVol);
         SetTreadmillVolume(gameVol);

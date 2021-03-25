@@ -19,8 +19,8 @@ public partial class GameManager
     private IEnumerator PressAnyKeyToLoadNextLevel()
     {
         while (!Input.anyKeyDown) { yield return null; }
-        //SceneManager.LoadScene(stage + 1);
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(stage + 1);
+        //SceneManager.LoadScene(0);
     }
 
     protected void DetectDeath()
@@ -30,6 +30,10 @@ public partial class GameManager
             deathDetected = true;
             cameraTarget = player.transform;
             if (!cameraMoving) StartCoroutine(MoveCamera());
+            controlIndex = PLAYER;
+            player.hasControl = true;
+            firstArm.hasControl = false;
+            secondArm.hasControl = false;
             DisableControl();
             EnablePause(false);
 
@@ -40,7 +44,6 @@ public partial class GameManager
                     HideCube();
                     ForceResumeGame();
                     EnableControl();
-                    controlIndex = PLAYER;
                     deathDetected = false;
                 });
             });

@@ -99,6 +99,9 @@ public partial class GameManager
         }
         else
         {
+
+        }
+        {
             PauseGame();
         }
     }
@@ -117,18 +120,21 @@ public partial class GameManager
             switch (controlIndex)
             {
                 case PLAYER:
+                    Debug.Log("PLAYER");
                     cameraTarget = player.transform;
                     player.hasControl = true;
                     firstArm.hasControl = false;
                     secondArm.hasControl = false;
                     break;
                 case FIRST_ARM:
+                    Debug.Log("FIRST_ARM");
                     cameraTarget = firstArm.cameraTarget;
                     player.hasControl = false;
                     firstArm.hasControl = true;
                     secondArm.hasControl = false;
                     break;
                 case SECOND_ARM:
+                    Debug.Log("SECOND_ARM");
                     cameraTarget = secondArm.cameraTarget;
                     player.hasControl = false;
                     firstArm.hasControl = false;

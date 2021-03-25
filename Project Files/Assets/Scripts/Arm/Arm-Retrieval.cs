@@ -40,6 +40,10 @@ public partial class ArmController
         {
             player.RetrieveSecondArm();
         }
+        if (isPlugged)
+        {
+            PlugOut();
+        }
         gameManager.controlIndex = GameManager.PLAYER;
         gameManager.cameraTarget = player.transform;
         player.hasControl = true;
@@ -69,21 +73,31 @@ public partial class ArmController
             // Retrieve complete
             if (diff.magnitude < retreiveRadius)
             {
-                gameObject.SetActive(false);
-                transform.parent = null;
-                transform.position = origin;
-                rigidbody.gravityScale = normalScale;
-                rigidbody.mass = normalMass;
-                capsuleCollider.isTrigger = false;
-                circleCollider_1.isTrigger = false;
-                circleCollider_2.isTrigger = false;
-                isOut = false;
-                isFireComplete = false;
-                isRetrieving = false;
-                player.OnArmRetrieved();
+                OnRetrieveComplete();
             }
             yield return null;
         }
+    }
+
+    private void OnRetrieveComplete()
+    {
+        gameObject.SetActive(false);
+        transform.parent = null;
+        transform.position = origin;
+        rigidbody.gravityScale = normalScale;
+        rigidbody.mass = normalMass;
+        capsuleCollider.isTrigger = false;
+        circleCollider_1.isTrigger = false;
+        circleCollider_2.isTrigger = false;
+        isOut = false;
+        isFireComplete = false;
+        isRetrieving = false;
+        player.OnArmRetrieved();
+        player.hasControl = true;
+        gameManager.firstArm.hasControl = false;
+        gameManager.secondArm.hasControl = false;
+        gameManager.controlIndex = GameManager.PLAYER;
+        gameManager.cameraTarget = player.transform;
     }
 
 }
