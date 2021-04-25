@@ -10,7 +10,7 @@ public class SwitchController: MonoBehaviour
     protected ArmController     firstArm;
     protected ArmController     secondArm;
     [HideInInspector] public Transform cameraTarget;
-    private Vector3 letterBoxOrigin;
+    private float x = 0;
 
     [Header("Target")]
     public GameObject   target;
@@ -32,7 +32,6 @@ public class SwitchController: MonoBehaviour
     protected virtual void Awake()
     {
         gameManager.switches.Add(this);
-        letterBoxOrigin = letterBox.transform.position;
     }
 
     protected virtual void Start()
@@ -59,6 +58,7 @@ public class SwitchController: MonoBehaviour
             StartCoroutine(gameManager.MoveCamera());
         }
         this.arm = arm;
+        arm.currentSwitch = this;
         isFirstArmPlugged = arm.isLeft;
         isSecondArmPlugged = !arm.isLeft;
         unpluggedSprite.SetActive(false);
@@ -81,82 +81,50 @@ public class SwitchController: MonoBehaviour
         pluggedSpriteGreen.SetActive(false);
         pluggedSpriteRed.SetActive(false);
         PlayPlugOutSound();
-        //arm = null;
+        arm = null;
     }
 
-    public virtual void ChangeControl() 
-    {
-        if (Input.GetKeyDown(KeyCode.Tab))
-        {
-            gameManager.controlIndex = gameManager.GetControlIndex();
-            switch (gameManager.controlIndex)
-            {
-                case GameManager.PLAYER:
-                    player.hasControl = true;
-                    firstArm.hasControl = false;
-                    secondArm.hasControl = false;
-                    gameManager.cameraTarget = player.transform;
-                    StartCoroutine(gameManager.MoveCamera());
-                    break;
-                case GameManager.FIRST_ARM:
-                    player.hasControl = false;
-                    firstArm.hasControl = true;
-                    secondArm.hasControl = false;
-                    gameManager.cameraTarget = firstArm.cameraTarget;
-                    StartCoroutine(gameManager.MoveCamera());
-                    break;
-                case GameManager.SECOND_ARM:
-                    player.hasControl = false;
-                    firstArm.hasControl = false;
-                    secondArm.hasControl = true;
-                    gameManager.cameraTarget = secondArm.cameraTarget;
-                    StartCoroutine(gameManager.MoveCamera());
-                    break;
-            }
-        }
-    }
+    public virtual void OnControlGained() { Debug.Log("SwitchController: OnControlGained"); }
+
+    public virtual void OnControlLost() { Debug.Log("SwitchController: OnControlLost"); }
 
     public virtual void MoveCamera() {}
 
-    virtual public void OnActivation() {}
+    virtual public void OnActivation() { Debug.Log("SwitchController: OnActivation"); }
 
-    virtual public void OnDeactivation() {}
+    virtual public void OnDeactivation() { Debug.Log("SwitchController: OnDeactivation"); }
 
-    virtual public void AdjustAudio(float volume) { }
+    virtual public void AdjustAudio(float volume) {
+        activationSound.volume = volume;
+        deactivationSound.volume = volume;
+        plugInSound.volume = volume;
+        plugOutSound.volume = volume;
+    }
 
     private void ManageLetterBox()
     {
-        if (letterBox.activeSelf)
+        float movement = Mathf.Sin(x) * Time.deltaTime * 0.5f;
+        letterBox.transform.Translate(new Vector2(0, movement));
+        x += 0.1f;
+
+        bool isPlugged = (isFirstArmPlugged || isSecondArmPlugged);
+        bool armInControl = (firstArm.hasControl || secondArm.hasControl);
+
+        if (armInControl)
         {
-            if (player.hasControl)
+            if (isPlugged)
             {
                 letterBox.SetActive(false);
+            }
+            else
+            {
+                letterBox.SetActive(true);
             }
         }
         else
         {
-            if (firstArm.hasControl || secondArm.hasControl)
-            {
-                letterBox.SetActive(true);
-                StartCoroutine(ShowLetterBox());
-            }
+            letterBox.SetActive(false);
         }
-    }
-
-    private IEnumerator ShowLetterBox()
-    {
-        float x = 0;
-
-        while(!isFirstArmPlugged && !isSecondArmPlugged)
-        {
-            float movement = Mathf.Sin(x) * Time.deltaTime * 0.5f;
-            letterBox.transform.Translate(new Vector2(0, movement));
-            x += 0.1f;
-            yield return null;
-        }
-
-        letterBox.SetActive(false);
-        letterBox.transform.position = letterBoxOrigin;
     }
 
     protected void PlayPlugInSound()

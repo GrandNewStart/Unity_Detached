@@ -22,8 +22,13 @@ public partial class ArmController
         {
             if (isPlugged && counter >= 0)
             {
+                PlayHoldSound();
+                float progress = counter / waitToPlugOut;
+                holdSound.pitch = 0.5f + progress / 2;
+                progressBar.fillAmount = progress;
                 if (counter++ > waitToPlugOut)
                 {
+                    StopHoldSound();
                     PlugOut();
                     counter = 0;
                 }
@@ -33,6 +38,8 @@ public partial class ArmController
         if (Input.GetKeyUp(KeyCode.Q))
         {
             counter = 0;
+            progressBar.fillAmount = 0;
+            StopHoldSound();
         }
     }
 
@@ -59,12 +66,12 @@ public partial class ArmController
         capsuleCollider.isTrigger = false;
         circleCollider_1.isTrigger = false;
         circleCollider_2.isTrigger = false;
-        rigidbody.gravityScale = normalScale;
+        rigidbody.gravityScale = normalGScale;
         rigidbody.mass = normalMass;
         isMovable = true;
         isPlugged = false;
         currentSwitch.Deactivate();
-        //currentSwitch = null;
+        progressBar.fillAmount = 0;
     }
 
 }

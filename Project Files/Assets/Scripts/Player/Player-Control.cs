@@ -20,7 +20,8 @@ public partial class PlayerController
     private void DeathCollisionCheck()
     {
         if (isDestroyed) return;
-        if (deathCollider.IsTouchingLayers(LayerMask.GetMask("Ground")))
+        if (deathCollider.IsTouchingLayers(LayerMask.GetMask("Ground")) ||
+            deathCollider.IsTouchingLayers(LayerMask.GetMask("Physical Object")))
         {
             DestroyObject();
         }

@@ -18,12 +18,10 @@ public partial class GameManager
                     ChangeControl();
                     break;
                 case FIRST_ARM:
-                    player.CancelFire();
                     if (player.isDestroyed) return;
                     firstArm.Control();
                     break;
                 case SECOND_ARM:
-                    player.CancelFire();
                     if (player.isDestroyed) return;
                     secondArm.Control();
                     break;
@@ -99,9 +97,6 @@ public partial class GameManager
         }
         else
         {
-
-        }
-        {
             PauseGame();
         }
     }
@@ -111,37 +106,13 @@ public partial class GameManager
         if (cameraMoving) return;
         if (firstArm.isRetrieving) return;
         if (secondArm.isRetrieving) return;
-
         if (Input.GetKeyDown(KeyCode.Tab))
         {
             int index = GetControlIndex();
             if (controlIndex == index) return;
             controlIndex = index;
-            switch (controlIndex)
-            {
-                case PLAYER:
-                    Debug.Log("PLAYER");
-                    cameraTarget = player.transform;
-                    player.hasControl = true;
-                    firstArm.hasControl = false;
-                    secondArm.hasControl = false;
-                    break;
-                case FIRST_ARM:
-                    Debug.Log("FIRST_ARM");
-                    cameraTarget = firstArm.cameraTarget;
-                    player.hasControl = false;
-                    firstArm.hasControl = true;
-                    secondArm.hasControl = false;
-                    break;
-                case SECOND_ARM:
-                    Debug.Log("SECOND_ARM");
-                    cameraTarget = secondArm.cameraTarget;
-                    player.hasControl = false;
-                    firstArm.hasControl = false;
-                    secondArm.hasControl = true;
-                    break;
-            }
-            StartCoroutine(MoveCamera());
+            player.CancelFire();
+            SetControl();
         }
     }
 
@@ -157,6 +128,54 @@ public partial class GameManager
             if (firstArm.hasControl && secondArm.isOut) return SECOND_ARM;
         }
         return PLAYER;
+    }
+
+    public void SetControl()
+    {
+        if (firstArm.hasControl)
+        {
+            if (firstArm.currentSwitch != null)
+            {
+                firstArm.currentSwitch.OnControlLost();
+            }
+        }
+        if (secondArm.hasControl)
+        {
+            if (secondArm.currentSwitch != null)
+            {
+                secondArm.currentSwitch.OnControlLost();
+            }
+        }
+        switch (controlIndex)
+        {
+            case PLAYER:
+                cameraTarget = player.transform;
+                player.hasControl = true;
+                firstArm.hasControl = false;
+                secondArm.hasControl = false;
+                break;
+            case FIRST_ARM:
+                cameraTarget = firstArm.cameraTarget;
+                player.hasControl = false;
+                firstArm.hasControl = true;
+                secondArm.hasControl = false;
+                if (firstArm.currentSwitch != null)
+                {
+                    firstArm.currentSwitch.OnControlGained();
+                }
+                break;
+            case SECOND_ARM:
+                cameraTarget = secondArm.cameraTarget;
+                player.hasControl = false;
+                firstArm.hasControl = false;
+                secondArm.hasControl = true;
+                if (secondArm.currentSwitch != null)
+                {
+                    secondArm.currentSwitch.OnControlGained();
+                }
+                break;
+        }
+        StartCoroutine(MoveCamera());
     }
 
     public void EnableControl()

@@ -9,22 +9,21 @@ public partial class ArmController
         if (trapped) return;
         if (isPlugged)
         {
+            DeactivateSwitch();
             if (currentSwitch == null)
             {
                 Debug.LogError("SWITCH IS NULL");
                 return;
             }
             currentSwitch.Control();
-            currentSwitch.ChangeControl();
             currentSwitch.MoveCamera();
-            DeactivateSwitch();
         }
         else
         {
             Move();
-            gameManager.ChangeControl();
             ActivateSwitch();
         }
+        gameManager.ChangeControl();
     }
 
 }

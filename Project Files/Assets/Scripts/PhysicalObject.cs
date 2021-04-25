@@ -50,7 +50,8 @@ public class PhysicalObject : MonoBehaviour
 
     protected virtual void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.collider.CompareTag("Platform"))
+        if (collision.collider.CompareTag("Platform") ||
+            collision.collider.CompareTag("Metal"))
         {
             transform.parent = collision.transform;
         }
@@ -62,7 +63,8 @@ public class PhysicalObject : MonoBehaviour
 
     protected virtual void OnCollisionExit2D(Collision2D collision)
     {
-        if (collision.collider.CompareTag("Platform"))
+        if (collision.collider.CompareTag("Platform") ||
+            collision.collider.CompareTag("Metal"))
         {
             transform.parent = null;
         }

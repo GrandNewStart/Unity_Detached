@@ -14,11 +14,15 @@ public partial class PlayerController
 
     public void CancelFire()
     {
-        power = 0.0f;
-        tempPower = power;
-        foreach (GameObject gauge in gauges) gauge.SetActive(false);
-        state = State.idle;
-        isMovable = true;
+        if (state == State.charge||
+            state == State.fire)
+        {
+            power = 0.0f;
+            tempPower = power;
+            foreach (GameObject gauge in gauges) gauge.SetActive(false);
+            state = State.idle;
+            isMovable = true;
+        }
     }
 
     private void Shoot()
@@ -35,8 +39,10 @@ public partial class PlayerController
     private void Charge()
     {
         if (arms == 0) return;
-        if (Input.GetKey(KeyCode.L) || Input.GetKey(KeyCode.F))
+        if (Input.GetKey(KeyCode.L) ||
+            Input.GetKey(KeyCode.F))
         {
+            rigidbody.velocity = Vector2.zero;
             // Charging start.
             state = State.charge;
             // Play charge sound
@@ -85,7 +91,8 @@ public partial class PlayerController
     private void Fire()
     {
         if (arms == 0) return;
-        if (Input.GetKeyUp(KeyCode.L) || Input.GetKeyUp(KeyCode.F))
+        if (Input.GetKeyUp(KeyCode.L) ||
+            Input.GetKeyUp(KeyCode.F))
         {
             // Firing start.
             state = State.fire;
@@ -149,6 +156,7 @@ public partial class PlayerController
     {
         arms++;
         PlayRetrieveCompleteSound();
+        isMovable = !moveOverrided;
     }
 
     public void RetrieveFirstArm()

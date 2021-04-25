@@ -6,6 +6,11 @@ public partial class PlayerController : PhysicalObject
     public enum Resolution { _1024, _512, _256, _128 };
     public enum State { idle, walk, jump, charge, fire };
     public GameManager gameManager;
+    private SpriteRenderer head_sprite;
+    private SpriteRenderer body_sprite;
+    private SpriteRenderer left_arm_sprite;
+    private SpriteRenderer right_arm_sprite;
+    private SpriteRenderer sprite;
 
     [Header("Movement Attributes")]
     public  GameObject  normal;
@@ -13,8 +18,11 @@ public partial class PlayerController : PhysicalObject
     public  float       jumpHeight;
     [HideInInspector] public float treadmillVelocity;
     private bool        isGrounded;
+    public bool         isPressured;
     public bool         isMovable;
     private bool        jumped;
+    private SliderJoint2D joint;
+    [HideInInspector] public bool moveOverrided = false;
     [HideInInspector] public bool hasControl;
     [HideInInspector] public bool isOnTreadmill;
 
@@ -30,8 +38,11 @@ public partial class PlayerController : PhysicalObject
     [HideInInspector] public int arms;
 
     [Header("Ground Check Attributes")]
+    public GameObject   headCheck;
     public GameObject   groundCheck;
+    public float        headCheckRadius;
     public float        groundCheckWidth;
+    private bool        isGroundCheckEnabled = true;
 
     [Header("Animation Attributes")]
     public Resolution   resolution = Resolution._1024;
@@ -74,11 +85,22 @@ public partial class PlayerController : PhysicalObject
         InitShootingAttributes();
         InitAnimationAttributes();
         InitAudioAttributes();
+
+        head_sprite         = head.GetComponent<SpriteRenderer>();
+        body_sprite         = body.GetComponent<SpriteRenderer>();
+        left_arm_sprite     = left_arm.GetComponent<SpriteRenderer>();
+        right_arm_sprite    = right_arm.GetComponent<SpriteRenderer>();
+        sprite              = normalSprite.GetComponent<SpriteRenderer>();
+    }
+
+    private void FixedUpdate()
+    {
+        GroundCheck();
+        HeadCheck();
     }
 
     private void Update()
     {
-        GroundCheck();
         DeathCollisionCheck();
         AnimationControl();
         MoveOnTreadmill();
@@ -86,7 +108,7 @@ public partial class PlayerController : PhysicalObject
 
     protected override void OnDestruction()
     {
-        base.OnDestruction();
+        transform.SetParent(null);
         if (firstArm.isPlugged) firstArm.PlugOut();
         if (secondArm.isPlugged) secondArm.PlugOut();
         foreach(GameObject gauge in gauges) { gauge.SetActive(false); }
@@ -197,18 +219,96 @@ public partial class PlayerController : PhysicalObject
 
     protected override void OnCollisionEnter2D(Collision2D collision)
     {
-        base.OnCollisionEnter2D(collision);
+        if (collision.collider.CompareTag("Crusher"))
+        {
+            if (isDestroyed) return;
+            DestroyObject();
+        }
         if (collision.collider.CompareTag("Trap"))
         {
             if (isDestroyed) return;
             DestroyObject();
         }
+        if (collision.collider.CompareTag("Platform"))
+        {
+            Vector2 origin      = groundCheck.transform.position;
+            Vector2 vector      = new Vector2(groundCheckWidth, 0.5f);
+            LayerMask ground    = LayerMask.GetMask("Ground");
+            Collider2D col      = Physics2D.OverlapBox(origin, vector, 0.0f, ground);
+            if (col != null)
+            {
+                joint = col.GetComponent<SliderJoint2D>();
+                if (joint != null)
+                {
+                    joint.connectedBody = rigidbody;
+                    transform.SetParent(col.transform);
+                }
+            }
+        }
+    }
+
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        if (collision.collider.CompareTag("Platform"))
+        {
+            Vector2 origin      = groundCheck.transform.position;
+            Vector2 vector      = new Vector2(groundCheckWidth, 0.5f);
+            LayerMask ground    = LayerMask.GetMask("Ground");
+            Collider2D col      = Physics2D.OverlapBox(origin, vector, 0.0f, ground);
+            if (col != null)
+            {
+                joint = col.GetComponent<SliderJoint2D>();
+                if (joint != null)
+                {
+                    if (!hasControl)
+                    {
+                        rigidbody.velocity = Vector2.zero;
+                    }
+                }
+            }
+        }
+    }
+
+    protected override void OnCollisionExit2D(Collision2D collision) 
+    {
+        if (collision.collider.CompareTag("Platform"))
+        {
+            transform.SetParent(null);
+            joint = collision.gameObject.GetComponent<SliderJoint2D>();
+            if (joint != null)
+            {
+                joint.connectedBody = null;
+                joint = null;
+            }
+        }
     }
 
     private void OnDrawGizmos()
-    { Gizmos.DrawWireCube(groundCheck.transform.position, new Vector2(groundCheckWidth, 0.5f)); }
+    {
+        Gizmos.DrawWireSphere(headCheck.transform.position, headCheckRadius);
+        Gizmos.DrawWireCube(groundCheck.transform.position, new Vector2(groundCheckWidth, 0.5f));
+    }
 
     public void SetState(State state)
     { this.state = state; }
+
+    public void SetColor(Color color)
+    {
+        head_sprite.color       = color;
+        body_sprite.color       = color;
+        left_arm_sprite.color   = color;
+        right_arm_sprite.color  = color;
+        sprite.color            = color;
+    }
+
+    public void EnableCollider(bool enabled)
+    {
+        collider_1.enabled = enabled;
+        collider_2.enabled = enabled;
+        deathCollider.enabled = enabled;
+    }
+
+    public void EnableGroundCheck(bool enabled)
+    { isGroundCheckEnabled = enabled; }
 
 }

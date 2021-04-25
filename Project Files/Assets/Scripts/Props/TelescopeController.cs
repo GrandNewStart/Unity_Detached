@@ -8,11 +8,11 @@ public class TelescopeController : MonoBehaviour
     public GameObject           letterBox;
     private Camera              mainCamera;
     private PlayerController    player;
-    private ArmController       firstArm;
-    private ArmController       secondArm;
     private new BoxCollider2D   collider;
     private bool                isActive = false;
     private bool                isPlayerAround = false;
+    private float               x = 0;
+    public float                viewSize;
     public float                width;
     public float                height;
 
@@ -25,13 +25,8 @@ public class TelescopeController : MonoBehaviour
     {
         mainCamera      = gameManager.camera;
         player          = gameManager.player;
-        firstArm        = gameManager.firstArm;
-        secondArm       = gameManager.secondArm;
         collider        = GetComponent<BoxCollider2D>();
         collider.size   = new Vector2(width, height);
-
-        if (player.hasControl) StartCoroutine(ShowLetterBox());
-        else letterBox.SetActive(false);
     }
 
     private void Update()
@@ -101,36 +96,20 @@ public class TelescopeController : MonoBehaviour
 
     private void ManageLetterBox()
     {
-        if (letterBox.activeSelf)
-        {
-            if (firstArm.hasControl)
-            {
-                letterBox.SetActive(false);
-            }
-            if (secondArm.hasControl)
-            {
-                letterBox.SetActive(false);
-            }
-        }
-        else
-        {
-            if (player.hasControl && !letterBox.activeSelf)
-            {
-                StartCoroutine(ShowLetterBox());
-            }
-        }
+        float movement = Mathf.Sin(x) * Time.deltaTime * 0.5f;
+        letterBox.transform.Translate(new Vector2(0, movement));
+        x += 0.1f;
+        letterBox.SetActive(player.hasControl);
     }
 
     private IEnumerator IncreaseCameraSize()
     {
-        int targetSize = 16;
-
-        while(mainCamera.orthographicSize < targetSize)
+        while(mainCamera.orthographicSize < viewSize)
         {
             mainCamera.orthographicSize += 0.5f;
             yield return null;
         }
-        mainCamera.orthographicSize = targetSize;
+        mainCamera.orthographicSize = viewSize;
     }
 
     private IEnumerator DecreaseCameraSize()
@@ -143,25 +122,6 @@ public class TelescopeController : MonoBehaviour
             yield return null;
         }
         mainCamera.orthographicSize = 8;
-    }
-
-    private IEnumerator ShowLetterBox()
-    {
-        if (letterBox.activeSelf) yield return null;
-
-        letterBox.SetActive(true);
-        float x = 0;
-
-        while (gameManager.controlIndex == GameManager.PLAYER)
-        {
-            float movement = Mathf.Sin(x) * Time.deltaTime * 0.5f;
-            letterBox.transform.Translate(new Vector2(0, movement));
-            x += 0.1f;
-            if (!letterBox.activeSelf) break;
-            yield return null;
-        }
-
-        letterBox.SetActive(false);
     }
 
     public void SetActive(bool isActive)

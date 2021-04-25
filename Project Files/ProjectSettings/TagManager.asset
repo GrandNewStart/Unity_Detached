@@ -10,6 +10,7 @@ TagManager:
   - Crusher
   - Switch
   - Trap
+  - Metal
   layers:
   - Default
   - TransparentFX

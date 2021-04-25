@@ -119,6 +119,7 @@ public partial class GameManager : MonoBehaviour
     protected virtual void Awake()
     {
         cameraTarget = player.transform;
+        Cursor.visible = false;
     }
 
     protected virtual void Start()

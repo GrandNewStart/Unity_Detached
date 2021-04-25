@@ -8,6 +8,7 @@ public class LiftController : SwitchController
     public GameObject   minHeightCheck;
     public AudioSource  motorSound;
     public float        speed;
+    private Rigidbody2D targetRB;
     private Vector3     targetPosition;
     private float       maxHeight;
     private float       minHeight;
@@ -16,6 +17,7 @@ public class LiftController : SwitchController
     protected override void Start()
     {
         base.Start();
+        targetRB        = target.GetComponent<Rigidbody2D>();
         targetPosition  = target.transform.position;
         maxHeight       = maxHeightCheck.transform.position.y;
         minHeight       = minHeightCheck.transform.position.y;
@@ -35,10 +37,7 @@ public class LiftController : SwitchController
 
     public override void AdjustAudio(float volume)
     {
-        plugInSound.volume = volume;
-        plugOutSound.volume = volume;
-        activationSound.volume = volume;
-        deactivationSound.volume = volume;
+        base.AdjustAudio(volume);
         motorSound.volume = volume;
     }
 
@@ -49,7 +48,9 @@ public class LiftController : SwitchController
         while (targetPosition.y <= maxHeight && isGoingUp)
         {
             targetPosition = target.transform.position;
-            Move(1);
+            float y = speed * Time.deltaTime;
+            targetPosition.y += y;
+            targetRB.MovePosition(targetPosition);
 
             if (gameManager.isPaused)
             {
@@ -59,10 +60,16 @@ public class LiftController : SwitchController
             {
                 PlayOperationSound();
             }
+
             yield return null;
         }
 
-        target.transform.position = maxHeightCheck.transform.position;
+        targetRB.velocity = Vector2.zero;
+
+        if (isGoingUp)
+        {
+            target.transform.position = maxHeightCheck.transform.position;
+        }
         StopOperationSound();
     }
 
@@ -73,7 +80,9 @@ public class LiftController : SwitchController
         while (targetPosition.y > minHeight && !isGoingUp)
         {
             targetPosition = target.transform.position;
-            Move(-2);
+            float y = speed * -2 * Time.deltaTime;
+            targetPosition.y += y;
+            targetRB.MovePosition(targetPosition);
 
             if (gameManager.isPaused)
             {
@@ -83,10 +92,16 @@ public class LiftController : SwitchController
             {
                 PlayOperationSound();
             }
+
             yield return null;
         }
 
-        target.transform.position = minHeightCheck.transform.position;
+        targetRB.velocity = Vector2.zero;
+
+        if (!isGoingUp)
+        {
+            target.transform.position = minHeightCheck.transform.position;
+        }
         StopOperationSound();
     }
 
@@ -104,12 +119,6 @@ public class LiftController : SwitchController
         {
             motorSound.Stop();
         }
-    }
-
-    private void Move(short dir)
-    {
-        float y = speed * dir * Time.deltaTime;
-        target.transform.Translate(new Vector3(0, y, 0));
     }
 
     private void OnDrawGizmos()

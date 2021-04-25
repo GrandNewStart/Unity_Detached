@@ -14,8 +14,8 @@ public partial class PlayerController
     private void AnimationControl()
     {
         if (isDestroyed) return;
-
-        switch (state)
+        if (!isGrounded) state = State.jump;
+            switch (state)
         {
             case State.idle:
                 if (lastDir == 1)

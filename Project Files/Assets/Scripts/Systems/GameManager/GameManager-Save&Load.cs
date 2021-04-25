@@ -20,6 +20,9 @@ public partial class GameManager
     {
         while (!Input.anyKeyDown) { yield return null; }
         SceneManager.LoadScene(stage + 1);
+        stage += 1;
+        isLoadingSaveData = false;
+        currentCheckpoint = 0;
         //SceneManager.LoadScene(0);
     }
 

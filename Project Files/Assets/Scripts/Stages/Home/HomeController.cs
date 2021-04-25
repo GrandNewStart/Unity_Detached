@@ -98,6 +98,7 @@ public partial class HomeController : MonoBehaviour
         InitMenu4();
         PlayBgm();
         CrossfadeStart(0, 0, null);
+        Cursor.visible = false;
     }
 
     private void Update()

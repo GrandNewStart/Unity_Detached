@@ -1,14 +1,12 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public partial class ArmController
 {
     private void InitRetrievalAttributes()
     {
-        sprite = normal.GetComponent<SpriteRenderer>();
         playerPosition = player.transform.position;
-        normalScale = rigidbody.gravityScale;
+        normalGScale = rigidbody.gravityScale;
         normalMass = rigidbody.mass;
     }
 
@@ -32,24 +30,9 @@ public partial class ArmController
 
     private void ForceRetrieve()
     {
-        if (isLeft)
-        {
-            player.RetrieveFirstArm();
-        }
-        else
-        {
-            player.RetrieveSecondArm();
-        }
-        if (isPlugged)
-        {
-            PlugOut();
-        }
-        gameManager.controlIndex = GameManager.PLAYER;
-        gameManager.cameraTarget = player.transform;
-        player.hasControl = true;
-        gameManager.firstArm.hasControl = false;
-        gameManager.secondArm.hasControl = false;
-        StartCoroutine(gameManager.MoveCamera());
+        if (isPlugged) PlugOut();
+        if (isLeft) player.RetrieveFirstArm();
+        else player.RetrieveSecondArm();
         trapped = false;
     }
 
@@ -82,9 +65,9 @@ public partial class ArmController
     private void OnRetrieveComplete()
     {
         gameObject.SetActive(false);
-        transform.parent = null;
+        transform.SetParent(null);
         transform.position = origin;
-        rigidbody.gravityScale = normalScale;
+        rigidbody.gravityScale = normalGScale;
         rigidbody.mass = normalMass;
         capsuleCollider.isTrigger = false;
         circleCollider_1.isTrigger = false;
@@ -93,11 +76,21 @@ public partial class ArmController
         isFireComplete = false;
         isRetrieving = false;
         player.OnArmRetrieved();
-        player.hasControl = true;
-        gameManager.firstArm.hasControl = false;
-        gameManager.secondArm.hasControl = false;
         gameManager.controlIndex = GameManager.PLAYER;
-        gameManager.cameraTarget = player.transform;
+        gameManager.SetControl();
+    }
+
+    public void RetrieveOnTrapped()
+    {
+        if (isRetrieving) return;
+        if (trapped) return;
+        if (currentSwitch != null) currentSwitch.Deactivate();
+        trapped = true;
+        rigidbody.AddForce(new Vector2(0, 500));
+        capsuleCollider.isTrigger = true;
+        circleCollider_1.isTrigger = true;
+        circleCollider_2.isTrigger = true;
+        Invoke(nameof(ForceRetrieve), 0.3f);
     }
 
 }

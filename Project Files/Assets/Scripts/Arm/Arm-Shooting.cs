@@ -15,11 +15,12 @@ public partial class ArmController
 
     private void PrepareFire()
     {
-        rigidbody.gravityScale = normalScale;
+        rigidbody.gravityScale = normalGScale;
         rigidbody.mass = normalMass;
         gameObject.transform.position = playerPosition;
         gameObject.SetActive(true);
         isOut = true;
+        isFireComplete = false;
         dir = 0;
     }
 
@@ -31,12 +32,12 @@ public partial class ArmController
         {
             case 1:
                 lastDir = 1;
-                playerPosition.x += 1;
+                playerPosition.x += .5f;
                 fireVector = new Vector2(5 + power, 15 + power);
                 break;
             case -1:
                 lastDir = -1;
-                playerPosition.x -= 1;
+                playerPosition.x -= .5f;
                 fireVector = new Vector2(-5 - power, 15 + power);
                 break;
         }
