@@ -86,6 +86,7 @@ public partial class ArmController
         if (trapped) return;
         if (currentSwitch != null) currentSwitch.Deactivate();
         trapped = true;
+        rigidbody.velocity = Vector2.zero;
         rigidbody.AddForce(new Vector2(0, 500));
         capsuleCollider.isTrigger = true;
         circleCollider_1.isTrigger = true;

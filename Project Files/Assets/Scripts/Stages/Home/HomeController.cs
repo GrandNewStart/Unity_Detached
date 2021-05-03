@@ -88,6 +88,9 @@ public partial class HomeController : MonoBehaviour
 
     private void Start()
     {
+        //SaveSystem.DeleteSaveFile();
+        //GameSettings settings = new GameSettings(true, GameSettings.KOREAN, GameSettings.FHD, 0.5f, 0.5f, 0.5f);
+        //SaveSystem.SaveSettings(settings);
         DetectResolutions();
         InitGameSettings();
         InitAudioAttributes();

@@ -51,7 +51,9 @@ public partial class GameManager : MonoBehaviour
     public new Camera camera;
     public Transform cameraTarget;
     public bool cameraMoving = false;
+    public bool cameraAdjusting = false;
     private float cameraSpeed = 130;
+    public float defaultCameraSize = 8;
 
     [Header("Game Settings")]
     public Sprite           checkbox_checked;

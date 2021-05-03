@@ -12,6 +12,10 @@ public class SwitchController: MonoBehaviour
     [HideInInspector] public Transform cameraTarget;
     private float x = 0;
 
+    [Header("Camera")]
+    [SerializeField] protected Transform cameraPoint;
+    [SerializeField] protected float cameraSize = 8;
+
     [Header("Target")]
     public GameObject   target;
 
@@ -36,7 +40,7 @@ public class SwitchController: MonoBehaviour
 
     protected virtual void Start()
     {
-        cameraTarget = gameObject.transform;
+        cameraTarget = cameraPoint;
         player = gameManager.player;
         firstArm = gameManager.firstArm;
         secondArm = gameManager.secondArm;
@@ -56,6 +60,7 @@ public class SwitchController: MonoBehaviour
         {
             gameManager.cameraTarget = cameraTarget;
             StartCoroutine(gameManager.MoveCamera());
+            StartCoroutine(gameManager.AdjustCameraSize(cameraSize));
         }
         this.arm = arm;
         arm.currentSwitch = this;
@@ -70,10 +75,14 @@ public class SwitchController: MonoBehaviour
     public void Deactivate()
     {
         OnDeactivation();
-        if (arm.hasControl)
+        if (arm != null)
         {
-            gameManager.cameraTarget = arm.transform;
-            StartCoroutine(gameManager.MoveCamera());
+            if (arm.hasControl)
+            {
+                gameManager.cameraTarget = arm.transform;
+                StartCoroutine(gameManager.MoveCamera());
+                StartCoroutine(gameManager.AdjustCameraSize(gameManager.defaultCameraSize));
+            }
         }
         isFirstArmPlugged = false;
         isSecondArmPlugged = false;
@@ -84,15 +93,30 @@ public class SwitchController: MonoBehaviour
         arm = null;
     }
 
-    public virtual void OnControlGained() { Debug.Log("SwitchController: OnControlGained"); }
+    public virtual void OnControlGained() { 
+        Debug.Log("SwitchController: OnControlGained");
+        Camera cam = gameManager.camera;
+        if (cam.orthographicSize != cameraSize)
+        {
+            StartCoroutine(gameManager.AdjustCameraSize(cameraSize));
+        }
+    }
 
     public virtual void OnControlLost() { Debug.Log("SwitchController: OnControlLost"); }
 
-    public virtual void MoveCamera() {}
+    public virtual void MoveCamera() 
+    {
+        Debug.Log("MOVE CAM");
+        if (gameManager.cameraMoving) return;
+        Vector3 cameraPos = cameraPoint.transform.position;
+        cameraPos.z = -1;
+        cameraPos.y += 2;
+        gameManager.camera.transform.position = cameraPos;
+    }
 
-    virtual public void OnActivation() { Debug.Log("SwitchController: OnActivation"); }
+    public virtual void OnActivation() { Debug.Log("SwitchController: OnActivation"); }
 
-    virtual public void OnDeactivation() { Debug.Log("SwitchController: OnDeactivation"); }
+    public virtual void OnDeactivation() { Debug.Log("SwitchController: OnDeactivation"); }
 
     virtual public void AdjustAudio(float volume) {
         activationSound.volume = volume;

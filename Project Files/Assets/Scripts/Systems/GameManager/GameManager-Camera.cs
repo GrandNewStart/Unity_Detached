@@ -63,4 +63,31 @@ public partial class GameManager
         }
     }
 
+    public IEnumerator AdjustCameraSize(float size)
+    {
+        cameraAdjusting = true;
+        Debug.Log("1");
+        if (camera.orthographicSize > size)
+        {
+            while (camera.orthographicSize > size && cameraAdjusting)
+            {
+                Debug.Log("2-("+size+")");
+                camera.orthographicSize -= 0.5f;
+                yield return null;
+            }
+        }
+        else
+        {
+            while (camera.orthographicSize < size && cameraAdjusting)
+            {
+                Debug.Log("3-(" + size + ")");
+                camera.orthographicSize += 0.5f;
+                yield return null;
+            }
+        }
+        Debug.Log("4");
+        cameraAdjusting = false;
+        camera.orthographicSize = size;
+    }
+
 }

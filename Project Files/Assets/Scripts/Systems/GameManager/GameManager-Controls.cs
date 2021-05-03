@@ -104,6 +104,7 @@ public partial class GameManager
     public void ChangeControl()
     {
         if (cameraMoving) return;
+        if (cameraAdjusting) return;
         if (firstArm.isRetrieving) return;
         if (secondArm.isRetrieving) return;
         if (Input.GetKeyDown(KeyCode.Tab))
@@ -153,15 +154,20 @@ public partial class GameManager
                 player.hasControl = true;
                 firstArm.hasControl = false;
                 secondArm.hasControl = false;
+                StartCoroutine(AdjustCameraSize(defaultCameraSize));
                 break;
             case FIRST_ARM:
                 cameraTarget = firstArm.cameraTarget;
                 player.hasControl = false;
                 firstArm.hasControl = true;
                 secondArm.hasControl = false;
-                if (firstArm.currentSwitch != null)
+                if (firstArm.isPlugged)
                 {
                     firstArm.currentSwitch.OnControlGained();
+                }
+                else
+                {
+                    StartCoroutine(AdjustCameraSize(defaultCameraSize));
                 }
                 break;
             case SECOND_ARM:
@@ -169,9 +175,13 @@ public partial class GameManager
                 player.hasControl = false;
                 firstArm.hasControl = false;
                 secondArm.hasControl = true;
-                if (secondArm.currentSwitch != null)
+                if (secondArm.isPlugged)
                 {
                     secondArm.currentSwitch.OnControlGained();
+                }
+                else
+                {
+                    StartCoroutine(AdjustCameraSize(defaultCameraSize));
                 }
                 break;
         }

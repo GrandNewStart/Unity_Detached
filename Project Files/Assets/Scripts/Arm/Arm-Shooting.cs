@@ -19,6 +19,9 @@ public partial class ArmController
         rigidbody.mass = normalMass;
         gameObject.transform.position = playerPosition;
         gameObject.SetActive(true);
+        capsuleCollider.isTrigger = false;
+        circleCollider_1.isTrigger = false;
+        circleCollider_2.isTrigger = false;
         isOut = true;
         isFireComplete = false;
         dir = 0;
