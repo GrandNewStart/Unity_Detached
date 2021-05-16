@@ -2,23 +2,23 @@
 
 public partial class GameManager
 {
-    private void RotateCube()
+    private void RotateLoadingBar()
     {
-        cube.transform.Rotate(new Vector3(1, 1, 1));
+        loadingBar.transform.Rotate(new Vector3(0, 0, 1));
     }
 
-    public void ShowCube(float seconds)
+    public void ShowLoadingBar(float seconds)
     {
-        cube.SetActive(true);
+        loadingBar.fillAmount = 0.75f;
         if (seconds != INFINITE)
         {
-            Invoke(nameof(HideCube), seconds);
+            Invoke(nameof(HideLoadingBar), seconds);
         }
     }
 
-    public void HideCube()
+    public void HideLoadingBar()
     {
-        cube.SetActive(false);
+        loadingBar.fillAmount = 0;
     }
 
 }

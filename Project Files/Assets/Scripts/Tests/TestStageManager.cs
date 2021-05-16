@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class TestStageManager : GameManager
@@ -11,7 +10,7 @@ public class TestStageManager : GameManager
 
     protected override void Start()
     {
-        cube.SetActive(false);
+        loadingBar.fillAmount = 0;
         OnTestStageStarted();
         currentCheckpoint = 0;
         SceneFadeStart(0, 0, null);

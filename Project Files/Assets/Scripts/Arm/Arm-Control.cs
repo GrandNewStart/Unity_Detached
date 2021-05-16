@@ -1,29 +1,36 @@
-﻿using System;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public partial class ArmController
 {
-    public void Control()
+    public void OnControlGained()
     {
-        if (trapped) return;
         if (isPlugged)
         {
-            DeactivateSwitch();
-            if (currentSwitch == null)
-            {
-                Debug.LogError("SWITCH IS NULL");
-                return;
-            }
-            currentSwitch.Control();
-            currentSwitch.MoveCamera();
+            if (currentSwitch == null) return;
+            currentSwitch.OnControlGained();
+            gameManager.cameraTarget = currentSwitch.cameraTarget;
         }
         else
         {
-            Move();
-            ActivateSwitch();
+            Debug.Log("ArmController: OnControlGained");
+            dir = 0;
+            gameManager.cameraTarget = transform;
+            gameManager.SetCameraSizeToDefault();
         }
-        gameManager.ChangeControl();
+    }
+
+    public void OnControlLost()
+    {
+        if (isPlugged)
+        {
+            if (currentSwitch == null) return;
+            currentSwitch.OnControlLost();
+        }
+        else
+        {
+            Debug.Log("ArmController: OnControlLost");
+            dir = 0;
+        }
     }
 
 }

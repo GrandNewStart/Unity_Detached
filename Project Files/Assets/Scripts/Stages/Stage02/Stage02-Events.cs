@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.Tilemaps;
 
 public partial class StageManager02
 {
@@ -85,11 +84,11 @@ public partial class StageManager02
 
         Color original1 = new Color(255, 192, 143, 255);
         Color original2 = new Color(212, 156, 113, 255);
-        Color target1 = new Color(215, 227, 255, 255);
-        Color target2 = new Color(149, 171, 221, 255);
-        Color frontColor = wareHouseFront3.color;
-        Color middleColor = original1;
-        Color backColor = original2;
+        Color target1   = new Color(215, 227, 255, 255);
+        Color target2   = new Color(149, 171, 221, 255);
+        Color frontColor    = wareHouseFront3.color;
+        Color middleColor   = original1;
+        Color backColor     = original2;
         float r1, r2;
         float g1, g2;
         float b1, b2;
@@ -97,7 +96,7 @@ public partial class StageManager02
 
         if (distA < 10)
         {
-            // Before entering warehouse
+            // Before entrance
             if (distA < 0)
             {
                 alpha = 1;
@@ -163,6 +162,7 @@ public partial class StageManager02
         backColor /= 255;
         frontColor.a = alpha;
 
+        wareHouseFront4.alpha = alpha;
         wareHouseBack2.color = backColor;
         wareHouseBack1.color = middleColor;
         wareHouseGround.color = middleColor;
@@ -190,7 +190,7 @@ public partial class StageManager02
         Color original2 = new Color(212, 156, 113, 255);
         Color target1 = new Color(255, 217, 215, 255);
         Color target2 = new Color(212, 169, 167, 255);
-        Color frontColor = factoryFront3.color;
+        Color frontColor = factoryFront4.color;
         Color middleColor = original1;
         Color backColor = original2;
         float r1, r2;
@@ -200,7 +200,7 @@ public partial class StageManager02
 
         if (distA < 10)
         {
-            // Before entering factory
+            // Before enterance
             if (distA < 0)
             {
                 alpha = 1;
@@ -237,7 +237,8 @@ public partial class StageManager02
         backColor /= 255;
 
         frontColor.a = alpha;
-        factoryFront3.color = frontColor;
+        factoryFront5.alpha = alpha;
+        factoryFront4.color = frontColor;
         factoryBack2.color = backColor;
         factoryBack1.color = middleColor;
         factoryGround.color = middleColor;

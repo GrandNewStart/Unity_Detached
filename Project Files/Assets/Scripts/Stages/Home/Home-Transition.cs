@@ -58,7 +58,7 @@ public partial class HomeController
             color               = background.color;
             color.a             += 0.02f;
             background.color    = color;
-            yield return null;
+            yield return new WaitForSecondsRealtime(0.02f);
         }
 
         color.a             = 1;
@@ -80,7 +80,7 @@ public partial class HomeController
             color               = background.color;
             color.a             -= 0.02f;
             background.color    = color;
-            yield return null;
+            yield return new WaitForSecondsRealtime(0.02f);
         }
 
         color.a             = 0;
@@ -104,7 +104,7 @@ public partial class HomeController
         {
             AnimatorStateInfo anim = animator.GetCurrentAnimatorStateInfo(0);
             if (anim.IsName(animation) && anim.normalizedTime >= 1.0f) break;
-            yield return null;
+            yield return new WaitForSecondsRealtime(0.02f);
         }
 
         yield return new WaitForSeconds(after);
@@ -122,7 +122,7 @@ public partial class HomeController
             color = text.color;
             color.a += 0.02f;
             text.color = color;
-            yield return null;
+            yield return new WaitForSecondsRealtime(0.02f);
         }
 
         color.a = 1;
@@ -141,7 +141,7 @@ public partial class HomeController
             color = image.color;
             color.a += 0.02f;
             image.color = color;
-            yield return null;
+            yield return new WaitForSecondsRealtime(0.02f);
         }
 
         color.a = 1;
@@ -160,7 +160,7 @@ public partial class HomeController
             color = sprite.color;
             color.a += 0.02f;
             sprite.color = color;
-            yield return null;
+            yield return new WaitForSecondsRealtime(0.02f);
         }
 
         color.a = 1;
@@ -179,7 +179,7 @@ public partial class HomeController
             color = text.color;
             color.a -= 0.02f;
             text.color = color;
-            yield return null;
+            yield return new WaitForSecondsRealtime(0.02f);
         }
 
         color.a = 0;
@@ -198,7 +198,7 @@ public partial class HomeController
             color = image.color;
             color.a -= 0.02f;
             image.color = color;
-            yield return null;
+            yield return new WaitForSecondsRealtime(0.02f);
         }
 
         color.a = 0;
@@ -217,7 +217,7 @@ public partial class HomeController
             color = sprite.color;
             color.a -= 0.02f;
             sprite.color = color;
-            yield return null;
+            yield return new WaitForSecondsRealtime(0.02f);
         }
 
         color.a = 0;

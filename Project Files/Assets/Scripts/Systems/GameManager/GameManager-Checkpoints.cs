@@ -14,7 +14,7 @@ public partial class GameManager
     protected virtual void LoadCheckpoint(int index)
     {
         ForcePauseGame();
-        ShowCube(INFINITE);
+        ShowLoadingBar(INFINITE);
         Checkpoint checkpoint = checkpoints[index];
         player.transform.position = checkpoint.transform.position;
         position = player.transform.position;
@@ -32,6 +32,7 @@ public partial class GameManager
             {
                 for (int j = 0; j <= i; j++)
                 {
+                    checkpoints[j].isSaved = true;
                     checkpoints[j].gameObject.SetActive(false);
                 }
                 return;

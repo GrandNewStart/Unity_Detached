@@ -25,13 +25,15 @@ public class LiftController : SwitchController
         motorSound.transform.position   = target.transform.position;
     }
 
-    public override void OnActivation()
+    public override void OnActivation(ArmController arm)
     {
+        base.OnActivation(arm);
         StartCoroutine(RaiseLift());
     }
 
     public override void OnDeactivation()
     {
+        base.OnDeactivation();
         StartCoroutine(LowerLift());
     }
 
@@ -61,7 +63,7 @@ public class LiftController : SwitchController
                 PlayOperationSound();
             }
 
-            yield return null;
+            yield return new WaitForFixedUpdate();
         }
 
         targetRB.velocity = Vector2.zero;
@@ -93,7 +95,7 @@ public class LiftController : SwitchController
                 PlayOperationSound();
             }
 
-            yield return null;
+            yield return new WaitForFixedUpdate();
         }
 
         targetRB.velocity = Vector2.zero;

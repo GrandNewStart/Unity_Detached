@@ -4,15 +4,7 @@ using UnityEngine;
 
 public partial class PlayerController
 {
-    public void Control()
-    {
-        Move();
-        Jump();
-        Shoot();
-        Retrieve();
-    }
-
-    private void DIE()
+    private void DIE() // For test only
     {
         if (Input.GetKeyDown(KeyCode.P)) DestroyObject();
     }
@@ -25,6 +17,18 @@ public partial class PlayerController
         {
             DestroyObject();
         }
+    }
+
+    public void OnControlGained()
+    {
+        gameManager.SetCameraSizeToDefault();
+        gameManager.cameraTarget = transform;
+    }
+
+    public void OnControlLost()
+    {
+        Debug.Log("PlayerController: OnControlLost");
+        CancelFire();
     }
 
 }

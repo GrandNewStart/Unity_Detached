@@ -11,6 +11,7 @@ TagManager:
   - Switch
   - Trap
   - Metal
+  - Background
   layers:
   - Default
   - TransparentFX
@@ -26,7 +27,7 @@ TagManager:
   - Right Arm
   - Physical Object
   - Switch
-  - 
+  - Background
   - 
   - 
   - 

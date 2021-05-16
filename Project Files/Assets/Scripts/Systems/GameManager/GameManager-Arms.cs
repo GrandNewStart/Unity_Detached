@@ -14,11 +14,7 @@ public partial class GameManager
                     case 1:
                         break;
                     case 2:
-                        if (!firstArm.isRetrieving)
-                        {
-                            player.PlayRetrieveSound();
-                            RetrieveLeftArm();
-                        }
+                        firstArm.StartRetrieve();
                         break;
                 }
                 break;
@@ -26,23 +22,11 @@ public partial class GameManager
                 switch (player.enabledArms)
                 {
                     case 1:
-                        if (!firstArm.isRetrieving)
-                        {
-                            player.PlayRetrieveSound();
-                            RetrieveLeftArm();
-                        }
+                        firstArm.StartRetrieve();
                         break;
                     case 2:
-                        if (!firstArm.isRetrieving)
-                        {
-                            player.PlayRetrieveSound();
-                            RetrieveLeftArm();
-                        }
-                        if (!secondArm.isRetrieving)
-                        {
-                            player.PlayRetrieveSound();
-                            RetrieveRightArm();
-                        }
+                        firstArm.StartRetrieve();
+                        secondArm.StartRetrieve();
                         break;
                 }
                 break;

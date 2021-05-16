@@ -6,12 +6,12 @@ public partial class ArmController
 {
     public void CameraControl()
     {
-        Vector3 cameraPos;
         if (gameManager.cameraMoving) return;
-        cameraPos = gameManager.cameraTarget.position;
-        cameraPos.y += 2;
-        cameraPos.z = -1;
-        gameManager.camera.transform.position = cameraPos;
+
+        Vector3 pos = gameManager.cameraTarget.position;
+        pos.y += 2;
+        pos.z = -1;
+        gameManager.camera.transform.position = pos;
     }
 
 }

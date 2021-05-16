@@ -4,7 +4,6 @@ using UnityEngine;
 
 public partial class PlayerController
 {
-
     public void CameraControl()
     {
         Vector3 cameraPos;

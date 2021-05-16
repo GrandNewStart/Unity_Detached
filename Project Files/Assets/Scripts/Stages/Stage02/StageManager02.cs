@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Tilemaps;
 using TMPro;
 
@@ -12,6 +10,7 @@ public partial class StageManager02 : GameManager
     [SerializeField] private TextMeshProUGUI text_magnet;
 
     [Header("Tilemaps")]
+    [SerializeField] private CanvasGroup wareHouseFront4;
     [SerializeField] private Tilemap wareHouseFront3;
     [SerializeField] private Tilemap wareHouseFront2;
     [SerializeField] private Tilemap wareHouseFront1;
@@ -19,12 +18,14 @@ public partial class StageManager02 : GameManager
     [SerializeField] private Tilemap wareHouseTraps;
     [SerializeField] private Tilemap wareHouseBack1;
     [SerializeField] private Tilemap wareHouseBack2;
-    [SerializeField] private Tilemap factoryFront3;
+    [SerializeField] private CanvasGroup factoryFront5;
+    [SerializeField] private Tilemap factoryFront4;
     [SerializeField] private Tilemap factoryFront2;
     [SerializeField] private Tilemap factoryFront1;
     [SerializeField] private Tilemap factoryGround;
     [SerializeField] private Tilemap factoryBack1;
     [SerializeField] private Tilemap factoryBack2;
+    
 
     [Header("Event Triggers")]
     [SerializeField] private Transform trapText1StartPoint;
@@ -39,7 +40,7 @@ public partial class StageManager02 : GameManager
 
     protected override void Start()
     {
-        cube.SetActive(false);
+        loadingBar.fillAmount = 0;
         OnStageStarted();
         CheckStartPosition();
         OnTestStageStarted();

@@ -10,7 +10,7 @@ public partial class GameManager
         EnablePause(false);
         DisableControl();
         StopBGM();
-        ShowCube(INFINITE);
+        ShowLoadingBar(INFINITE);
         SceneFadeEnd(0, 0, () => {
             ShowLoadingScreen();
         });
@@ -23,7 +23,6 @@ public partial class GameManager
         stage += 1;
         isLoadingSaveData = false;
         currentCheckpoint = 0;
-        //SceneManager.LoadScene(0);
     }
 
     protected void DetectDeath()
@@ -38,13 +37,17 @@ public partial class GameManager
             firstArm.hasControl = false;
             secondArm.hasControl = false;
             DisableControl();
+            //firstArm.currentSwitch?.Deactivate();
+            //secondArm.currentSwitch?.Deactivate();
+            firstArm.PlugOut();
+            secondArm.PlugOut();
             EnablePause(false);
 
             SceneFadeEnd(1, 1, () => {
                 player.RecoverObject();
                 LoadCheckpoint(currentCheckpoint);
                 SceneFadeStart(0, 0, () => {
-                    HideCube();
+                    HideLoadingBar();
                     ForceResumeGame();
                     EnableControl();
                     deathDetected = false;

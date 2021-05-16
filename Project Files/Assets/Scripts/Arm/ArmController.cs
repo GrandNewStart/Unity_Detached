@@ -1,72 +1,65 @@
-﻿using System.Collections;
-using UnityEngine;
-using UnityEngine.UI;
+﻿using UnityEngine;
 
 public partial class ArmController : PhysicalObject
 {
     public enum Resolution { _1024, _512, _256, _128 };
 
-    public GameManager          gameManager;
-    public PlayerController     player;
-    [SerializeField] private Transform headCheck;
-    [SerializeField] private Transform groundCheck;
-    [SerializeField] private float headCheckWidth;
-    [SerializeField] private float groundCheckWidth;
-    private float               waitToPlugOut = 50;
-    private Vector3             origin;
-    private int                 counter = 0;
-    private bool                trapped = false;
-    [HideInInspector] public bool isOut = false;
-    public Transform cameraTarget;
+    public GameManager  gameManager;
+    public bool         isOut       = false;
+    public bool         hasControl  = false;
+    [SerializeField] private PlayerController   player;
+    [SerializeField] private CapsuleCollider2D  mainCollider;
+    [SerializeField] private CircleCollider2D   leftCollider;
+    [SerializeField] private CircleCollider2D   rightCollider;
+    [SerializeField] private SpriteRenderer     sprite;
+    [SerializeField] private Transform          headCheck;
+    [SerializeField] private Transform          groundCheck;
+    [SerializeField] private Vector2            headCheckVector;
+    [SerializeField] private Vector2            groundCheckVector;
+    private Vector3     origin;
+    private LayerMask   groundMask;
+    private LayerMask   phyObjMask;
+    private bool        trapped        = false;
+    private bool        isFireComplete = false;
+    private bool        isGrounded     = false;
 
     [Header("Movement Attributes")]
-    public float    moveSpeed;
-    public float    checkRectX;
-    public float    checkRectY;
-    private short   dir;
-    private short   lastDir;
-    private bool    isGrounded = false;
-    private bool    isPressured = false;
-    private bool    isFireComplete  = false;
-    [HideInInspector] public bool hasControl = false;
-    [HideInInspector] public bool isMovable = true;
-    [HideInInspector] public bool isOnTreadmill   = false;
-    [HideInInspector] public float treadmillVelocity;
-
+    public bool isMovable = true;
+    [HideInInspector] public bool   isOnTreadmill = false;
+    [HideInInspector] public float  treadmillVelocity;
+    [SerializeField] private float  moveSpeed;
+    private short dir;
+    private short lastDir;
+    
     [Header("Retrieve Attributes")]
-    public CapsuleCollider2D    capsuleCollider;
-    public CircleCollider2D     circleCollider_1;
-    public CircleCollider2D     circleCollider_2;
-    private SpriteRenderer      sprite;
-    private Vector3             playerPosition;
-    public float                retrieveSpeed;
-    public float                retreiveRadius;
-    private float               normalGScale;
-    private float               normalMass;
+    public float    retrieveSpeed;
+    public float    retreiveRadius;
+    private float   normalGScale;
+    private float   normalMass;
     [HideInInspector] public bool isRetrieving = false;
 
     [Header("Switch Attributes")]
-    public Image progressBar;
-    private bool isSwitchAround = false;
-    [HideInInspector] public bool isPlugged = false;
-    [HideInInspector] public SwitchController currentSwitch;
+    public bool                 isPlugged = false;
+    public SwitchController     currentSwitch;
+    private SwitchController    possibleSwitch;
+    private int                 counter = -1;
+    private float               waitToPlugOut = 200;
 
     [Header("Sound Attributes")]
-    public AudioSource  moveSound;
-    public AudioSource  holdSound;
-    private float       moveVolume;
-    private float       holdVolume;
-    private int         moveSoundDelay = 0;
+    [SerializeField] private AudioSource moveSound;
+    [SerializeField] private AudioSource holdSound;
+    private float   moveVolume;
+    private float   holdVolume;
+    private int     moveSoundDelay = 0;
 
     [Header("Animation Attributes")]
     public Animator     anim;
     public Resolution   resolution = Resolution._1024;
     public bool         isLeft = false;
 
-    private void Awake()
+    protected override void Awake()
     {
         gameObject.SetActive(false);
-        progressBar.fillAmount = 0;
         InitMovementAttributes();
         InitRetrievalAttributes();
         InitAudioAttributes();
@@ -74,32 +67,33 @@ public partial class ArmController : PhysicalObject
 
     private void FixedUpdate()
     {
-        if (sprite.enabled)
+        if (!isPlugged)
         {
             HeadCheck();
             GroundCheck();
             MoveOnTreadmill();
         }
+        Move();
     }
 
     private void Update()
     {
         AnimationControl();
+        ActivateSwitch();
+        DeactivateSwitch();
 
-        Physics2D.IgnoreCollision(player.collider_1, capsuleCollider);
-        Physics2D.IgnoreCollision(player.collider_1, circleCollider_1);
-        Physics2D.IgnoreCollision(player.collider_1, circleCollider_2);
-        Physics2D.IgnoreCollision(player.collider_2, capsuleCollider);
-        Physics2D.IgnoreCollision(player.collider_2, circleCollider_1);
-        Physics2D.IgnoreCollision(player.collider_2, circleCollider_2);
+        Physics2D.IgnoreCollision(player.mainCollider, mainCollider);
+        Physics2D.IgnoreCollision(player.mainCollider, leftCollider);
+        Physics2D.IgnoreCollision(player.mainCollider, rightCollider);
+        Physics2D.IgnoreCollision(player.groundCollider, mainCollider);
+        Physics2D.IgnoreCollision(player.groundCollider, leftCollider);
+        Physics2D.IgnoreCollision(player.groundCollider, rightCollider);
     }
 
     public override void OnPause()
     {
         moveSound.volume = 0;
         holdSound.volume = 0;
-        progressBar.fillAmount = 0;
-        counter = 0;
     }
 
     public override void OnResume()
@@ -115,12 +109,14 @@ public partial class ArmController : PhysicalObject
 
     public void EnableCollider(bool enabled)
     {
-        //circleCollider_1.isTrigger = !enabled;
-        //circleCollider_2.isTrigger = !enabled;
-        //capsuleCollider.isTrigger = !enabled;
-        circleCollider_1.enabled = enabled;
-        circleCollider_2.enabled = enabled;
-        capsuleCollider.enabled = enabled;
+        leftCollider.enabled = enabled;
+        rightCollider.enabled = enabled;
+        mainCollider.enabled = enabled;
+    }
+
+    private bool IsColliderEnabled()
+    {
+        return (mainCollider.enabled && rightCollider.enabled && leftCollider.enabled);
     }
 
     protected override void OnDestruction()
@@ -132,12 +128,7 @@ public partial class ArmController : PhysicalObject
     {
         if (collision.CompareTag("Switch"))
         {
-            currentSwitch = collision.GetComponent<SwitchController>();
-            isSwitchAround = true;
-        }
-        if (collision.CompareTag("Trap"))
-        {
-            RetrieveOnTrapped();
+            possibleSwitch = collision.GetComponent<SwitchController>();
         }
     }
 
@@ -145,8 +136,7 @@ public partial class ArmController : PhysicalObject
     {
         if (collision.CompareTag("Switch"))
         {
-            currentSwitch = null;
-            isSwitchAround = false;
+            possibleSwitch = null;
         }
     }
 
@@ -163,10 +153,9 @@ public partial class ArmController : PhysicalObject
 
     private void OnDrawGizmos()
     {
-        Gizmos.DrawWireCube(transform.position, new Vector3(checkRectX, checkRectY, 0));
         Gizmos.DrawWireSphere(transform.position, retreiveRadius);
-        Gizmos.DrawWireCube(headCheck.position, new Vector2(headCheckWidth, .2f));
-        Gizmos.DrawWireCube(groundCheck.position, new Vector2(groundCheckWidth, .2f));
+        Gizmos.DrawWireCube(headCheck.position, headCheckVector);
+        Gizmos.DrawWireCube(groundCheck.position, groundCheckVector);
     }
 
 }

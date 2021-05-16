@@ -98,7 +98,7 @@ public partial class GameManager
             color       = screenMask.color;
             color.a     += 0.02f;
             screenMask.color  = color;
-            yield return null;
+            yield return new WaitForSecondsRealtime(0.02f);
         }
 
         color.a     = 1;
@@ -120,7 +120,7 @@ public partial class GameManager
             color       = screenMask.color;
             color.a     -= 0.02f;
             screenMask.color  = color;
-            yield return null;
+            yield return new WaitForSecondsRealtime(0.02f);
         }
 
         color.a     = 0;
@@ -141,7 +141,7 @@ public partial class GameManager
             color       = text.color;
             color.a     += 0.02f;
             text.color  = color;
-            yield return null;
+            yield return new WaitForSecondsRealtime(0.02f);
         }
 
         color.a     = 1;
@@ -160,7 +160,7 @@ public partial class GameManager
             color           = image.color;
             color.a         += 0.02f;
             image.color     = color;
-            yield return null;
+            yield return new WaitForSecondsRealtime(0.02f);
         }
 
         color.a     = 1;
@@ -179,7 +179,7 @@ public partial class GameManager
             color           = sprite.color;
             color.a         += 0.02f;
             sprite.color    = color;
-            yield return null;
+            yield return new WaitForSecondsRealtime(0.02f);
         }
 
         color.a         = 1;
@@ -192,7 +192,7 @@ public partial class GameManager
         while(group.alpha < 0.98f)
         {
             group.alpha += 0.02f;
-            yield return null;
+            yield return new WaitForSecondsRealtime(0.02f);
         }
 
         group.alpha = 1.0f;
@@ -210,7 +210,7 @@ public partial class GameManager
             color       = text.color;
             color.a     -= 0.02f;
             text.color  = color;
-            yield return null;
+            yield return new WaitForSecondsRealtime(0.02f);
         }
 
         color.a     = 0;
@@ -229,7 +229,7 @@ public partial class GameManager
             color       = image.color;
             color.a     -= 0.02f;
             image.color = color;
-            yield return null;
+            yield return new WaitForSecondsRealtime(0.02f);
         }
 
         color.a     = 0;
@@ -248,7 +248,7 @@ public partial class GameManager
             color           = sprite.color;
             color.a         -= 0.02f;
             sprite.color    = color;
-            yield return null;
+            yield return new WaitForSecondsRealtime(0.02f);
         }
 
         color.a         = 0;
@@ -261,7 +261,7 @@ public partial class GameManager
         while(group.alpha > 0.02f)
         {
             group.alpha -= 0.02f;
-            yield return null;
+            yield return new WaitForSecondsRealtime(0.02f);
         }
         group.alpha = 0;
         callback?.Invoke();

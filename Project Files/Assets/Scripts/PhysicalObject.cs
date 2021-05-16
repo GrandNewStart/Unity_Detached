@@ -3,28 +3,21 @@ using UnityEngine;
 
 public class PhysicalObject : MonoBehaviour
 {
-    public Boolean              isDestroyed;
-    public GameObject           normalSprite;
-    public GameObject           destroyedSprite;
-    public new Rigidbody2D      rigidbody;
-    protected float             gravityScale;
-    protected float             mass;
-    
-    protected virtual void Start()
-    {
-        isDestroyed     = false;
+    public bool             isDestroyed = false;
+    public GameObject       normalSprite;
+    public GameObject       destroyedSprite;
+    public new Rigidbody2D  rigidbody;
+    protected float         gravityScale;
+    protected float         mass;
+
+    protected virtual void Awake() {}
+
+    protected virtual void Start() {
         rigidbody       = GetComponent<Rigidbody2D>();
         gravityScale    = rigidbody.gravityScale;
         mass            = rigidbody.mass;
-        normalSprite    .SetActive(true);
-        destroyedSprite .SetActive(false);
-    }
-
-    public void MoveObject(int dir, float speed)
-    {
-        Vector2 newPosition     = transform.position;
-        newPosition.x           += dir * speed * Time.deltaTime;
-        transform.localPosition = newPosition;
+        normalSprite.SetActive(true);
+        destroyedSprite.SetActive(false);
     }
 
     public void DestroyObject()

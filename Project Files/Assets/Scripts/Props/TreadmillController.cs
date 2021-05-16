@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class TreadmillController : MonoBehaviour
 {
@@ -39,17 +37,14 @@ public class TreadmillController : MonoBehaviour
 
     private void OnCollisionStay2D(Collision2D collision)
     {
-        // determine if objects on the treadmill are supposed to move
         if (collision.collider.CompareTag("Physical Object"))
         {
-            GameObject objectOnTreadmill = collision.gameObject;
-            Rigidbody2D rb = objectOnTreadmill.GetComponent<Rigidbody2D>();
-
+            Rigidbody2D rb = collision.gameObject.GetComponent<Rigidbody2D>();
+            if (rb == null) return;
+            if (rb.bodyType != RigidbodyType2D.Dynamic) return;
             if (rb.velocity.magnitude < speed)
             {
-                float horizontal = dir * speed * Time.deltaTime;
-                float vertical = rb.velocity.y * Time.deltaTime;
-                rb.velocity = new Vector3(horizontal, vertical, 0.0f);
+                rb.velocity = new Vector2(dir * speed * Time.deltaTime, rb.velocity.y * Time.deltaTime);
             }
         }
         if (collision.collider.CompareTag("Player"))
@@ -81,8 +76,8 @@ public class TreadmillController : MonoBehaviour
         }
         if (collision.collider.CompareTag("Arm"))
         {
-            ArmController hand = collision.gameObject.GetComponent<ArmController>();
-            hand.isOnTreadmill = false;
+            ArmController arm = collision.gameObject.GetComponent<ArmController>();
+            arm.isOnTreadmill = false;
         }
     }
 

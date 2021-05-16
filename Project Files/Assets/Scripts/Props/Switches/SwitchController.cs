@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class SwitchController: MonoBehaviour
 {
@@ -9,12 +10,13 @@ public class SwitchController: MonoBehaviour
     protected PlayerController  player;
     protected ArmController     firstArm;
     protected ArmController     secondArm;
-    [HideInInspector] public Transform cameraTarget;
+    public Transform            cameraTarget;
+    public Image                progressBar;
     private float x = 0;
 
     [Header("Camera")]
-    [SerializeField] protected Transform cameraPoint;
-    [SerializeField] protected float cameraSize = 8;
+    public float cameraSize = 8;
+    public Transform cameraPoint;
 
     [Header("Target")]
     public GameObject   target;
@@ -32,6 +34,7 @@ public class SwitchController: MonoBehaviour
     public AudioSource plugOutSound;
     public AudioSource activationSound;
     public AudioSource deactivationSound;
+    public AudioSource holdSound;
 
     protected virtual void Awake()
     {
@@ -40,11 +43,15 @@ public class SwitchController: MonoBehaviour
 
     protected virtual void Start()
     {
-        cameraTarget = cameraPoint;
-        player = gameManager.player;
-        firstArm = gameManager.firstArm;
-        secondArm = gameManager.secondArm;
+        cameraTarget    = cameraPoint;
+        player          = gameManager.player;
+        firstArm        = gameManager.firstArm;
+        secondArm       = gameManager.secondArm;
+        holdSound.loop  = true;
+        progressBar.fillAmount = 0;
     }
+
+    protected virtual void FixedUpdate() { }
 
     protected virtual void Update()
     {
@@ -53,52 +60,11 @@ public class SwitchController: MonoBehaviour
 
     public virtual void Control() {}
 
-    public void Activate(ArmController arm)
-    {
-        OnActivation();
-        if (arm.hasControl)
-        {
-            gameManager.cameraTarget = cameraTarget;
-            StartCoroutine(gameManager.MoveCamera());
-            StartCoroutine(gameManager.AdjustCameraSize(cameraSize));
-        }
-        this.arm = arm;
-        arm.currentSwitch = this;
-        isFirstArmPlugged = arm.isLeft;
-        isSecondArmPlugged = !arm.isLeft;
-        unpluggedSprite.SetActive(false);
-        pluggedSpriteGreen.SetActive(true);
-        pluggedSpriteRed.SetActive(false);
-        PlayPlugInSound();
-    }
-
-    public void Deactivate()
-    {
-        OnDeactivation();
-        if (arm != null)
-        {
-            if (arm.hasControl)
-            {
-                gameManager.cameraTarget = arm.transform;
-                StartCoroutine(gameManager.MoveCamera());
-                StartCoroutine(gameManager.AdjustCameraSize(gameManager.defaultCameraSize));
-            }
-        }
-        isFirstArmPlugged = false;
-        isSecondArmPlugged = false;
-        unpluggedSprite.SetActive(true);
-        pluggedSpriteGreen.SetActive(false);
-        pluggedSpriteRed.SetActive(false);
-        PlayPlugOutSound();
-        arm = null;
-    }
-
     public virtual void OnControlGained() { 
         Debug.Log("SwitchController: OnControlGained");
-        Camera cam = gameManager.camera;
-        if (cam.orthographicSize != cameraSize)
+        if (gameManager.camera.orthographicSize != cameraSize)
         {
-            StartCoroutine(gameManager.AdjustCameraSize(cameraSize));
+            gameManager.SetCameraSizeTo(cameraSize);
         }
     }
 
@@ -106,23 +72,46 @@ public class SwitchController: MonoBehaviour
 
     public virtual void MoveCamera() 
     {
-        Debug.Log("MOVE CAM");
         if (gameManager.cameraMoving) return;
-        Vector3 cameraPos = cameraPoint.transform.position;
-        cameraPos.z = -1;
-        cameraPos.y += 2;
-        gameManager.camera.transform.position = cameraPos;
+        Vector3 pos = cameraPoint.transform.position;
+        pos.z = -1;
+        pos.y += 2;
+        gameManager.camera.transform.position = pos;
     }
 
-    public virtual void OnActivation() { Debug.Log("SwitchController: OnActivation"); }
+    public virtual void OnActivation(ArmController arm) { 
+        Debug.Log("SwitchController: OnActivation");
 
-    public virtual void OnDeactivation() { Debug.Log("SwitchController: OnDeactivation"); }
+        this.arm = arm;
+        arm.currentSwitch = this;
+
+        isFirstArmPlugged   = arm.isLeft;
+        isSecondArmPlugged  = !arm.isLeft;
+        unpluggedSprite     .SetActive(false);
+        pluggedSpriteGreen  .SetActive(true);
+        pluggedSpriteRed    .SetActive(false);
+        PlayPlugInSound();
+    }
+
+    public virtual void OnDeactivation() { 
+        Debug.Log("SwitchController: OnDeactivation");
+
+        isFirstArmPlugged   = false;
+        isSecondArmPlugged  = false;
+        unpluggedSprite     .SetActive(true);
+        pluggedSpriteGreen  .SetActive(false);
+        pluggedSpriteRed    .SetActive(false);
+        PlayPlugOutSound();
+
+        arm = null;
+    }
 
     virtual public void AdjustAudio(float volume) {
-        activationSound.volume = volume;
-        deactivationSound.volume = volume;
-        plugInSound.volume = volume;
-        plugOutSound.volume = volume;
+        activationSound     .volume = volume;
+        deactivationSound   .volume = volume;
+        plugInSound         .volume = volume;
+        plugOutSound        .volume = volume;
+        holdSound           .volume = volume;
     }
 
     private void ManageLetterBox()
@@ -131,8 +120,8 @@ public class SwitchController: MonoBehaviour
         letterBox.transform.Translate(new Vector2(0, movement));
         x += 0.1f;
 
-        bool isPlugged = (isFirstArmPlugged || isSecondArmPlugged);
-        bool armInControl = (firstArm.hasControl || secondArm.hasControl);
+        bool isPlugged      = (isFirstArmPlugged || isSecondArmPlugged);
+        bool armInControl   = (firstArm.hasControl || secondArm.hasControl);
 
         if (armInControl)
         {
@@ -169,6 +158,17 @@ public class SwitchController: MonoBehaviour
     protected void PlayDeactivationSound()
     {
         deactivationSound.Play();
+    }
+
+    protected void PlayHoldSound()
+    {
+        if (holdSound.isPlaying) return;
+        holdSound.Play();
+    }
+
+    protected void StopHoldSound()
+    {
+        holdSound.Stop();
     }
 
     public bool IsPluggedIn()

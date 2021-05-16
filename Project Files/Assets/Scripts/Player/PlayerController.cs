@@ -1,19 +1,19 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 
 public partial class PlayerController : PhysicalObject
 {
     public enum Resolution { _1024, _512, _256, _128 };
+
     public enum State { idle, walk, jump, charge, fire };
+    private State state;
+
     public GameManager gameManager;
-    private SpriteRenderer head_sprite;
-    private SpriteRenderer body_sprite;
-    private SpriteRenderer left_arm_sprite;
-    private SpriteRenderer right_arm_sprite;
-    private SpriteRenderer sprite;
+    public CapsuleCollider2D mainCollider;
+    public GameObject normal;
+    private LayerMask groundMask;
+    private LayerMask phyObjMask;
 
     [Header("Movement Attributes")]
-    public  GameObject  normal;
     public  float       moveSpeed;
     public  float       jumpHeight;
     [HideInInspector] public float treadmillVelocity;
@@ -22,7 +22,6 @@ public partial class PlayerController : PhysicalObject
     public bool         isMovable;
     private bool        jumped;
     private SliderJoint2D joint;
-    [HideInInspector] public bool moveOverrided = false;
     [HideInInspector] public bool hasControl;
     [HideInInspector] public bool isOnTreadmill;
 
@@ -38,28 +37,32 @@ public partial class PlayerController : PhysicalObject
     [HideInInspector] public int arms;
 
     [Header("Ground Check Attributes")]
-    public GameObject   headCheck;
-    public GameObject   groundCheck;
+    public CircleCollider2D groundCollider;
+    public Transform    headCheck;
+    public Transform    groundCheck;
     public float        headCheckRadius;
-    public float        groundCheckWidth;
-    private bool        isGroundCheckEnabled = true;
+    public Vector2      groundCheckVector;
+    private bool        groundCheckEnabled = true;
 
     [Header("Animation Attributes")]
     public Resolution   resolution = Resolution._1024;
     private Animator    animator;
     [HideInInspector] public short dir;
     [HideInInspector] public short lastDir;
-    private State       state;
+    
     private bool        isStateFixed;
 
     [Header("Destruction Attributes")]
-    public CapsuleCollider2D    collider_1;
-    public CircleCollider2D     collider_2;
-    public  CapsuleCollider2D   deathCollider;
-    public  GameObject          head;
-    public  GameObject          body;
-    public  GameObject          left_arm;
-    public  GameObject          right_arm;
+    public CapsuleCollider2D deathCollider;
+    public GameObject       head;
+    public GameObject       body;
+    public GameObject       left_arm;
+    public GameObject       right_arm;
+    private SpriteRenderer head_sprite;
+    private SpriteRenderer body_sprite;
+    private SpriteRenderer left_arm_sprite;
+    private SpriteRenderer right_arm_sprite;
+    private SpriteRenderer sprite;
 
     [Header("Sound Attributes")]
     public AudioSource  footStepSound;
@@ -77,9 +80,8 @@ public partial class PlayerController : PhysicalObject
     private float       footStepDelay;
     private float       chargePitch;
     private float       chargeSoundOriginalPitch;
-    private bool        isChargeSoundPlaying;
 
-    private void Awake()
+    protected override void Awake()
     {
         InitMovementAttributes();
         InitShootingAttributes();
@@ -95,39 +97,44 @@ public partial class PlayerController : PhysicalObject
 
     private void FixedUpdate()
     {
-        GroundCheck();
-        HeadCheck();
+        MoveOnTreadmill();
+        AnimationControl();
+
+        Move();
     }
 
     private void Update()
     {
+        GroundCheck();
+        HeadCheck();
         DeathCollisionCheck();
-        AnimationControl();
-        MoveOnTreadmill();
+
+        Jump();
+        Shoot();
+        Retrieve();
     }
 
     protected override void OnDestruction()
     {
-        transform.SetParent(null);
-        if (firstArm.isPlugged) firstArm.PlugOut();
-        if (secondArm.isPlugged) secondArm.PlugOut();
+        if (firstArm.isPlugged)     firstArm.PlugOut();
+        if (secondArm.isPlugged)    secondArm.PlugOut();
+
         foreach(GameObject gauge in gauges) { gauge.SetActive(false); }
 
-        head        .transform.parent = null;
-        body        .transform.parent = null;
-        left_arm    .transform.parent = null;
-        right_arm   .transform.parent = null;
+        head        .transform.SetParent(null);
+        body        .transform.SetParent(null);
+        left_arm    .transform.SetParent(null);
+        right_arm   .transform.SetParent(null);
 
         Rigidbody2D headRB      = head.GetComponent<Rigidbody2D>();
         Rigidbody2D bodyRB      = body.GetComponent<Rigidbody2D>();
         Rigidbody2D leftArmRB   = left_arm.GetComponent<Rigidbody2D>();
         Rigidbody2D rightArmRB  = right_arm.GetComponent<Rigidbody2D>();
 
-        Vector3 velocity    = rigidbody.velocity;
-        headRB.velocity     = velocity;
-        bodyRB.velocity     = velocity;
-        leftArmRB.velocity  = velocity;
-        rightArmRB.velocity = velocity;
+        headRB.velocity     = rigidbody.velocity;
+        bodyRB.velocity     = rigidbody.velocity;
+        leftArmRB.velocity  = rigidbody.velocity;
+        rightArmRB.velocity = rigidbody.velocity;
 
         rigidbody.velocity  = Vector3.zero;
         rigidbody.mass          = 0;
@@ -140,8 +147,8 @@ public partial class PlayerController : PhysicalObject
         
         if (enabledArms == 0)
         {
-            left_arm.SetActive(false);
-            right_arm.SetActive(false);
+            left_arm    .SetActive(false);
+            right_arm   .SetActive(false);
         }
         else
         {
@@ -159,10 +166,10 @@ public partial class PlayerController : PhysicalObject
 
     protected override void OnRestoration()
     {
-        head.SetActive(true);
-        body.SetActive(true);
-        left_arm.SetActive(true);
-        right_arm.SetActive(true);
+        head        .SetActive(true);
+        body        .SetActive(true);
+        left_arm    .SetActive(true);
+        right_arm   .SetActive(true);
 
         head.transform.position         = transform.position;
         body.transform.position         = transform.position;
@@ -178,13 +185,14 @@ public partial class PlayerController : PhysicalObject
         rigidbody.gravityScale  = gravityScale;
         rigidbody.mass          = mass;
 
-        destroyedSprite.SetActive(false);
-        firstArm.gameObject.SetActive(false);
+        destroyedSprite     .SetActive(false);
+        firstArm.gameObject .SetActive(false);
         secondArm.gameObject.SetActive(false);
 
-        firstArm.isOut = false;
+        firstArm.isOut  = false;
         secondArm.isOut = false;
-        arms = enabledArms;
+        isOnTreadmill   = false;
+        arms            = enabledArms;
     }
 
     public override void OnPause()
@@ -232,9 +240,8 @@ public partial class PlayerController : PhysicalObject
         if (collision.collider.CompareTag("Platform"))
         {
             Vector2 origin      = groundCheck.transform.position;
-            Vector2 vector      = new Vector2(groundCheckWidth, 0.5f);
             LayerMask ground    = LayerMask.GetMask("Ground");
-            Collider2D col      = Physics2D.OverlapBox(origin, vector, 0.0f, ground);
+            Collider2D col      = Physics2D.OverlapBox(origin, groundCheckVector, 0.0f, ground);
             if (col != null)
             {
                 joint = col.GetComponent<SliderJoint2D>();
@@ -252,9 +259,8 @@ public partial class PlayerController : PhysicalObject
         if (collision.collider.CompareTag("Platform"))
         {
             Vector2 origin      = groundCheck.transform.position;
-            Vector2 vector      = new Vector2(groundCheckWidth, 0.5f);
             LayerMask ground    = LayerMask.GetMask("Ground");
-            Collider2D col      = Physics2D.OverlapBox(origin, vector, 0.0f, ground);
+            Collider2D col      = Physics2D.OverlapBox(origin, groundCheckVector, 0.0f, ground);
             if (col != null)
             {
                 joint = col.GetComponent<SliderJoint2D>();
@@ -283,14 +289,10 @@ public partial class PlayerController : PhysicalObject
         }
     }
 
-    private void OnDrawGizmos()
+    public void SetState(State state) 
     {
-        Gizmos.DrawWireSphere(headCheck.transform.position, headCheckRadius);
-        Gizmos.DrawWireCube(groundCheck.transform.position, new Vector2(groundCheckWidth, 0.5f));
+        this.state = state;
     }
-
-    public void SetState(State state)
-    { this.state = state; }
 
     public void SetColor(Color color)
     {
@@ -303,12 +305,19 @@ public partial class PlayerController : PhysicalObject
 
     public void EnableCollider(bool enabled)
     {
-        collider_1.enabled = enabled;
-        collider_2.enabled = enabled;
-        deathCollider.enabled = enabled;
+        mainCollider    .enabled = enabled;
+        groundCollider  .enabled = enabled;
+        deathCollider   .enabled = enabled;
     }
 
     public void EnableGroundCheck(bool enabled)
-    { isGroundCheckEnabled = enabled; }
+    {
+        groundCheckEnabled = enabled;
+    }
 
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(headCheck.position, headCheckRadius);
+        Gizmos.DrawWireCube(groundCheck.position, groundCheckVector);
+    }
 }

@@ -7,6 +7,7 @@ public class Checkpoint : MonoBehaviour
     public float        checkpointRadius;
     public int          stage;
     public int          enabledArms;
+    public bool         isSaved = false;
     private bool        isPlayerAround = false;
     private Vector3     origin;
 
@@ -17,8 +18,11 @@ public class Checkpoint : MonoBehaviour
 
     void Update()
     {
-        PlayerCheck();
-        SaveGame();
+        if (!isSaved)
+        {
+            PlayerCheck();
+            SaveGame();
+        }
     }
 
     private void PlayerCheck()
@@ -31,9 +35,9 @@ public class Checkpoint : MonoBehaviour
 
     private void SaveGame()
     {
-        if (!gameObject.activeSelf) return;
         if (isPlayerAround)
         {
+            isSaved = true;
             SaveData data = new SaveData(
                 stage,
                 index, 
@@ -41,19 +45,16 @@ public class Checkpoint : MonoBehaviour
                 gameObject.transform.position);
             SaveSystem.SaveGame(data);
             GameManager.currentCheckpoint = index;
-            gameManager.ShowCube(2);
+            gameManager.ShowLoadingBar(2);
             gameManager.RetrieveArms();
             gameObject.SetActive(false);
         }
     }
 
-    public bool IsActive()
-    {
-        return gameObject.activeSelf;
-    }
 
     private void OnDrawGizmos()
     {
+        Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, checkpointRadius);
     }
 }

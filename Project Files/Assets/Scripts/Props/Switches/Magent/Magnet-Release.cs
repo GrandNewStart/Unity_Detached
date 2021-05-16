@@ -1,81 +1,85 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
+﻿using UnityEngine;
 
 public partial class MagnetController
 {
     private void Release()
     {
+        if (!IsPluggedIn())                 return;
+        if (!arm.hasControl)                return;
+        if (isPulling)                      return;
+        if (targetType == TargetType.none)  return;
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            OnRelease();
+        }
+    }
+
+    private void OnRelease()
+    {
         if (pullTarget == null) return;
+
         SetDefaultCollider();
-        SetCollider();
-        if (isPullingPlayer)
-        {
-            player.EnableGroundCheck(true);
-            player.EnableCollider(true);
-            player.moveOverrided = false;
-            player.isMovable = true;
-            isPullingPlayer = false;
-        }
-        if (isPullingArm)
-        {
-            ArmController arm = pullTarget.gameObject.GetComponent<ArmController>();
-            if (arm != null) arm.EnableCollider(true);
-            isPullingArm = false;
-        }
-        if (isPullingCrate)
-        {
-            BoxCollider2D crateCollider = pullTarget.gameObject.GetComponent<BoxCollider2D>();
-            if (crateCollider != null)
-            {
-                crateCollider.enabled = true;
-            }
-            isPullingCrate = false;
-            pullTargetRigidbody.bodyType = RigidbodyType2D.Dynamic;
-        }
-        isActivated = false;
-        Vector2 pos = pullTarget.position;
-        if (pullTarget != null)
-        {
-            pullTargetRigidbody.gravityScale = pullTargetGravityScale;
-            pullTargetRigidbody.velocity = rigidbody.velocity;
-            pullPoint.transform.position -= pullTargetOffset;
-            pullTarget.SetParent(null);
-            pullTarget.position = pos;
-            pullTarget = null;
-        }
-        player.isMovable = true;
-        firstArm.isMovable = true;
-        secondArm.isMovable = true;
-        rigidbody.velocity = Vector2.zero;
-        joint.connectedBody = null;
+        MoveCollider();
+        RestoreTargetState();
         PlayDeactivationSound();
+    }
+
+    private void RestoreTargetState()
+    {
+        switch (targetType)
+        {
+            case TargetType.player:
+                player.EnableGroundCheck(true);
+                player.EnableCollider(true);
+                player.isMovable = true;
+                break;
+            case TargetType.arm:
+                ArmController targetArm = pullTarget.gameObject.GetComponent<ArmController>();
+                targetArm.EnableCollider(true);
+                targetArm.isMovable = true;
+                break;
+            case TargetType.crate:
+                BoxCollider2D crateCollider = pullTarget.gameObject.GetComponent<BoxCollider2D>();
+                crateCollider.enabled = true;
+                pullTargetRigidbody.bodyType = RigidbodyType2D.Dynamic;
+                break;
+        }
+
+        pullTargetRigidbody.gravityScale    = pullTargetGravityScale;
+        pullTargetRigidbody.velocity        = magnetRigidbody.velocity;
+        pullPoint.transform.position        -= pullTargetOffset;
+
+        pullTarget          = null;
+        pullTargetRigidbody = null;
+
+        targetType                  = TargetType.none;
+        magnetRigidbody.velocity    = Vector2.zero;
+        joint.connectedBody         = null;
     }
 
     private void SetDefaultCollider()
     {
-        offset = defaultOffset;
-        colliderSize = defaultSize;
-        if (orientation == Orientation.horizontal_down)
+        offset          = defaultOffset;
+        colliderSize    = defaultSize;
+        switch (orientation) 
         {
-            collisionWidth = 0.3f;
-            collisionHeight = defaultSize.y;
-        }
-        if (orientation == Orientation.horizontal_up)
-        {
-            collisionWidth = 0.3f;
-            collisionHeight = defaultSize.y;
-        }
-        if (orientation == Orientation.vertical_left)
-        {
-            collisionWidth = defaultSize.y;
-            collisionHeight = 0.3f;
-        }
-        if (orientation == Orientation.vertical_right)
-        {
-            collisionWidth = defaultSize.y;
-            collisionHeight = 0.3f;
+            case Orientation.horizontal_down:
+                collisionWidth  = 0.3f;
+                collisionHeight = defaultSize.y;
+                break;
+            case Orientation.horizontal_up:
+                collisionWidth  = 0.3f;
+                collisionHeight = defaultSize.y;
+                break;
+            case Orientation.vertical_left:
+                collisionWidth  = defaultSize.y;
+                collisionHeight = 0.3f;
+                break;
+            case Orientation.vertical_right:
+                collisionWidth  = defaultSize.y;
+                collisionHeight = 0.3f;
+                break;
         }
     }
 

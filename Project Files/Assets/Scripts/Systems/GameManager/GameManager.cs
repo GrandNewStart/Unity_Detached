@@ -2,7 +2,6 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
-using System;
 
 public partial class GameManager : MonoBehaviour
 {
@@ -25,7 +24,7 @@ public partial class GameManager : MonoBehaviour
     public const int TUTORIALS      = 2;
     
     public bool                 isPaused;
-    public GameObject           cube;
+    public Image                loadingBar;
     public Image                screenMask;
     public PlayerController     player;
     public ArmController        firstArm;
@@ -131,7 +130,7 @@ public partial class GameManager : MonoBehaviour
 
     protected virtual void Update()
     {
-        RotateCube();
+        RotateLoadingBar();
         DetectDeath();
         Control();
     }
@@ -143,7 +142,7 @@ public partial class GameManager : MonoBehaviour
 
     protected virtual void OnStageStarted()
     {
-        cube.SetActive(false);
+        loadingBar.fillAmount = 0;
         InitPauseMenu();
         InitGameSettings();
         InitSettingsMenu();

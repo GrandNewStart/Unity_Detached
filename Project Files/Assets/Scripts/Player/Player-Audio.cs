@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public partial class PlayerController
@@ -8,6 +7,7 @@ public partial class PlayerController
     {
         chargePitch = chargeSound.pitch;
         chargeSoundOriginalPitch = chargeSound.pitch;
+
         footStepSound.volume = .2f;
         jumpSound.volume = .8f;
         chargeSound.volume = .3f;
@@ -17,11 +17,12 @@ public partial class PlayerController
         footStepVolume = footStepSound.volume;
         jumpVolume = jumpSound.volume;
         chargeVolume = chargeSound.volume;
+        chargeSound.loop = true;
         fireVolume = fireSound.volume;
         retrieveVolume = retrieveSound.volume;
+
         footStepDelay = 0;
         retrieveCompleteVolume = retrieveCompleteSound.volume;
-        isChargeSoundPlaying = false;
     }
 
     public void AdjustAudio(float volume)
@@ -43,19 +44,36 @@ public partial class PlayerController
         }
     }
 
-    private IEnumerator PlayChargeSound()
+    private void PlayChargeSound()
+    {
+        if (chargeSound.isPlaying) return;
+        StartCoroutine(ChargeSoundRoutine());
+    }
+
+    private IEnumerator ChargeSoundRoutine()
     {
         chargeSound.Play();
-        chargeSound.loop = true;
-
         while (state == State.charge && !isDestroyed)
         {
+            if (chargeSound.pitch < 1.5f)
+            {
+                //chargeSound.pitch *= 1.001f;
+                chargeSound.pitch = power / 15 + 0.5f;
+            }
+            else
+            {
+                chargeSound.pitch = 1.5f;
+            }
             yield return null;
         }
 
         chargeSound.Stop();
         chargeSound.pitch = chargeSoundOriginalPitch;
-        isChargeSoundPlaying = false;
+    }
+
+    private void PlayFireSound()
+    {
+        fireSound.Play();
     }
 
     public void PlayRetrieveSound()
