@@ -43,7 +43,7 @@ public partial class ArmController : PhysicalObject
     public SwitchController     currentSwitch;
     private SwitchController    possibleSwitch;
     private int                 counter = -1;
-    private float               waitToPlugOut = 200;
+    private float               waitToPlugOut = 100;
 
     [Header("Sound Attributes")]
     [SerializeField] private AudioSource moveSound;

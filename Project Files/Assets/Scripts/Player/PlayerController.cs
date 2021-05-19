@@ -99,7 +99,6 @@ public partial class PlayerController : PhysicalObject
     {
         MoveOnTreadmill();
         AnimationControl();
-
         Move();
     }
 

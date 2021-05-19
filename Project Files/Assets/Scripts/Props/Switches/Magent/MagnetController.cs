@@ -65,7 +65,6 @@ public partial class MagnetController : SwitchController
     {
         base.Update();
         Pull();
-        Release();
         MovePullTarget();
     }
 

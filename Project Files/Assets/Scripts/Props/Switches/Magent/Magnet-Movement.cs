@@ -4,6 +4,8 @@ public partial class MagnetController
 {
     private void Move()
     {
+        magnetRigidbody.velocity = Vector2.zero;
+
         if (!IsPluggedIn())     return;
         if (!arm.hasControl)    return;
         if (isPulling)          return;

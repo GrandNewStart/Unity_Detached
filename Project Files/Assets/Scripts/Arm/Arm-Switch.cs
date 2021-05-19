@@ -61,9 +61,10 @@ public partial class ArmController
 
     private void ResetProgress()
     {
+        StopHoldSound();
+        holdSound.pitch = 0.5f;
         counter = 0;
         currentSwitch.progressBar.fillAmount = 0;
-        StopHoldSound();
     }
 
     public void PlugOut()

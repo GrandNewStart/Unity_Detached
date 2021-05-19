@@ -8,7 +8,11 @@ public partial class MagnetController
         if (!IsPluggedIn())                 return;
         if (!arm.hasControl)                return;
         if (isPulling)                      return;
-        if (targetType != TargetType.none)  return;
+        if (targetType != TargetType.none)
+        {
+            Release();
+            return;
+        }
 
         if (Input.GetKeyDown(KeyCode.Space))
         {

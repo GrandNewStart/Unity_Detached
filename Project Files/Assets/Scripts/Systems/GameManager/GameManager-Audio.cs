@@ -4,21 +4,7 @@ using UnityEngine;
 
 public partial class GameManager
 {
-    //private void SetVolumes()
-    //{
-    //    float musicVol  = Common.masterVolume * Common.musicVolume;
-    //    float gameVol   = Common.masterVolume * Common.gameVolume;
-    //    bgm.volume = musicVol;
-    //    clickSound.volume = gameVol;
-    //    pageSound.volume = gameVol;
-    //    player.AdjustAudio(gameVol);
-    //    firstArm.AdjustAudio(gameVol);
-    //    secondArm.AdjustAudio(gameVol);
 
-    //    SetSwitchVolume(gameVol);
-    //    SetCrusherVolume(gameVol);
-    //    SetTreadmillVolume(gameVol);
-    //}
     private void ApplyVolumes()
     {
         int master = (int)(Common.masterVolume * 100);
@@ -74,7 +60,7 @@ public partial class GameManager
     {
         foreach (SwitchController _switch in switches)
         {
-            _switch.AdjustAudio(volume);
+            _switch.AdjustAudio(volume * 0.5f);
         }
     }
 
@@ -90,7 +76,7 @@ public partial class GameManager
     {
         foreach (TreadmillController treadmill in treadmills)
         {
-            treadmill.AdjustAudio(volume);
+            treadmill.AdjustAudio(volume * 0.5f);
         }
     }
 
