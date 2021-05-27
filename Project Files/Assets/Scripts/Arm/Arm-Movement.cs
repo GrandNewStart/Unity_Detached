@@ -44,57 +44,54 @@ public partial class ArmController
         if (rb.velocity.magnitude > 10 || rb.mass > 5) RetrieveOnTrapped();
     }
 
-    private void Move()
+    private void ReadMoveInput()
     {
+        velocity = rigidbody.velocity;
+
         if (!hasControl)    return;
         if (trapped)        return;
         if (isRetrieving)   return;
         if (isPlugged)      return;
 
         float horizontal = Input.GetAxis("Horizontal") * moveSpeed * Time.deltaTime;
-        float vertical = rigidbody.velocity.y;
 
         if (horizontal > 0)
         {
-            dir = 1;
-            lastDir = 1;
+            dir = lastDir = 1;
+            isMoving = true;
             PlayMoveSound();
         }
-        else if (horizontal < 0)
+        if (horizontal < 0)
         {
-            dir = -1;
-            lastDir = -1;
+            dir = lastDir = -1;
+            isMoving = true;
             PlayMoveSound();
         }
-        else if (horizontal == 0)
+        if (horizontal == 0)
         {
             dir = 0;
+            isMoving = false;
             StopMoveSound();
         }
-
-        
-        if (isMovable)
+        if (isOnTreadmill)
         {
-            if (isOnTreadmill)
-            {
-                horizontal += treadmillVelocity * Time.deltaTime;
-                rigidbody.velocity = new Vector3(horizontal, vertical, 0);
-            }
-            else
-            {
-                if (horizontal != 0)
-                {
-                    rigidbody.velocity = new Vector3(horizontal, vertical, 0);
-                }
-            }
+            horizontal += treadmillVelocity;
         }
+        velocity.x = horizontal;
     }
 
-    private void MoveOnTreadmill()
+    private void Move()
+    {
+        if (!hasControl) return;
+        rigidbody.velocity = velocity;
+    }
+
+    protected override void MoveOnTreadmill()
     {
         if (hasControl)     return;
         if (!isOnTreadmill) return;
-        rigidbody.velocity = new Vector2(treadmillVelocity * Time.deltaTime, rigidbody.velocity.y);
+        velocity = new Vector2(treadmillVelocity, rigidbody.velocity.y);
+        rigidbody.velocity = velocity;
         dir = 0;
     }
 

@@ -5,7 +5,6 @@ public class TestStageManager : GameManager
 {
     [SerializeField] private GameObject truck;
     [SerializeField] private TelescopeController telescope;
-    public float timeScale = 1;
     private bool conversationBegan = false;
 
     protected override void Start()
@@ -106,7 +105,6 @@ public class TestStageManager : GameManager
     {
         base.Update();
         DetectEventTrigger();
-        Time.timeScale = timeScale;
     }
 
     private void DetectEventTrigger()

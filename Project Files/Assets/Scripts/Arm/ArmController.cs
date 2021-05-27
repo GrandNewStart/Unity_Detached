@@ -25,9 +25,8 @@ public partial class ArmController : PhysicalObject
 
     [Header("Movement Attributes")]
     public bool isMovable = true;
-    [HideInInspector] public bool   isOnTreadmill = false;
-    [HideInInspector] public float  treadmillVelocity;
     [SerializeField] private float  moveSpeed;
+    private bool isMoving = false;
     private short dir;
     private short lastDir;
     
@@ -43,14 +42,14 @@ public partial class ArmController : PhysicalObject
     public SwitchController     currentSwitch;
     private SwitchController    possibleSwitch;
     private int                 counter = -1;
-    private float               waitToPlugOut = 100;
+    private float               waitToPlugOut = 50;
 
     [Header("Sound Attributes")]
     [SerializeField] private AudioSource moveSound;
     [SerializeField] private AudioSource holdSound;
     private float   moveVolume;
     private float   holdVolume;
-    private int     moveSoundDelay = 0;
+    private bool    isMoveSoundPlaying = false;
 
     [Header("Animation Attributes")]
     public Animator     anim;
@@ -65,15 +64,15 @@ public partial class ArmController : PhysicalObject
         InitAudioAttributes();
     }
 
-    private void FixedUpdate()
+    protected override void FixedUpdate()
     {
         if (!isPlugged)
         {
             HeadCheck();
             GroundCheck();
             MoveOnTreadmill();
+            Move();
         }
-        Move();
     }
 
     private void Update()
@@ -81,6 +80,7 @@ public partial class ArmController : PhysicalObject
         AnimationControl();
         ActivateSwitch();
         DeactivateSwitch();
+        ReadMoveInput();
 
         Physics2D.IgnoreCollision(player.mainCollider, mainCollider);
         Physics2D.IgnoreCollision(player.mainCollider, leftCollider);
@@ -119,11 +119,6 @@ public partial class ArmController : PhysicalObject
         return (mainCollider.enabled && rightCollider.enabled && leftCollider.enabled);
     }
 
-    protected override void OnDestruction()
-    {
-        base.OnDestruction();
-    }
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Switch"))
@@ -147,9 +142,31 @@ public partial class ArmController : PhysicalObject
         {
             RetrieveOnTrapped();
         }
+        if (collision.collider.CompareTag("Treadmill"))
+        {
+            Vector2 origin      = groundCheck.position;
+            LayerMask ground    = LayerMask.GetMask("Ground");
+            Collider2D col      = Physics2D.OverlapBox(origin, groundCheckVector, 0.0f, ground);
+            if (col != null)
+            {
+                SurfaceEffector2D effector = col.GetComponent<SurfaceEffector2D>();
+                if (effector != null)
+                {
+                    isOnTreadmill = true;
+                    treadmillVelocity = effector.speed;
+                }
+            }
+        }
     }
 
-    protected override void OnCollisionExit2D(Collision2D collision) {}
+    protected override void OnCollisionExit2D(Collision2D collision) 
+    {
+        if (collision.collider.CompareTag("Treadmill"))
+        {
+            isOnTreadmill = false;
+            treadmillVelocity = 0;
+        }
+    }
 
     private void OnDrawGizmos()
     {

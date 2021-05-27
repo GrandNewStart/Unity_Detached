@@ -12,7 +12,6 @@ public partial class ArmController
         }
         else
         {
-            Debug.Log("ArmController: OnControlGained");
             dir = 0;
             gameManager.cameraTarget = transform;
             gameManager.SetCameraSizeToDefault();
@@ -28,7 +27,7 @@ public partial class ArmController
         }
         else
         {
-            Debug.Log("ArmController: OnControlLost");
+            isMoving = false;
             dir = 0;
         }
     }

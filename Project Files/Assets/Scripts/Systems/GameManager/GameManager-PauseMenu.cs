@@ -12,7 +12,7 @@ public partial class GameManager : MenuInterface
         menus.Add(new Menu(1, pause_settings, "settings"));
         menus.Add(new Menu(2, pause_tutorials, "tutorials"));
         menus.Add(new Menu(3, pause_quit, "quit"));
-        pause_controller = new MenuController(pauseMenu, menus, this);
+        pause_controller = new MenuController(menus, this);
         pause_controller.SetOkSound(pageSound);
         pause_controller.SetNextSound(clickSound);
         pause_controller.SetOrientation(MenuController.Orientation.vertical);
@@ -20,13 +20,13 @@ public partial class GameManager : MenuInterface
 
     private void ShowPauseMenu()
     {
-        pause_controller.SetVisible(true);
+        pauseMenu.alpha = 1;
         pause_controller.SetEnabled(true);
     }
 
     private void HidePauseMenu()
     {
-        pause_controller.SetVisible(false);
+        pauseMenu.alpha = 0;
         pause_controller.SetEnabled(false);
         pause_controller.SetDefault();
     }

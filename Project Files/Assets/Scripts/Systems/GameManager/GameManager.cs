@@ -55,31 +55,31 @@ public partial class GameManager : MonoBehaviour
     public float defaultCameraSize = 8;
 
     [Header("Game Settings")]
-    public Sprite           checkbox_checked;
-    public Sprite           checkbox_unchecked;
-    public TMP_FontAsset    font_english;
-    public TMP_FontAsset    font_korean;
-    public GameObject       settings_screen;
-    public TextMeshProUGUI  settings_title;
-    public TextMeshProUGUI  settings_full_screen;
-    public TextMeshProUGUI  settings_windowed;
-    public TextMeshProUGUI  settings_resolution;
-    public TextMeshProUGUI  settings_resolution_value;
-    public TextMeshProUGUI  settings_master_volume;
-    public TextMeshProUGUI  settings_master_volume_value;
-    public TextMeshProUGUI  settings_music_volume;
-    public TextMeshProUGUI  settings_music_volume_value;
-    public TextMeshProUGUI  settings_game_volume;
-    public TextMeshProUGUI  settings_game_volume_value;
-    public TextMeshProUGUI  settings_language;
-    public TextMeshProUGUI  settings_language_value;
-    public TextMeshProUGUI  settings_apply;
-    public TextMeshProUGUI  settings_back;
-    public Image            settings_full_screen_checkbox;
-    public Image            settings_windowed_checkbox;
-    public Slider           settings_master_volume_slider;
-    public Slider           settings_music_volume_slider;
-    public Slider           settings_game_volume_slider;
+    [SerializeField] protected Sprite           checkbox_checked;
+    [SerializeField] protected Sprite           checkbox_unchecked;
+    [SerializeField] protected TMP_FontAsset    font_english;
+    [SerializeField] protected TMP_FontAsset    font_korean;
+    [SerializeField] protected CanvasGroup      settingsMenu;
+    [SerializeField] protected TextMeshProUGUI  settings_title;
+    [SerializeField] protected TextMeshProUGUI  settings_full_screen;
+    [SerializeField] protected TextMeshProUGUI  settings_windowed;
+    [SerializeField] protected TextMeshProUGUI  settings_resolution;
+    [SerializeField] protected TextMeshProUGUI  settings_resolution_value;
+    [SerializeField] protected TextMeshProUGUI  settings_master_volume;
+    [SerializeField] protected TextMeshProUGUI  settings_master_volume_value;
+    [SerializeField] protected TextMeshProUGUI  settings_music_volume;
+    [SerializeField] protected TextMeshProUGUI  settings_music_volume_value;
+    [SerializeField] protected TextMeshProUGUI  settings_game_volume;
+    [SerializeField] protected TextMeshProUGUI  settings_game_volume_value;
+    [SerializeField] protected TextMeshProUGUI  settings_language;
+    [SerializeField] protected TextMeshProUGUI  settings_language_value;
+    [SerializeField] protected TextMeshProUGUI  settings_apply;
+    [SerializeField] protected TextMeshProUGUI  settings_back;
+    [SerializeField] protected Image            settings_full_screen_checkbox;
+    [SerializeField] protected Image            settings_windowed_checkbox;
+    [SerializeField] protected Slider           settings_master_volume_slider;
+    [SerializeField] protected Slider           settings_music_volume_slider;
+    [SerializeField] protected Slider           settings_game_volume_slider;
     private MenuController  settings_controller;
     private bool    tempIsFullScreen    = false;
     private int     tempResolution      = GameSettings.FHD;
@@ -89,13 +89,13 @@ public partial class GameManager : MonoBehaviour
     private float   tempGameVolume      = 0.5f;
 
     [Header("Conversation")]
+    [SerializeField] protected CanvasGroup          conversationBox;
+    [SerializeField] protected CanvasGroup          responseBox;
+    [SerializeField] protected TextMeshProUGUI      conversation_text;
+    [SerializeField] protected TextMeshProUGUI      response_text_1;
+    [SerializeField] protected TextMeshProUGUI      response_text_2;
+    [SerializeField] protected TextMeshProUGUI      response_text_3;
     protected List<LineNode> conversations = new List<LineNode>();
-    public CanvasGroup          conversationBox;
-    public CanvasGroup          responseBox;
-    public TextMeshProUGUI      conversation_text;
-    public TextMeshProUGUI      response_text_1;
-    public TextMeshProUGUI      response_text_2;
-    public TextMeshProUGUI      response_text_3;
 
     [Header("Checkpoints")]
     public List<Checkpoint> checkpoints;
@@ -105,7 +105,7 @@ public partial class GameManager : MonoBehaviour
     public TextMeshProUGUI  text_continue;
 
     [Header("Pause Menu")]
-    public GameObject       pauseMenu;
+    public CanvasGroup      pauseMenu;
     public TextMeshProUGUI  pause_resume;
     public TextMeshProUGUI  pause_settings;
     public TextMeshProUGUI  pause_tutorials;
@@ -159,37 +159,24 @@ public partial class GameManager : MonoBehaviour
     }
 
     // Called both in Pause & ForcePause
-    protected virtual void OnGamePaused()
-    {
-        DisableControl();
-        Time.timeScale = 0;
-        isPaused = true;
-
-        player.OnPause();
-        firstArm.OnPause();
-        secondArm.OnPause();
-        PauseAudio();
-    }
+    protected virtual void OnGamePaused() { }
 
     // Called both in Resume & ForceResume
-    protected virtual void OnGameResumed()
-    {
-        EnableControl();
-        Time.timeScale = 1;
-        isPaused = false;
-
-        player.OnResume();
-        firstArm.OnResume();
-        secondArm.OnResume();
-        ResumeAudio();
-    }
+    protected virtual void OnGameResumed() { }
 
     // Pause game with pause menu
     public void PauseGame()
     {
-        tempControlIndex = controlIndex;
-        controlIndex = UI;
         OnGamePaused();
+        player.OnPause();
+        firstArm.OnPause();
+        secondArm.OnPause();
+
+        //DisableControl();
+        controlIndex = UI;
+        Time.timeScale = 0;
+        isPaused = true;
+        PauseAudio();
         ShowPauseMenu();
     }
 
@@ -197,6 +184,14 @@ public partial class GameManager : MonoBehaviour
     private void ResumeGame()
     {
         OnGameResumed();
+        player.OnResume();
+        firstArm.OnResume();
+        secondArm.OnResume();
+
+        EnableControl();
+        Time.timeScale = 1;
+        isPaused = false;
+        ResumeAudio();
         HidePauseMenu();
     }
 
@@ -204,6 +199,14 @@ public partial class GameManager : MonoBehaviour
     public void ForcePauseGame()
     {
         OnGamePaused();
+        player.OnPause();
+        firstArm.OnPause();
+        secondArm.OnPause();
+
+        DisableControl();
+        Time.timeScale = 0;
+        isPaused = true;
+        PauseAudio();
         EnablePause(false);
     }
 
@@ -211,6 +214,15 @@ public partial class GameManager : MonoBehaviour
     public void ForceResumeGame()
     {
         OnGameResumed();
+        player.OnResume();
+        firstArm.OnResume();
+        secondArm.OnResume();
+
+        EnableControl();
+        Time.timeScale = 1;
+        isPaused = false;
+        ResumeAudio();
+        HidePauseMenu();
         EnablePause(true);
     }
 

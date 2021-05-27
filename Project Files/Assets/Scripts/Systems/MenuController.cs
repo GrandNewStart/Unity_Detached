@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
@@ -7,38 +6,31 @@ public class MenuController
 {
     public enum Orientation { vertical, horizontal, both }
 
-    private GameObject      screen;
     private List<Menu>      menus;
     private AudioSource     nextSound;
     private AudioSource     okSound;
-    private bool            isVisible = false;
     private bool            isEnabled = false;
     private int             index = 0;
     private int             max = 0;
     private Orientation     orientation = Orientation.vertical;
     private MenuInterface   menuAction;
 
-    public MenuController(
-        GameObject screen, 
-        List<Menu> menus,
-        MenuInterface menuAction)
+    public MenuController(List<Menu> menus, MenuInterface menuAction)
     {
-        this.screen = screen;
-        this.menus = menus;
+        this.menus      = menus;
         this.menuAction = menuAction;
+
         if (menus == null) return;
         max = menus.Count - 1;
+        SetDefault();
     }
 
     public void ControlMenu()
     {
-        if (isVisible)
+        if (isEnabled)
         {
-            if (isEnabled)
-            {
-                SelectMenu();
-                EnterMenu();
-            }
+            SelectMenu();
+            EnterMenu();
         }
     }
 
@@ -183,19 +175,11 @@ public class MenuController
         this.orientation = orientation;
     }
 
-    public void SetVisible(bool isVisible)
-    {
-        this.isVisible = isVisible;
-        if (screen != null)
-        {
-            screen.SetActive(isVisible);
-        }
-        SetDefault();
-    }
-
     public void SetEnabled(bool isEnabled)
     {
         this.isEnabled = isEnabled;
+        index = 0;
+        SetDefault();
     }
 
     public void SetIndex(int index)

@@ -890,13 +890,13 @@ MonoBehaviour:
   rigidbody: {fileID: 0}
   gameManager: {fileID: 0}
   mainCollider: {fileID: 2297292982259909061}
+  hasControl: 0
   normal: {fileID: 2297292982259909056}
-  moveSpeed: 500
+  moveSpeed: 800
   jumpHeight: 20
   treadmillVelocity: 0
   isPressured: 0
   isMovable: 0
-  hasControl: 0
   isOnTreadmill: 0
   firstArm: {fileID: 0}
   secondArm: {fileID: 0}
@@ -908,8 +908,8 @@ MonoBehaviour:
   - {fileID: 6842791096692277394}
   powerLimit: 15
   powerIncrement: 0.15
-  enabledArms: 2
   arms: 0
+  enabledArms: 2
   groundCollider: {fileID: 2297292982259909058}
   headCheck: {fileID: 6967855427805973076}
   groundCheck: {fileID: 2714851829839212854}

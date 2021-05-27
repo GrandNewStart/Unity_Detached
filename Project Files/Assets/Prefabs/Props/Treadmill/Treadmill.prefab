@@ -13,9 +13,10 @@ GameObject:
   - component: {fileID: 4897253565663955583}
   - component: {fileID: 8202187126348920216}
   - component: {fileID: 585291516694549830}
+  - component: {fileID: 5442105677049694917}
   m_Layer: 8
   m_Name: Treadmill
-  m_TagString: Untagged
+  m_TagString: Treadmill
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -330,7 +331,7 @@ Tilemap:
       - {fileID: 21300000, guid: 2c4e51c2e3cef824181e625a3d2163b5, type: 3}
       - {fileID: 21300000, guid: 3f144f4aace83594991d37a3a9d445ae, type: 3}
       - {fileID: 21300000, guid: 9c4a4db1b199b6c41944e665e96f9e9d, type: 3}
-      m_AnimationSpeed: 10
+      m_AnimationSpeed: 10.000001
       m_AnimationTimeOffset: 0
       m_IsLooping: 1
   - first: {x: -7, y: 0, z: 0}
@@ -360,7 +361,7 @@ Tilemap:
       - {fileID: 21300000, guid: 2c4e51c2e3cef824181e625a3d2163b5, type: 3}
       - {fileID: 21300000, guid: 3f144f4aace83594991d37a3a9d445ae, type: 3}
       - {fileID: 21300000, guid: 9c4a4db1b199b6c41944e665e96f9e9d, type: 3}
-      m_AnimationSpeed: 10
+      m_AnimationSpeed: 10.000001
       m_AnimationTimeOffset: 0
       m_IsLooping: 1
   - first: {x: -4, y: 0, z: 0}
@@ -644,9 +645,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
   motorSound: {fileID: 4317029843143853933}
-  player: {fileID: 0}
-  dir: 1
-  speed: 300
 --- !u!19719996 &585291516694549830
 TilemapCollider2D:
   m_ObjectHideFlags: 0
@@ -663,6 +661,24 @@ TilemapCollider2D:
   m_Offset: {x: 0, y: 0}
   m_MaximumTileChangeCount: 1000
   m_ExtrusionFactor: 0.00001
+--- !u!252 &5442105677049694917
+SurfaceEffector2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 592400705507074112}
+  m_Enabled: 1
+  m_UseColliderMask: 1
+  m_ColliderMask:
+    serializedVersion: 2
+    m_Bits: 7680
+  m_Speed: 1
+  m_SpeedVariation: 0
+  m_ForceScale: 0.1
+  m_UseContactForce: 0
+  m_UseFriction: 1
+  m_UseBounce: 1
 --- !u!1 &3745105873423860676
 GameObject:
   m_ObjectHideFlags: 0
@@ -845,7 +861,7 @@ GameObject:
   - component: {fileID: 5208858115419838082}
   m_Layer: 0
   m_Name: Treadmill
-  m_TagString: Untagged
+  m_TagString: Treadmill
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

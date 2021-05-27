@@ -21,7 +21,6 @@ public partial class PlayerController
         fireVolume = fireSound.volume;
         retrieveVolume = retrieveSound.volume;
 
-        footStepDelay = 0;
         retrieveCompleteVolume = retrieveCompleteSound.volume;
     }
 
@@ -37,11 +36,23 @@ public partial class PlayerController
 
     private void PlayFootStepSound()
     {
-        if (footStepDelay++ > 20)
+        if (footStepPlaying)        return;
+        if (state != State.walk)    return;
+
+        StartCoroutine(FootStepSoundRoutine());
+    }
+
+    private IEnumerator FootStepSoundRoutine()
+    {
+        footStepPlaying = true;
+
+        while (state == State.walk && !isDestroyed)
         {
             footStepSound.Play();
-            footStepDelay = 0;
+            yield return new WaitForSeconds(0.3f);
         }
+
+        footStepPlaying = false;
     }
 
     private void PlayChargeSound()

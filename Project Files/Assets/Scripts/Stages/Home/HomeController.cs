@@ -14,35 +14,34 @@ public partial class HomeController : MonoBehaviour
     private const int       MENU_4      = 4;
 
     public Image                background;
-    public TMPro.TMP_FontAsset  font_english;
-    public TMPro.TMP_FontAsset  font_korean;
+    public TMP_FontAsset        font_english;
+    public TMP_FontAsset        font_korean;
     public Sprite               checkbox_unchecked;
     public Sprite               checkbox_checked;
 
     [Header("Menus")]
-    private MenuController menuController;
     public TextMeshProUGUI loadGame;
     public TextMeshProUGUI newGame;
     public TextMeshProUGUI settings;
     public TextMeshProUGUI quit;
+    private MenuController menuController;
 
-    [Header("No Save Data")]
-    private MenuController  menu_1_controller;
-    public GameObject       menu_1_screen;
+    [Header("No Save Data")]    
+    public CanvasGroup      menu_1_screen;
     public TextMeshProUGUI  menu_1_message;
     public TextMeshProUGUI  menu_1_yes;
     public TextMeshProUGUI  menu_1_no;
+    private MenuController  menu_1_controller;
 
     [Header("Save Data Exists")]
-    private MenuController  menu_2_controller;
-    public GameObject       menu_2_screen;
+    public CanvasGroup      menu_2_screen;
     public TextMeshProUGUI  menu_2_message;
     public TextMeshProUGUI  menu_2_yes;
     public TextMeshProUGUI  menu_2_no;
+    private MenuController  menu_2_controller;
 
-    [Header("Settings")]
-    private MenuController  menu_3_controller;
-    public GameObject       menu_3_screen;
+    [Header("Settings")]    
+    public CanvasGroup      menu_3_screen;
     public TextMeshProUGUI  menu_3_message;
     public TextMeshProUGUI  menu_3_full_screen;
     public TextMeshProUGUI  menu_3_windowed;
@@ -63,6 +62,7 @@ public partial class HomeController : MonoBehaviour
     public Slider           menu_3_master_volume_slider;
     public Slider           menu_3_music_volume_slider;
     public Slider           menu_3_game_volume_slider;
+    private MenuController  menu_3_controller;
     private bool            tempIsFullScreen = true;
     private int             tempLanguage = GameSettings.ENGLISH;
     private int             tempResolution = GameSettings.FHD;
@@ -71,11 +71,11 @@ public partial class HomeController : MonoBehaviour
     private float           tempGameVolume = 0.5f;
 
     [Header("Quit")]
-    private MenuController  menu_4_controller;
-    public GameObject       menu_4_screen;
+    public CanvasGroup      menu_4_screen;
     public TextMeshProUGUI  menu_4_message;
     public TextMeshProUGUI  menu_4_yes;
     public TextMeshProUGUI  menu_4_no;
+    private MenuController  menu_4_controller;
 
     [Header("Loading Screens")]
     public Image            chap_1_splash;

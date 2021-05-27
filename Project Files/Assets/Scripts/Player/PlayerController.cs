@@ -9,6 +9,7 @@ public partial class PlayerController : PhysicalObject
 
     public GameManager gameManager;
     public CapsuleCollider2D mainCollider;
+    public bool hasControl;
     public GameObject normal;
     private LayerMask groundMask;
     private LayerMask phyObjMask;
@@ -16,14 +17,12 @@ public partial class PlayerController : PhysicalObject
     [Header("Movement Attributes")]
     public  float       moveSpeed;
     public  float       jumpHeight;
-    [HideInInspector] public float treadmillVelocity;
     private bool        isGrounded;
     public bool         isPressured;
     public bool         isMovable;
     private bool        jumped;
     private SliderJoint2D joint;
-    [HideInInspector] public bool hasControl;
-    [HideInInspector] public bool isOnTreadmill;
+    
 
     [Header("Shoot Attributes")]
     public  ArmController   firstArm;
@@ -31,10 +30,10 @@ public partial class PlayerController : PhysicalObject
     public  GameObject[]    gauges;
     public  float           powerLimit;
     public  float           powerIncrement;
+    public int              arms;
     public int              enabledArms;
     private float           power;
     private float           tempPower;
-    [HideInInspector] public int arms;
 
     [Header("Ground Check Attributes")]
     public CircleCollider2D groundCollider;
@@ -77,9 +76,9 @@ public partial class PlayerController : PhysicalObject
     public float        fireVolume;
     public float        retrieveVolume;
     public float        retrieveCompleteVolume;
-    private float       footStepDelay;
     private float       chargePitch;
     private float       chargeSoundOriginalPitch;
+    private bool        footStepPlaying = false;
 
     protected override void Awake()
     {
@@ -95,10 +94,9 @@ public partial class PlayerController : PhysicalObject
         sprite              = normalSprite.GetComponent<SpriteRenderer>();
     }
 
-    private void FixedUpdate()
+    protected override void FixedUpdate()
     {
         MoveOnTreadmill();
-        AnimationControl();
         Move();
     }
 
@@ -107,10 +105,11 @@ public partial class PlayerController : PhysicalObject
         GroundCheck();
         HeadCheck();
         DeathCollisionCheck();
-
-        Jump();
+        ReadMoveInput();
+        ReadJumpInput();
         Shoot();
         Retrieve();
+        AnimationControl();
     }
 
     protected override void OnDestruction()
@@ -135,7 +134,8 @@ public partial class PlayerController : PhysicalObject
         leftArmRB.velocity  = rigidbody.velocity;
         rightArmRB.velocity = rigidbody.velocity;
 
-        rigidbody.velocity  = Vector3.zero;
+        velocity                = Vector2.zero;
+        rigidbody.velocity      = velocity;
         rigidbody.mass          = 0;
         rigidbody.gravityScale  = 0;
 
@@ -180,7 +180,8 @@ public partial class PlayerController : PhysicalObject
         left_arm.transform.parent   = destroyedSprite.transform;
         right_arm.transform.parent  = destroyedSprite.transform;
 
-        rigidbody.velocity      = Vector3.zero;
+        velocity                = Vector2.zero;
+        rigidbody.velocity      = velocity;
         rigidbody.gravityScale  = gravityScale;
         rigidbody.mass          = mass;
 
@@ -251,6 +252,21 @@ public partial class PlayerController : PhysicalObject
                 }
             }
         }
+        if (collision.collider.CompareTag("Treadmill"))
+        {
+            Vector2 origin      = groundCheck.transform.position;
+            LayerMask ground    = LayerMask.GetMask("Ground");
+            Collider2D col      = Physics2D.OverlapBox(origin, groundCheckVector, 0.0f, ground);
+            if (col != null)
+            {
+                SurfaceEffector2D effector = col.GetComponent<SurfaceEffector2D>();
+                if (effector != null)
+                {
+                    isOnTreadmill = true;
+                    treadmillVelocity = effector.speed;
+                }
+            }
+        }
     }
 
     private void OnCollisionStay2D(Collision2D collision)
@@ -285,6 +301,11 @@ public partial class PlayerController : PhysicalObject
                 joint.connectedBody = null;
                 joint = null;
             }
+        }
+        if (collision.collider.CompareTag("Treadmill"))
+        {
+            isOnTreadmill = false;
+            treadmillVelocity = 0;
         }
     }
 

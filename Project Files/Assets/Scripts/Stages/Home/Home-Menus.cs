@@ -11,12 +11,11 @@ public partial class HomeController : MenuInterface
         menus.Add(new Menu(1, newGame, "new game"));
         menus.Add(new Menu(2, settings, "settings"));
         menus.Add(new Menu(3, quit, "quit"));
-        menuController = new MenuController(null, menus, this);
+        menuController = new MenuController(menus, this);
         menuController.SetNextSound(click);
         menuController.SetOkSound(page);
         menuController.SetOrientation(MenuController.Orientation.vertical);
         menuController.SetEnabled(true);
-        menuController.SetVisible(true);
     }
 
     // Overrided from MenuInterface

@@ -36,7 +36,19 @@ public partial class StageManager02 : GameManager
     [SerializeField] private Transform wareHouseEndPoint;
     [SerializeField] private Transform factoryStartPoint;
     [SerializeField] private MagnetController firstMagnet;
-    
+
+    [Header("Sections")]
+    [SerializeField] private GameObject section01;
+    [SerializeField] private GameObject section02;
+    [SerializeField] private GameObject section03;
+    [SerializeField] private GameObject section04;
+    [SerializeField] private GameObject section05;
+    [SerializeField] private GameObject section06;
+    [SerializeField] private Transform  section02Point;
+    [SerializeField] private Transform  section03Point;
+    [SerializeField] private Transform  section04Point;
+    [SerializeField] private Transform  section05Point;
+    [SerializeField] private Transform  section06Point;
 
     protected override void Start()
     {
@@ -84,12 +96,11 @@ public partial class StageManager02 : GameManager
     {
         base.Update();
         ManageEvents();
+        ManageSections();
     }
 
     private void OnDrawGizmos()
     {
-        Gizmos.color = Color.blue;
-
         Gizmos.DrawWireSphere(wareHouseStartPoint.position, .5f);
         Gizmos.DrawWireSphere(wareHouseEndPoint.position, .5f);
 
@@ -102,6 +113,13 @@ public partial class StageManager02 : GameManager
         Gizmos.DrawLine(trapText2StartPoint.position, trapText2EndPoint.position);
 
         Gizmos.DrawWireSphere(factoryStartPoint.position, .5f);
+
+        Gizmos.color = Color.green;
+        Gizmos.DrawRay(section02Point.position, new Vector2(0, 50));
+        Gizmos.DrawRay(section03Point.position, new Vector2(0, 50));
+        Gizmos.DrawRay(section04Point.position, new Vector2(0, 50));
+        Gizmos.DrawRay(section05Point.position, new Vector2(0, 50));
+        Gizmos.DrawRay(section06Point.position, new Vector2(0, 50));
     }
 
 }

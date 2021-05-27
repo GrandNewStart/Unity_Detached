@@ -15,21 +15,21 @@ public partial class HomeController
         menus.Add(new Menu(14, menu_3_language, "language"));
         menus.Add(new Menu(15, menu_3_apply, "apply"));
         menus.Add(new Menu(16, menu_3_back, "back"));
-        menu_3_controller = new MenuController(menu_3_screen, menus, this);
+        menu_3_controller = new MenuController(menus, this);
         menu_3_controller.SetNextSound(click);
     }
 
     private void ShowMenu3()
     {
         InitGameSettings();
-        menu_3_controller.SetVisible(true);
+        menu_3_screen.alpha = 1;
         menu_3_controller.SetEnabled(true);
         menuIndex = MENU_3;
     }
 
     private void CloseMenu3()
     {
-        menu_3_controller.SetVisible(false);
+        menu_3_screen.alpha = 0;
         menu_3_controller.SetEnabled(false);
         menuIndex = MENU_HOME;
     }

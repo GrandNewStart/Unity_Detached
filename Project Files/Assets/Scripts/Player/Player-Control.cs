@@ -27,7 +27,6 @@ public partial class PlayerController
 
     public void OnControlLost()
     {
-        Debug.Log("PlayerController: OnControlLost");
         CancelFire();
     }
 

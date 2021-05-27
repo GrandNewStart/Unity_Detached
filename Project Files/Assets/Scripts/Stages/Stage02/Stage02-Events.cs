@@ -168,7 +168,7 @@ public partial class StageManager02
         wareHouseGround.color = middleColor;
         wareHouseTraps.color = middleColor;
         wareHouseFront1.color = middleColor;
-        wareHouseFront3.color = middleColor;
+        wareHouseFront2.color = middleColor;
         wareHouseFront3.color = frontColor;
         player.SetColor(middleColor);
         firstArm.SetColor(middleColor);

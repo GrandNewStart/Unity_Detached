@@ -46,7 +46,7 @@ public partial class PlayerController
             state = State.charge;
             PlayChargeSound();
             isMovable = false;
-            if (power < powerLimit) power += powerIncrement/3;
+            if (power < powerLimit) power += powerIncrement/2;
 
             for (int i = 0; i < 5; i++)
             {

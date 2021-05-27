@@ -58,8 +58,10 @@ public partial class PlayerController
         }
     }
 
-    private void Move()
+    private void ReadMoveInput()
     {
+        velocity = rigidbody.velocity;
+
         if (isDestroyed) return;
         if (!hasControl) return;
 
@@ -67,7 +69,7 @@ public partial class PlayerController
 
         if (horizontal < 0)
         {
-            dir     = -1;
+            dir = -1;
             lastDir = -1;
             if (isGrounded && !isStateFixed)
             {
@@ -76,7 +78,7 @@ public partial class PlayerController
         }
         if (horizontal > 0)
         {
-            dir     = 1;
+            dir = 1;
             lastDir = 1;
             if (isGrounded && !isStateFixed)
             {
@@ -91,33 +93,38 @@ public partial class PlayerController
                 state = State.idle;
             }
         }
-
         if (isOnTreadmill)
         {
-            horizontal += treadmillVelocity * Time.deltaTime;
-            rigidbody.velocity = new Vector2(horizontal, rigidbody.velocity.y);
+            horizontal += treadmillVelocity;
         }
-        else
+        velocity.x = horizontal;
+
+        if (state == State.walk)
         {
-            if (isMovable)
-            {
-                rigidbody.velocity = new Vector2(horizontal, rigidbody.velocity.y);
-                if (state == State.walk)
-                {
-                    PlayFootStepSound();
-                }
-            }       
+            PlayFootStepSound();
         }
     }
 
-    private void MoveOnTreadmill()
+    private void Move()
+    {
+        if (jumped)
+        {
+            jumpSound.Play();
+            jumped = false;
+            velocity.y += jumpHeight;
+        }
+        rigidbody.velocity = velocity;
+    }
+
+    protected override void MoveOnTreadmill()
     {
         if (hasControl)     return;
         if (!isOnTreadmill) return;
-        rigidbody.velocity = new Vector2(treadmillVelocity * Time.deltaTime, rigidbody.velocity.y);
+        velocity = new Vector2(treadmillVelocity, rigidbody.velocity.y);
+        rigidbody.velocity = velocity;
     }
 
-    private void Jump()
+    private void ReadJumpInput()
     {
         if (isDestroyed)    return;
         if (!hasControl)    return;
@@ -136,16 +143,8 @@ public partial class PlayerController
                 joint = null;
             }
 
-            DisableJump();
-            Invoke(nameof(EnableJump), 0.1f);
-            rigidbody.velocity = new Vector2(rigidbody.velocity.x, rigidbody.velocity.y + jumpHeight);
-            jumpSound.Play();
+            jumped = true;
         }
-    }
-
-    private void DisableJump()
-    {
-        jumped = true;
     }
 
     private void EnableJump()

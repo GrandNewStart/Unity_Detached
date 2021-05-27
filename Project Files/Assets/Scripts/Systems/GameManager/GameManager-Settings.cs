@@ -4,12 +4,12 @@ public partial class GameManager
 {
     protected void InitGameSettings()
     {
-        tempIsFullScreen = Common.isFullScreen;
-        tempResolution = Common.resolution;
-        tempMasterVolume = Common.masterVolume;
-        tempMusicVolume = Common.musicVolume;
-        tempGameVolume = Common.gameVolume;
-        tempLanguage = Common.language;
+        tempIsFullScreen    = Common.isFullScreen;
+        tempResolution      = Common.resolution;
+        tempMasterVolume    = Common.masterVolume;
+        tempMusicVolume     = Common.musicVolume;
+        tempGameVolume      = Common.gameVolume;
+        tempLanguage        = Common.language;
 
         ApplyScreenMode();
         ApplyLanguage();

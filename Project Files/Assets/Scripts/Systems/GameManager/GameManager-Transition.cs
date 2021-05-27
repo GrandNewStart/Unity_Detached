@@ -96,7 +96,7 @@ public partial class GameManager
         while (screenMask.color.a < 0.95f)
         {
             color       = screenMask.color;
-            color.a     += 0.02f;
+            color.a     += 0.05f;
             screenMask.color  = color;
             yield return new WaitForSecondsRealtime(0.02f);
         }
@@ -118,7 +118,7 @@ public partial class GameManager
         while (screenMask.color.a > 0.05f)
         {
             color       = screenMask.color;
-            color.a     -= 0.02f;
+            color.a     -= 0.05f;
             screenMask.color  = color;
             yield return new WaitForSecondsRealtime(0.02f);
         }
@@ -139,7 +139,7 @@ public partial class GameManager
         while (text.color.a < 0.95f)
         {
             color       = text.color;
-            color.a     += 0.02f;
+            color.a     += 0.05f;
             text.color  = color;
             yield return new WaitForSecondsRealtime(0.02f);
         }
@@ -158,7 +158,7 @@ public partial class GameManager
         while (image.color.a < 0.95f)
         {
             color           = image.color;
-            color.a         += 0.02f;
+            color.a         += 0.05f;
             image.color     = color;
             yield return new WaitForSecondsRealtime(0.02f);
         }
@@ -177,7 +177,7 @@ public partial class GameManager
         while (sprite.color.a < 0.95f)
         {
             color           = sprite.color;
-            color.a         += 0.02f;
+            color.a         += 0.05f;
             sprite.color    = color;
             yield return new WaitForSecondsRealtime(0.02f);
         }
@@ -189,9 +189,9 @@ public partial class GameManager
 
     private IEnumerator ShowFadeIn(CanvasGroup group, Action callback)
     {
-        while(group.alpha < 0.98f)
+        while(group.alpha < 0.95f)
         {
-            group.alpha += 0.02f;
+            group.alpha += 0.05f;
             yield return new WaitForSecondsRealtime(0.02f);
         }
 
@@ -208,7 +208,7 @@ public partial class GameManager
         while (text.color.a > 0.05f)
         {
             color       = text.color;
-            color.a     -= 0.02f;
+            color.a     -= 0.05f;
             text.color  = color;
             yield return new WaitForSecondsRealtime(0.02f);
         }
@@ -227,7 +227,7 @@ public partial class GameManager
         while (image.color.a > 0.05f)
         {
             color       = image.color;
-            color.a     -= 0.02f;
+            color.a     -= 0.05f;
             image.color = color;
             yield return new WaitForSecondsRealtime(0.02f);
         }
@@ -246,7 +246,7 @@ public partial class GameManager
         while (sprite.color.a > 0.05f)
         {
             color           = sprite.color;
-            color.a         -= 0.02f;
+            color.a         -= 0.05f;
             sprite.color    = color;
             yield return new WaitForSecondsRealtime(0.02f);
         }
@@ -258,9 +258,9 @@ public partial class GameManager
 
     private IEnumerator HideFadeOut(CanvasGroup group, Action callback)
     {
-        while(group.alpha > 0.02f)
+        while(group.alpha > 0.05f)
         {
-            group.alpha -= 0.02f;
+            group.alpha -= 0.05f;
             yield return new WaitForSecondsRealtime(0.02f);
         }
         group.alpha = 0;

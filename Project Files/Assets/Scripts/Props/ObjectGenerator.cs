@@ -44,6 +44,7 @@ public class ObjectGenerator : MonoBehaviour
             GameObject target       = targets[random];
             GameObject obj          = Instantiate(target, origin.position, Quaternion.identity);
             SpriteRenderer sprite   = obj.GetComponentInChildren<SpriteRenderer>();
+            obj.transform.SetParent(transform);
             sprite.color = color;
             objects.Add(obj);
             total++;

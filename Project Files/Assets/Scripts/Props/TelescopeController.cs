@@ -3,18 +3,16 @@ using System.Collections;
 
 public class TelescopeController : MonoBehaviour
 {
-    public GameManager          gameManager;
-    public GameObject           viewPoint;
-    public GameObject           letterBox;
+    [SerializeField] private GameManager        gameManager;
+    [SerializeField] private GameObject         viewPoint;
+    [SerializeField] private GameObject         letterBox;
+    [SerializeField] private float              viewSize;
     private Camera              mainCamera;
     private PlayerController    player;
-    private new BoxCollider2D   collider;
     private bool                isActive = false;
     private bool                isPlayerAround = false;
     private float               x = 0;
-    public float                viewSize;
-    public float                width;
-    public float                height;
+
 
     private void Awake()
     {
@@ -25,8 +23,6 @@ public class TelescopeController : MonoBehaviour
     {
         mainCamera      = gameManager.camera;
         player          = gameManager.player;
-        collider        = GetComponent<BoxCollider2D>();
-        collider.size   = new Vector2(width, height);
     }
 
     private void Update()
@@ -55,7 +51,6 @@ public class TelescopeController : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        Gizmos.DrawWireCube(transform.position, new Vector2(width, height));
         Gizmos.DrawWireSphere(viewPoint.transform.position, 1);
     }
 

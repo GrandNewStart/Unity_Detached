@@ -56,7 +56,7 @@ public partial class HomeController
         while (background.color.a < 0.95f)
         {
             color               = background.color;
-            color.a             += 0.02f;
+            color.a             += 0.05f;
             background.color    = color;
             yield return new WaitForSecondsRealtime(0.02f);
         }
@@ -78,7 +78,7 @@ public partial class HomeController
         while (background.color.a > 0.05f)
         {
             color               = background.color;
-            color.a             -= 0.02f;
+            color.a             -= 0.05f;
             background.color    = color;
             yield return new WaitForSecondsRealtime(0.02f);
         }
@@ -120,7 +120,7 @@ public partial class HomeController
         while (text.color.a < 0.95f)
         {
             color = text.color;
-            color.a += 0.02f;
+            color.a += 0.05f;
             text.color = color;
             yield return new WaitForSecondsRealtime(0.02f);
         }
@@ -139,7 +139,7 @@ public partial class HomeController
         while (image.color.a < 0.95f)
         {
             color = image.color;
-            color.a += 0.02f;
+            color.a += 0.05f;
             image.color = color;
             yield return new WaitForSecondsRealtime(0.02f);
         }
@@ -158,7 +158,7 @@ public partial class HomeController
         while (sprite.color.a < 0.95f)
         {
             color = sprite.color;
-            color.a += 0.02f;
+            color.a += 0.05f;
             sprite.color = color;
             yield return new WaitForSecondsRealtime(0.02f);
         }
@@ -177,7 +177,7 @@ public partial class HomeController
         while (text.color.a > 0.05f)
         {
             color = text.color;
-            color.a -= 0.02f;
+            color.a -= 0.05f;
             text.color = color;
             yield return new WaitForSecondsRealtime(0.02f);
         }
@@ -196,7 +196,7 @@ public partial class HomeController
         while (image.color.a > 0.05f)
         {
             color = image.color;
-            color.a -= 0.02f;
+            color.a -= 0.05f;
             image.color = color;
             yield return new WaitForSecondsRealtime(0.02f);
         }
@@ -215,7 +215,7 @@ public partial class HomeController
         while (sprite.color.a > 0.05f)
         {
             color = sprite.color;
-            color.a -= 0.02f;
+            color.a -= 0.05f;
             sprite.color = color;
             yield return new WaitForSecondsRealtime(0.02f);
         }

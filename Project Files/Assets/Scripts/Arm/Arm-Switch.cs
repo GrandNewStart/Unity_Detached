@@ -41,6 +41,7 @@ public partial class ArmController
         rigidbody.velocity      = Vector2.zero;
         sprite.enabled  = false;
         isMovable       = false;
+        isMoving        = false;
         isPlugged       = true;
         dir             = 0;
 

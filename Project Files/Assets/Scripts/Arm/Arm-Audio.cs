@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public partial class ArmController
@@ -22,11 +21,24 @@ public partial class ArmController
 
     private void PlayMoveSound()
     {
-        if (moveSoundDelay++ > 20 && isMovable)
+        if (isMoveSoundPlaying) return;
+        if (!isMoving) return;
+
+        StartCoroutine(MoveSoundRoutine());
+    }
+
+    private IEnumerator MoveSoundRoutine()
+    {
+        isMoveSoundPlaying = true;
+
+        while (isMoving)
         {
-            moveSoundDelay = 0;
             moveSound.Play();
+            yield return new WaitForSeconds(0.5f);
         }
+
+        isMoveSoundPlaying = false;
+        moveSound.Stop();
     }
 
     private void StopMoveSound()

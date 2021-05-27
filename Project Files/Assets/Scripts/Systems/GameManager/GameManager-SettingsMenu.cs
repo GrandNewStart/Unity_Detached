@@ -16,14 +16,14 @@ public partial class GameManager
         menus.Add(new Menu(10, settings_language, "language"));
         menus.Add(new Menu(11, settings_apply, "apply"));
         menus.Add(new Menu(12, settings_back, "back"));
-        settings_controller = new MenuController(settings_screen, menus, this);
+        settings_controller = new MenuController(menus, this);
         settings_controller.SetNextSound(clickSound);
     }
     private void ShowSettings()
     {
         menuIndex = SETTINGS;
         InitGameSettings();
-        settings_controller.SetVisible(true);
+        settingsMenu.alpha = 1;
         settings_controller.SetEnabled(true);
         
     }
@@ -31,7 +31,7 @@ public partial class GameManager
     private void CloseSettings()
     {
         menuIndex = PAUSE;
-        settings_controller.SetVisible(false);
+        settingsMenu.alpha = 0;
         settings_controller.SetEnabled(false);   
     }
 

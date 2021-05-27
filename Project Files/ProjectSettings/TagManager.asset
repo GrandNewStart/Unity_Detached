@@ -12,6 +12,7 @@ TagManager:
   - Trap
   - Metal
   - Background
+  - Treadmill
   layers:
   - Default
   - TransparentFX
