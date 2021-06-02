@@ -1,30 +1,40 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.Tilemaps;
 using TMPro;
 
 public partial class StageManager02 : GameManager
 {
+    [Header("Cut Scenes")]
+    public List<GameObject> cutScenes_1;
+
     [Header("Texts")]
     [SerializeField] private TextMeshProUGUI text_trap_1;
     [SerializeField] private TextMeshProUGUI text_trap_2;
     [SerializeField] private TextMeshProUGUI text_magnet;
 
-    [Header("Tilemaps")]
-    [SerializeField] private CanvasGroup wareHouseFront4;
-    [SerializeField] private Tilemap wareHouseFront3;
-    [SerializeField] private Tilemap wareHouseFront2;
-    [SerializeField] private Tilemap wareHouseFront1;
-    [SerializeField] private Tilemap wareHouseGround;
-    [SerializeField] private Tilemap wareHouseTraps;
-    [SerializeField] private Tilemap wareHouseBack1;
-    [SerializeField] private Tilemap wareHouseBack2;
-    [SerializeField] private CanvasGroup factoryFront5;
-    [SerializeField] private Tilemap factoryFront4;
-    [SerializeField] private Tilemap factoryFront2;
-    [SerializeField] private Tilemap factoryFront1;
-    [SerializeField] private Tilemap factoryGround;
-    [SerializeField] private Tilemap factoryBack1;
-    [SerializeField] private Tilemap factoryBack2;
+    [Header("Section 02 Tiles")]
+    [SerializeField] private CanvasGroup section02Front4;
+    [SerializeField] private Tilemap section02Front3;
+    [SerializeField] private Tilemap section02Front2;
+    [SerializeField] private Tilemap section02Front1;
+    [SerializeField] private Tilemap section02Ground;
+    [SerializeField] private Tilemap section02Traps;
+    [SerializeField] private Tilemap section02Back1;
+    [SerializeField] private Tilemap section02Back2;
+    [Header("Section 07 Tiles")]    
+    [SerializeField] private Tilemap section07Front2;
+    [SerializeField] private Tilemap section07Front1;
+    [SerializeField] private Tilemap section07Ground;
+    [SerializeField] private Tilemap section07Back1;
+    [SerializeField] private Tilemap section07Back2;
+    [Header("Section 09 Tiles")]
+    [SerializeField] private CanvasGroup section09Front4;
+    [SerializeField] private Tilemap section09Front3;
+    [SerializeField] private Tilemap section09Front1;
+    [SerializeField] private Tilemap section09Ground;
+    [SerializeField] private Tilemap section09Back1;
+    [SerializeField] private Tilemap section09Back2;
     
 
     [Header("Event Triggers")]
@@ -44,11 +54,15 @@ public partial class StageManager02 : GameManager
     [SerializeField] private GameObject section04;
     [SerializeField] private GameObject section05;
     [SerializeField] private GameObject section06;
+    [SerializeField] private GameObject section07;
+    [SerializeField] private GameObject section08;
     [SerializeField] private Transform  section02Point;
     [SerializeField] private Transform  section03Point;
     [SerializeField] private Transform  section04Point;
     [SerializeField] private Transform  section05Point;
     [SerializeField] private Transform  section06Point;
+    [SerializeField] private Transform  section07Point;
+    [SerializeField] private Transform  section08Point;
 
     protected override void Start()
     {
@@ -72,7 +86,7 @@ public partial class StageManager02 : GameManager
         {
             player.transform.position = checkpoints[0].transform.position;
             currentCheckpoint = 0;
-            SceneFadeStart(0, 0, null);
+            PlayCutScene1();
         }
     }
 
@@ -120,6 +134,8 @@ public partial class StageManager02 : GameManager
         Gizmos.DrawRay(section04Point.position, new Vector2(0, 50));
         Gizmos.DrawRay(section05Point.position, new Vector2(0, 50));
         Gizmos.DrawRay(section06Point.position, new Vector2(0, 50));
+        Gizmos.DrawRay(section07Point.position, new Vector2(0, 50));
+        Gizmos.DrawRay(section08Point.position, new Vector2(0, 50));
     }
 
 }
