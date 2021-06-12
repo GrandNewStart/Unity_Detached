@@ -7,7 +7,6 @@ public partial class PlayerController : PhysicalObject
     public enum State { idle, walk, jump, charge, fire };
     private State state;
 
-    public GameManager gameManager;
     public CapsuleCollider2D mainCollider;
     public bool hasControl;
     public GameObject normal;
@@ -16,13 +15,15 @@ public partial class PlayerController : PhysicalObject
 
     [Header("Movement Attributes")]
     public  float       moveSpeed;
+    public  float       accelSpeed;
     public  float       jumpHeight;
+    private float       treadmillSpeed;
     private bool        isGrounded;
+    private bool        isOnTreadmill;
     public bool         isPressured;
     public bool         isMovable;
     private bool        jumped;
-    private SliderJoint2D joint;
-    
+    private Vector2     outerForce;
 
     [Header("Shoot Attributes")]
     public  ArmController   firstArm;
@@ -48,8 +49,7 @@ public partial class PlayerController : PhysicalObject
     private Animator    animator;
     [HideInInspector] public short dir;
     [HideInInspector] public short lastDir;
-    
-    private bool        isStateFixed;
+    private bool isStateFixed;
 
     [Header("Destruction Attributes")]
     public CapsuleCollider2D deathCollider;
@@ -80,7 +80,7 @@ public partial class PlayerController : PhysicalObject
     private float       chargeSoundOriginalPitch;
     private bool        footStepPlaying = false;
 
-    protected override void Awake()
+    private void Awake()
     {
         InitMovementAttributes();
         InitShootingAttributes();
@@ -94,9 +94,8 @@ public partial class PlayerController : PhysicalObject
         sprite              = normalSprite.GetComponent<SpriteRenderer>();
     }
 
-    protected override void FixedUpdate()
+    private void FixedUpdate()
     {
-        MoveOnTreadmill();
         Move();
     }
 
@@ -237,75 +236,38 @@ public partial class PlayerController : PhysicalObject
             if (isDestroyed) return;
             DestroyObject();
         }
-        if (collision.collider.CompareTag("Platform"))
+        if (collision.collider.CompareTag("Platform") ||
+            collision.collider.CompareTag("Metal"))
         {
             Vector2 origin      = groundCheck.transform.position;
             LayerMask ground    = LayerMask.GetMask("Ground");
             Collider2D col      = Physics2D.OverlapBox(origin, groundCheckVector, 0.0f, ground);
-            if (col != null)
+            if (col)
             {
-                joint = col.GetComponent<SliderJoint2D>();
-                if (joint != null)
-                {
-                    joint.connectedBody = rigidbody;
-                    transform.SetParent(col.transform);
-                }
+                transform.SetParent(col.transform);
             }
         }
-        if (collision.collider.CompareTag("Treadmill"))
+        if (collision.collider.CompareTag("Physical Object"))
         {
-            Vector2 origin      = groundCheck.transform.position;
-            LayerMask ground    = LayerMask.GetMask("Ground");
-            Collider2D col      = Physics2D.OverlapBox(origin, groundCheckVector, 0.0f, ground);
-            if (col != null)
-            {
-                SurfaceEffector2D effector = col.GetComponent<SurfaceEffector2D>();
-                if (effector != null)
-                {
-                    isOnTreadmill = true;
-                    treadmillVelocity = effector.speed;
-                }
-            }
-        }
-    }
-
-    private void OnCollisionStay2D(Collision2D collision)
-    {
-        if (collision.collider.CompareTag("Platform"))
-        {
-            Vector2 origin      = groundCheck.transform.position;
-            LayerMask ground    = LayerMask.GetMask("Ground");
-            Collider2D col      = Physics2D.OverlapBox(origin, groundCheckVector, 0.0f, ground);
-            if (col != null)
-            {
-                joint = col.GetComponent<SliderJoint2D>();
-                if (joint != null)
-                {
-                    if (!hasControl)
-                    {
-                        rigidbody.velocity = Vector2.zero;
-                    }
-                }
-            }
+            transform.SetParent(collision.collider.GetComponentInParent<Transform>());
         }
     }
 
     protected override void OnCollisionExit2D(Collision2D collision) 
     {
-        if (collision.collider.CompareTag("Platform"))
+        if (collision.collider.CompareTag("Platform") ||
+            collision.collider.CompareTag("Metal"))
         {
             transform.SetParent(null);
-            joint = collision.gameObject.GetComponent<SliderJoint2D>();
-            if (joint != null)
-            {
-                joint.connectedBody = null;
-                joint = null;
-            }
         }
         if (collision.collider.CompareTag("Treadmill"))
         {
             isOnTreadmill = false;
-            treadmillVelocity = 0;
+            treadmillSpeed = 0;
+        }
+        if (collision.collider.CompareTag("Physical Object"))
+        {
+            transform.SetParent(null);
         }
     }
 
@@ -321,6 +283,11 @@ public partial class PlayerController : PhysicalObject
         left_arm_sprite.color   = color;
         right_arm_sprite.color  = color;
         sprite.color            = color;
+    }
+
+    public void SetOrigin(Vector2 origin)
+    {
+        this.origin = origin;
     }
 
     public void EnableCollider(bool enabled)

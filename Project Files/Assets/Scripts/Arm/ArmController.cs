@@ -4,7 +4,6 @@ public partial class ArmController : PhysicalObject
 {
     public enum Resolution { _1024, _512, _256, _128 };
 
-    public GameManager  gameManager;
     public bool         isOut       = false;
     public bool         hasControl  = false;
     [SerializeField] private PlayerController   player;
@@ -26,9 +25,13 @@ public partial class ArmController : PhysicalObject
     [Header("Movement Attributes")]
     public bool isMovable = true;
     [SerializeField] private float  moveSpeed;
+    [SerializeField] private float  accelSpeed;
+    private float treadmillSpeed = 0;
     private bool isMoving = false;
+    private bool isOnTreadmill = false;
     private short dir;
     private short lastDir;
+    private Vector2 outerForce = Vector2.zero;
     
     [Header("Retrieve Attributes")]
     public float    retrieveSpeed;
@@ -56,7 +59,7 @@ public partial class ArmController : PhysicalObject
     public Resolution   resolution = Resolution._1024;
     public bool         isLeft = false;
 
-    protected override void Awake()
+    private void Awake()
     {
         gameObject.SetActive(false);
         InitMovementAttributes();
@@ -64,13 +67,12 @@ public partial class ArmController : PhysicalObject
         InitAudioAttributes();
     }
 
-    protected override void FixedUpdate()
+    private void FixedUpdate()
     {
         if (!isPlugged)
         {
             HeadCheck();
             GroundCheck();
-            MoveOnTreadmill();
             Move();
         }
     }
@@ -149,22 +151,36 @@ public partial class ArmController : PhysicalObject
             Collider2D col      = Physics2D.OverlapBox(origin, groundCheckVector, 0.0f, ground);
             if (col != null)
             {
-                SurfaceEffector2D effector = col.GetComponent<SurfaceEffector2D>();
-                if (effector != null)
+                TreadmillController treadmill = col.GetComponent<TreadmillController>();
+                if (treadmill != null)
                 {
                     isOnTreadmill = true;
-                    treadmillVelocity = effector.speed;
+                    treadmillSpeed = treadmill.speed;
                 }
+            }
+        }
+        if (collision.collider.CompareTag("Platform"))
+        {
+            Collider2D col = Physics2D.OverlapBox(groundCheck.position, groundCheckVector, 0, groundMask);
+            if (col)
+            {
+                transform.SetParent(col.transform);
             }
         }
     }
 
-    protected override void OnCollisionExit2D(Collision2D collision) 
+    protected override void OnCollisionExit2D(Collision2D collision)
     {
         if (collision.collider.CompareTag("Treadmill"))
         {
             isOnTreadmill = false;
-            treadmillVelocity = 0;
+            treadmillSpeed = 0;
+        }
+        if (collision.collider.CompareTag("Platform"))
+        {
+            Vector2 pos = transform.position;
+            transform.SetParent(null);
+            transform.position = pos;
         }
     }
 

@@ -15,7 +15,7 @@ public partial class PlayerController
     {
         if (isDestroyed) return;
         if (!isGrounded) state = State.jump;
-            switch (state)
+        switch (state)
         {
             case State.idle:
                 if (lastDir == 1)

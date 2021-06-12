@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using TMPro;
+using UnityEngine.Experimental.Rendering.Universal;
 
 public partial class StageManager02 : GameManager
 {
@@ -13,30 +14,26 @@ public partial class StageManager02 : GameManager
     [SerializeField] private TextMeshProUGUI text_trap_2;
     [SerializeField] private TextMeshProUGUI text_magnet;
 
-    [Header("Section 02 Tiles")]
-    [SerializeField] private CanvasGroup section02Front4;
-    [SerializeField] private Tilemap section02Front3;
-    [SerializeField] private Tilemap section02Front2;
-    [SerializeField] private Tilemap section02Front1;
-    [SerializeField] private Tilemap section02Ground;
-    [SerializeField] private Tilemap section02Traps;
-    [SerializeField] private Tilemap section02Back1;
-    [SerializeField] private Tilemap section02Back2;
-    [Header("Section 07 Tiles")]    
-    [SerializeField] private Tilemap section07Front2;
-    [SerializeField] private Tilemap section07Front1;
-    [SerializeField] private Tilemap section07Ground;
-    [SerializeField] private Tilemap section07Back1;
-    [SerializeField] private Tilemap section07Back2;
-    [Header("Section 09 Tiles")]
-    [SerializeField] private CanvasGroup section09Front4;
-    [SerializeField] private Tilemap section09Front3;
-    [SerializeField] private Tilemap section09Front1;
-    [SerializeField] private Tilemap section09Ground;
-    [SerializeField] private Tilemap section09Back1;
-    [SerializeField] private Tilemap section09Back2;
-    
+    [Header("Section 01")]
+    [SerializeField] private Light2D section01Light;
 
+    [Header("Section 02")]
+    [SerializeField] private CanvasGroup section02WallDecos;
+    [SerializeField] private Tilemap section02Walls;
+    [SerializeField] private Light2D section02Light1;
+    [SerializeField] private Light2D section02Light2;
+
+    [Header("Section 07")]
+    [SerializeField] private Tilemap section07Walls;
+    [SerializeField] private Light2D section07Light1;
+    [SerializeField] private Light2D section07Light2;
+    [SerializeField] private Light2D section07Light4;
+
+    [Header("Section 08")]
+    [SerializeField] private CanvasGroup section08WallDecos;
+    [SerializeField] private Tilemap section08Walls;
+    [SerializeField] private Light2D section08Light;
+    
     [Header("Event Triggers")]
     [SerializeField] private Transform trapText1StartPoint;
     [SerializeField] private Transform trapText1EndPoint;
@@ -56,6 +53,7 @@ public partial class StageManager02 : GameManager
     [SerializeField] private GameObject section06;
     [SerializeField] private GameObject section07;
     [SerializeField] private GameObject section08;
+    [SerializeField] private GameObject section09;
     [SerializeField] private Transform  section02Point;
     [SerializeField] private Transform  section03Point;
     [SerializeField] private Transform  section04Point;
@@ -63,28 +61,32 @@ public partial class StageManager02 : GameManager
     [SerializeField] private Transform  section06Point;
     [SerializeField] private Transform  section07Point;
     [SerializeField] private Transform  section08Point;
+    [SerializeField] private Transform  section09Point;
 
     protected override void Start()
     {
         loadingBar.fillAmount = 0;
         OnStageStarted();
         CheckStartPosition();
-        OnTestStageStarted();
+        //OnTestStageStarted();
     }
 
     private void CheckStartPosition()
     {
-        PlayBGM();
         if (isLoadingSaveData)
         {
+            PlayBGM();
             player.transform.position = position;
+            player.SetOrigin(position);
             player.enabledArms = enabledArms;
             EnablePause(false);
             SceneFadeStart(0, 0, () => { ForceResumeGame(); });
         }
         else
         {
-            player.transform.position = checkpoints[0].transform.position;
+            position = checkpoints[0].transform.position;
+            player.transform.position = position;
+            player.SetOrigin(position);
             currentCheckpoint = 0;
             PlayCutScene1();
         }
@@ -136,6 +138,7 @@ public partial class StageManager02 : GameManager
         Gizmos.DrawRay(section06Point.position, new Vector2(0, 50));
         Gizmos.DrawRay(section07Point.position, new Vector2(0, 50));
         Gizmos.DrawRay(section08Point.position, new Vector2(0, 50));
+        Gizmos.DrawRay(section09Point.position, new Vector2(0, 50));
     }
 
 }

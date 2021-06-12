@@ -50,9 +50,8 @@ public class LiftController : SwitchController
         while (targetPosition.y <= maxHeight && isGoingUp)
         {
             targetPosition = target.transform.position;
-            float y = speed * Time.deltaTime;
-            targetPosition.y += y;
-            targetRB.MovePosition(targetPosition);
+            targetPosition.y += speed * Time.deltaTime;
+            target.transform.position = targetPosition;
 
             if (gameManager.isPaused)
             {
@@ -82,9 +81,8 @@ public class LiftController : SwitchController
         while (targetPosition.y > minHeight && !isGoingUp)
         {
             targetPosition = target.transform.position;
-            float y = speed * -2 * Time.deltaTime;
-            targetPosition.y += y;
-            targetRB.MovePosition(targetPosition);
+            targetPosition.y -= 2 * speed * Time.deltaTime;
+            target.transform.position = targetPosition;
 
             if (gameManager.isPaused)
             {

@@ -4,11 +4,9 @@ public partial class PlayerController
 {
     private void InitMovementAttributes()
     {
-        treadmillVelocity   = 0;
-        isOnTreadmill       = false;
-        isMovable           = true;
-        jumped              = false;
-        hasControl          = true;
+        isMovable   = true;
+        jumped      = false;
+        hasControl  = true;
 
         groundMask = LayerMask.GetMask("Ground");
         phyObjMask = LayerMask.GetMask("Physical Object");
@@ -64,8 +62,9 @@ public partial class PlayerController
 
         if (isDestroyed) return;
         if (!hasControl) return;
+        if (!isMovable) return;
 
-        float horizontal = Input.GetAxis("Horizontal") * moveSpeed * Time.deltaTime;
+        float horizontal = Input.GetAxis("Horizontal") * moveSpeed;
 
         if (horizontal < 0)
         {
@@ -93,34 +92,26 @@ public partial class PlayerController
                 state = State.idle;
             }
         }
-        if (isOnTreadmill)
-        {
-            horizontal += treadmillVelocity;
-        }
-        velocity.x = horizontal;
-
         if (state == State.walk)
         {
             PlayFootStepSound();
         }
+        velocity.x = horizontal;
     }
 
     private void Move()
     {
         if (jumped)
         {
-            jumpSound.Play();
             jumped = false;
-            velocity.y += jumpHeight;
+            jumpSound.Play();
+            velocity.y = jumpHeight;
         }
-        rigidbody.velocity = velocity;
-    }
-
-    protected override void MoveOnTreadmill()
-    {
-        if (hasControl)     return;
-        if (!isOnTreadmill) return;
-        velocity = new Vector2(treadmillVelocity, rigidbody.velocity.y);
+        if (outerForce != Vector2.zero)
+        {
+            velocity += outerForce;
+            outerForce = Vector2.zero;
+        }
         rigidbody.velocity = velocity;
     }
 
@@ -136,13 +127,6 @@ public partial class PlayerController
             Input.GetKeyDown(KeyCode.W) ||
             Input.GetKeyDown(KeyCode.Space))
         {
-            if (joint != null)
-            {
-                transform.SetParent(null);
-                joint.connectedBody = null;
-                joint = null;
-            }
-
             jumped = true;
         }
     }
@@ -150,6 +134,11 @@ public partial class PlayerController
     private void EnableJump()
     {
         jumped = false;
+    }
+
+    public void ApplyForce(Vector2 force)
+    {
+        outerForce = force;
     }
 
 }

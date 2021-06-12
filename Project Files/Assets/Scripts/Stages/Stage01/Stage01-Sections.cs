@@ -5,41 +5,72 @@ public partial class StageManager01
     private void ManageSections()
     {
         float camX = camera.transform.position.x;
-
-        bool _inSection01 = (camX < section01Point.position.x + section01Size.x / 2);
-        bool _inSection02 = (camX > section02Point.position.x - section02Size.x / 2 &&
-                            camX < section02Point.position.x + section02Size.x / 2);
-        bool _inSection03 = (camX > section03Point.position.x - section03Size.x / 2 &&
-                            camX < section03Point.position.x + section03Size.x / 2);
-        bool _inSection04 = (camX > section04Point.position.x - section04Size.x / 2 &&
-                            camX < section04Point.position.x + section04Size.x / 2);
-        bool _inSection05 = (camX > section05Point.position.x - section05Size.x / 2 &&
-                            camX < section05Point.position.x + section05Size.x / 2);
-
-        if (inSection01 != _inSection01)
+        
+        // at Section 01
+        if (camX < section02Point.position.x)
         {
-            section01.SetActive(_inSection01);
-            inSection01 = _inSection01;
+            section01.SetActive(true);
+            section02.SetActive(true);
+            section03.SetActive(false);
+            section04.SetActive(false);
+            section05.SetActive(false);
+            section06.SetActive(false);
+            return;
         }
-        if (inSection02 != _inSection02)
+        // at Section 02
+        if (camX < section03Point.position.x)
         {
-            section02.SetActive(_inSection02);
-            inSection02 = _inSection02;
+            section01.SetActive(true);
+            section02.SetActive(true);
+            section03.SetActive(true);
+            section04.SetActive(false);
+            section05.SetActive(false);
+            section06.SetActive(false);
+            return;
         }
-        if (inSection03 != _inSection03)
+        // at Section 03
+        if (camX < section04Point.position.x)
         {
-            section03.SetActive(_inSection03);
-            inSection03 = _inSection03;
+            section01.SetActive(false);
+            section02.SetActive(true);
+            section03.SetActive(true);
+            section04.SetActive(true);
+            section05.SetActive(false);
+            section06.SetActive(false);
+            return;
         }
-        if (inSection04 != _inSection04)
+        // at Section 04
+        if (camX < section05Point.position.x)
         {
-            section04.SetActive(_inSection04);
-            inSection04 = _inSection04;
+            section01.SetActive(false);
+            section02.SetActive(false);
+            section03.SetActive(true);
+            section04.SetActive(true);
+            section05.SetActive(true);
+            section06.SetActive(false);
+            return;
         }
-        if (inSection05 != _inSection05)
+        // at Section 05
+        if (camX < section06Point.position.x)
         {
-            section05.SetActive(_inSection05);
-            inSection05 = _inSection05;
+            section01.SetActive(false);
+            section02.SetActive(false);
+            section03.SetActive(false);
+            section04.SetActive(true);
+            section05.SetActive(true);
+            section06.SetActive(true);
+            return;
+        }
+        // at Section 06
+        if (camX > section06Point.position.x)
+        {
+            section01.SetActive(false);
+            section02.SetActive(false);
+            section03.SetActive(false);
+            section04.SetActive(false);
+            section05.SetActive(true);
+            section06.SetActive(true);
+            return;
         }
     }
 

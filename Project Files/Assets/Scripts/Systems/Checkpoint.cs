@@ -47,6 +47,7 @@ public class Checkpoint : MonoBehaviour
             GameManager.currentCheckpoint = index;
             gameManager.ShowLoadingBar(2);
             gameManager.RetrieveArms();
+            gameManager.player.SetOrigin(transform.position);
             gameObject.SetActive(false);
         }
     }

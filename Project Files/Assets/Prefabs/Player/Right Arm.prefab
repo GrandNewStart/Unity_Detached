@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5245864970992544177}
-  - component: {fileID: 4753611350976351610}
+  - component: {fileID: 8036016788726282812}
   - component: {fileID: 6364153883646694885}
   - component: {fileID: 8461392389994913860}
   - component: {fileID: 7572228472302161749}
@@ -35,7 +35,7 @@ Transform:
   m_Father: {fileID: 7866226421460697457}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &4753611350976351610
+--- !u!212 &8036016788726282812
 SpriteRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -54,7 +54,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -66,7 +66,7 @@ SpriteRenderer:
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
-  m_StitchLightmapSeams: 0
+  m_StitchLightmapSeams: 1
   m_SelectedEditorRenderState: 0
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
@@ -80,7 +80,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 12.3, y: 6.92}
+  m_Size: {x: 2.56, y: 2.56}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -583,15 +583,14 @@ MonoBehaviour:
   mainCollider: {fileID: 6364153883646694885}
   leftCollider: {fileID: 8461392389994913860}
   rightCollider: {fileID: 7572228472302161749}
-  sprite: {fileID: 4753611350976351610}
+  sprite: {fileID: 0}
   headCheck: {fileID: 8895923564384689486}
   groundCheck: {fileID: 7281662510198082026}
   headCheckVector: {x: 1.2, y: 0.2}
   groundCheckVector: {x: 1.2, y: 0.2}
   isMovable: 1
-  isOnTreadmill: 0
-  treadmillVelocity: 0
-  moveSpeed: 500
+  moveSpeed: 6
+  accelSpeed: 200
   retrieveSpeed: 50
   retreiveRadius: 2
   isRetrieving: 0

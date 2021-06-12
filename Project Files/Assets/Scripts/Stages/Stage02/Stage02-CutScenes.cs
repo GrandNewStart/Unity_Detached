@@ -2,7 +2,6 @@
 
 public partial class StageManager02
 {
-
     private void PlayCutScene1()
     {
         Color color = screenMask.color;

@@ -3,44 +3,41 @@ using UnityEngine;
 
 public class PhysicalObject : MonoBehaviour
 {
+    public GameManager      gameManager;
     public bool             isDestroyed = false;
-    public GameObject       normalSprite;
-    public GameObject       destroyedSprite;
+    public GameObject       normalSprite = null;
+    public GameObject       destroyedSprite = null;
     public new Rigidbody2D  rigidbody;
+    protected Vector2       origin;
+    protected Vector2       velocity;
     protected float         gravityScale;
     protected float         mass;
-    protected float         treadmillVelocity = 0;
-    protected bool          isOnTreadmill = false;
-    protected Vector2       velocity;
-
-    protected virtual void Awake() {}
 
     protected virtual void Start() {
+        origin          = transform.position;
         rigidbody       = GetComponent<Rigidbody2D>();
         gravityScale    = rigidbody.gravityScale;
         mass            = rigidbody.mass;
-        normalSprite.SetActive(true);
-        destroyedSprite.SetActive(false);
-    }
 
-    protected virtual void FixedUpdate()
-    {
-        MoveOnTreadmill();
+        if (normalSprite != null) { normalSprite.SetActive(true); }
+        if (destroyedSprite != null) { destroyedSprite.SetActive(false); }
+        if (gameManager != null) { gameManager.objects.Add(this); }
     }
 
     public void DestroyObject()
     {
         isDestroyed = true;
-        normalSprite.SetActive(false);
-        destroyedSprite.SetActive(true);
+        if (normalSprite != null) { normalSprite.SetActive(false); }
+        if (destroyedSprite != null) { destroyedSprite.SetActive(true); }
         OnDestruction();
     }
 
     public void RecoverObject()
     {
+        transform.position = origin;
         isDestroyed = false;
-        normalSprite.SetActive(true);
-        destroyedSprite.SetActive(false);
+        if (normalSprite != null) { normalSprite.SetActive(true); }
+        if (destroyedSprite != null) { destroyedSprite.SetActive(false); }
         OnRestoration();
     }
 
@@ -49,32 +46,16 @@ public class PhysicalObject : MonoBehaviour
     public virtual void OnPause() {}
     public virtual void OnResume() {}
 
-    protected virtual void MoveOnTreadmill()
-    {
-        if (!isOnTreadmill) return;
-        velocity = new Vector2(treadmillVelocity, rigidbody.velocity.y);
-        rigidbody.velocity = velocity;
-    }
-
     protected virtual void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.collider.CompareTag("Platform") ||
             collision.collider.CompareTag("Metal"))
         {
-            transform.parent = collision.transform;
+            transform.SetParent(collision.transform);
         }
         if (collision.collider.CompareTag("Crusher"))
         {
             DestroyObject();
-        }
-        if (collision.collider.CompareTag("Treadmill"))
-        {
-            SurfaceEffector2D effector = collision.collider.GetComponent<SurfaceEffector2D>();
-            if (effector != null)
-            {
-                isOnTreadmill = true;
-                treadmillVelocity = effector.speed;
-            }
         }
     }
 
@@ -83,13 +64,7 @@ public class PhysicalObject : MonoBehaviour
         if (collision.collider.CompareTag("Platform") ||
             collision.collider.CompareTag("Metal"))
         {
-            transform.parent = null;
-        }
-        if (collision.collider.CompareTag("Treadmill"))
-        {
-            isOnTreadmill = false;
-            rigidbody.AddForce(new Vector2(treadmillVelocity, 0));
-            treadmillVelocity = 0;
+            transform.SetParent(null);
         }
     }
 }

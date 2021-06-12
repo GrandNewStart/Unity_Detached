@@ -41,21 +41,11 @@ public partial class StageManager01 : GameManager
     [SerializeField] private GameObject section04;
     [SerializeField] private GameObject section05;
     [SerializeField] private GameObject section06;
-    [SerializeField] private Transform  section01Point;
-    [SerializeField] private Vector2    section01Size;
     [SerializeField] private Transform  section02Point;
-    [SerializeField] private Vector2    section02Size;
     [SerializeField] private Transform  section03Point;
-    [SerializeField] private Vector2    section03Size;
     [SerializeField] private Transform  section04Point;
-    [SerializeField] private Vector2    section04Size;
     [SerializeField] private Transform  section05Point;
-    [SerializeField] private Vector2    section05Size;
-    private bool inSection01 = true;
-    private bool inSection02 = true;
-    private bool inSection03 = true;
-    private bool inSection04 = true;
-    private bool inSection05 = true;
+    [SerializeField] private Transform  section06Point;
 
     protected override void Awake()
     {
@@ -189,15 +179,11 @@ public partial class StageManager01 : GameManager
         Gizmos.DrawWireCube(truck.transform.position, new Vector2(12, 4));
 
         Gizmos.color = Color.green;
-        Gizmos.DrawWireCube(section01Point.position, section01Size);
-        Gizmos.color = Color.blue;
-        Gizmos.DrawWireCube(section02Point.position, section02Size);
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireCube(section03Point.position, section03Size);
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireCube(section04Point.position, section04Size);
-        Gizmos.color = Color.blue;
-        Gizmos.DrawWireCube(section05Point.position, section05Size);
+        Gizmos.DrawRay(section02Point.position, new Vector2(0, 50));
+        Gizmos.DrawRay(section03Point.position, new Vector2(0, 50));
+        Gizmos.DrawRay(section04Point.position, new Vector2(0, 50));
+        Gizmos.DrawRay(section05Point.position, new Vector2(0, 50));
+        Gizmos.DrawRay(section06Point.position, new Vector2(0, 50));
     }
 
 }

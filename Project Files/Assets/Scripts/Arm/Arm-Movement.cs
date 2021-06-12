@@ -4,13 +4,12 @@ public partial class ArmController
 {
     private void InitMovementAttributes()
     {
-        groundMask          = LayerMask.GetMask("Ground");
-        phyObjMask          = LayerMask.GetMask("Physical Object");
-        sprite              = normalSprite.GetComponent<SpriteRenderer>();
-        origin              = transform.position;
-        dir                 = 1;
-        lastDir             = 1;
-        treadmillVelocity   = 0;
+        groundMask = LayerMask.GetMask("Ground");
+        phyObjMask = LayerMask.GetMask("Physical Object");
+        sprite = normalSprite.GetComponent<SpriteRenderer>();
+        origin = transform.position;
+        dir = 1;
+        lastDir = 1;
     }
 
     private void GroundCheck()
@@ -75,7 +74,7 @@ public partial class ArmController
         }
         if (isOnTreadmill)
         {
-            horizontal += treadmillVelocity;
+            horizontal += treadmillSpeed;
         }
         velocity.x = horizontal;
     }
@@ -83,16 +82,17 @@ public partial class ArmController
     private void Move()
     {
         if (!hasControl) return;
+        if (outerForce != Vector2.zero)
+        {
+            velocity += outerForce;
+            outerForce = Vector2.zero;
+        }
         rigidbody.velocity = velocity;
     }
 
-    protected override void MoveOnTreadmill()
+    public void ApplyForce(Vector2 force)
     {
-        if (hasControl)     return;
-        if (!isOnTreadmill) return;
-        velocity = new Vector2(treadmillVelocity, rigidbody.velocity.y);
-        rigidbody.velocity = velocity;
-        dir = 0;
+        outerForce = force;
     }
 
 }

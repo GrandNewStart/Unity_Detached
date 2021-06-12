@@ -40,6 +40,7 @@ public partial class GameManager : MonoBehaviour
     public List<CrusherController> crushers = new List<CrusherController>();
     public List<TreadmillController> treadmills = new List<TreadmillController>();
     public List<TelescopeController> telescopes = new List<TelescopeController>();
+    public List<PhysicalObject> objects = new List<PhysicalObject>();
 
     [Header("Control")]
     public int controlIndex = 0;
@@ -153,6 +154,7 @@ public partial class GameManager : MonoBehaviour
         if (isLoadingSaveData)
         {
             player.transform.position = position;
+            player.SetOrigin(position);
             player.enabledArms = enabledArms;
             player.arms = enabledArms;
         }

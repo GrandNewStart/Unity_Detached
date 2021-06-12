@@ -37,14 +37,12 @@ public partial class GameManager
             firstArm.hasControl = false;
             secondArm.hasControl = false;
             DisableControl();
-            //firstArm.currentSwitch?.Deactivate();
-            //secondArm.currentSwitch?.Deactivate();
             firstArm.PlugOut();
             secondArm.PlugOut();
             EnablePause(false);
 
             SceneFadeEnd(1, 1, () => {
-                player.RecoverObject();
+                RecoverStage();
                 LoadCheckpoint(currentCheckpoint);
                 SceneFadeStart(0, 0, () => {
                     HideLoadingBar();
@@ -53,6 +51,13 @@ public partial class GameManager
                     deathDetected = false;
                 });
             });
+        }
+    }
+
+    protected virtual void RecoverStage() 
+    { 
+        foreach (PhysicalObject obj in objects) {
+            obj.RecoverObject();
         }
     }
 

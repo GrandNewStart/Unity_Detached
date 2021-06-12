@@ -6,9 +6,9 @@ public partial class StageManager02
     {
         ManageTrapText();
         ManageMagnetText();
-        ManageSection02Color();
-        ManageSection07Color();
-        ManageSection08Color();
+        ManageSection02Entrance();
+        ManageSection07Exit();
+        ManageSection08Entrance();
     }
 
     private void ManageTrapText()
@@ -73,212 +73,128 @@ public partial class StageManager02
         }
     }
 
-    // Original1 color = (255, 192, 143, 255)
-    // Original2 color = (212, 156, 113, 255)
-    // Target1 color = (215, 227, 255, 255)
-    // Target2 color = (149, 171, 221, 255)
-    private void ManageSection02Color()
+
+    private void ManageSection02Entrance()
     {
-        Vector2 playerPos = player.transform.position;
-        float dist = playerPos.x - wareHouseStartPoint.position.x;
+        float playerPosX = player.transform.position.x;
+        float limitX = wareHouseStartPoint.transform.position.x;
+        float diff = playerPosX - limitX;
 
-        Color original1 = new Color(255, 192, 143, 255);
-        Color original2 = new Color(212, 156, 113, 255);
-        Color target1 = new Color(215, 227, 255, 255);
-        Color target2 = new Color(149, 171, 221, 255);
-        Color frontColor = section02Front3.color;
-        Color middleColor = original1;
-        Color backColor = original2;
-        float r1, r2;
-        float g1, g2;
-        float b1, b2;
-        float alpha;
-
-        // Before entrance
-        if (dist < 0)
+        if (diff < 0)
         {
-            alpha = 1;
-            middleColor = original1;
-            backColor = original2;
+            section02Light1.intensity = 0;
+            section02Light2.intensity = 0;
+            section01Light.lightOrder = 1;
+            section02Light1.lightOrder = 0;
+            section02Light2.lightOrder = 0;
         }
-        // During entrance
-        else if (dist > 0 && dist < 10)
+        if (diff > 0 && diff < 8)
         {
-            alpha = 1 - (dist * 0.1f);
-            r1 = original1.r - (dist * 4);
-            g1 = original1.g + (dist * 3.5f);
-            b1 = original1.b + (dist * 11.2f);
-            r2 = original2.r - (dist * 6.3f);
-            g2 = original2.g + (dist * 1.5f);
-            b2 = original2.b + (dist * 10.8f);
-            middleColor.r = r1;
-            middleColor.g = g1;
-            middleColor.b = b1;
-            backColor.r = r2;
-            backColor.g = g2;
-            backColor.b = b2;
+            float alpha = (8 - diff) / 10;
+            Color color = section02Walls.color;
+            color.a = alpha;
+            section02Walls.color = color;
+            section02WallDecos.alpha = alpha;
+            section01Light.intensity = alpha;
+            section02Light1.intensity = 0.8f - alpha;
+            section02Light2.intensity = 0.8f - alpha;
+            section01Light.lightOrder = 0;
+            section02Light1.lightOrder = 1;
+            section02Light2.lightOrder = 1;
         }
-        // After entrance
-        else
+        if (diff > 8)
         {
-            alpha = 0;
-            middleColor = target1;
-            backColor = target2;
+            Color color = section02Walls.color;
+            color.a = 0;
+            section02Walls.color = color;
+            section02WallDecos.alpha = 0;
+            section01Light.intensity = 0;
+            section02Light1.intensity = 0.8f;
+            section02Light2.intensity = 0.8f;
+            section01Light.lightOrder = 0;
+            section02Light1.lightOrder = 1;
+            section02Light2.lightOrder = 1;
         }
-
-        middleColor /= 255;
-        backColor /= 255;
-        frontColor.a = alpha;
-
-        section02Front4.alpha = alpha;
-        section02Back2.color = backColor;
-        section02Back1.color = middleColor;
-        section02Ground.color = middleColor;
-        section02Traps.color = middleColor;
-        section02Front1.color = middleColor;
-        section02Front2.color = middleColor;
-        section02Front3.color = frontColor;
-        player.SetColor(middleColor);
-        firstArm.SetColor(middleColor);
-        secondArm.SetColor(middleColor);
-
     }
 
-    private void ManageSection07Color()
+    private void ManageSection07Exit()
     {
-        Vector2 playerPos = player.transform.position;
-        float dist = playerPos.x - wareHouseEndPoint.position.x;
+        float playerPosX = player.transform.position.x;
+        float limitX = wareHouseEndPoint.transform.position.x;
+        float diff = playerPosX - limitX;
 
-        Color original1 = new Color(255, 192, 143, 255);
-        Color original2 = new Color(212, 156, 113, 255);
-        Color target1   = new Color(215, 227, 255, 255);
-        Color target2   = new Color(149, 171, 221, 255);
-        Color frontColor;
-        Color middleColor   = original1;
-        Color backColor     = original2;
-        float r1, r2;
-        float g1, g2;
-        float b1, b2;
-        float alpha;
-
-        // Before leaving warehouse
-        if (dist < -10)
+        if (diff < -8)
         {
-            alpha = 0;
-            middleColor = target1;
-            backColor = target2;
+            Color color = section07Walls.color;
+            color.a = 0;
+            section07Walls.color = color;
+            section07Light1.intensity = 0.8f;
+            section07Light1.lightOrder = 1;
+            section07Light2.intensity = 0;
+            section07Light2.lightOrder = 0;
         }
-        // During leaving
-        else if (dist >= -10 && dist < 0)
+        if (diff > -8 && diff < 0)
         {
-            alpha = 1 + (dist * 0.1f);
-            r1 = target1.r + ((dist + 10) * 4);
-            g1 = target1.g - ((dist + 10) * 3.5f);
-            b1 = target1.b - ((dist + 10) * 11.2f);
-            r2 = target2.r + ((dist + 10) * 6.3f);
-            g2 = target2.g - ((dist + 10) * 1.5f);
-            b2 = target2.b - ((dist + 10) * 10.8f);
-            middleColor.r = r1;
-            middleColor.g = g1;
-            middleColor.b = b1;
-            backColor.r = r2;
-            backColor.g = g2;
-            backColor.b = b2;
+            float alpha = -1 * diff / 10;
+            Color color = section07Walls.color;
+            color.a = 0.8f - alpha;
+            section07Walls.color = color;
+            section07Light1.intensity = alpha;
+            section07Light2.intensity = 0.8f - alpha;
+            section07Light1.lightOrder = 1;
+            section07Light2.lightOrder = 0;
         }
-        // After leaving
-        else
+        if (diff > 0)
         {
-            alpha = 1;
-            middleColor = original1;
-            backColor = original2;
+            Color color = section07Walls.color;
+            color.a = 1;
+            section07Walls.color = color;
+            section07Light1.intensity = 0;
+            section07Light1.lightOrder = 0;
+            section07Light2.intensity = 1;
+            section07Light2.lightOrder = 1;
         }
-
-        middleColor /= 255;
-        backColor /= 255;
-        frontColor = middleColor;
-        frontColor.a = alpha;
-
-        section07Back2.color = backColor;
-        section07Back1.color = middleColor;
-        section07Ground.color = middleColor;
-        section07Front1.color = middleColor;
-        section07Front2.color = frontColor;
-        player.SetColor(middleColor);
-        firstArm.SetColor(middleColor);
-        secondArm.SetColor(middleColor);
     }
 
-    // Original1 color = (255, 192, 143, 255)
-    // Original2 color = (212, 156, 113, 255)
-    // Target1 color = (255, 217, 215, 255)
-    // Target2 color = (212, 169, 167, 255)
-    private void ManageSection08Color()
+    private void ManageSection08Entrance()
     {
-        Vector2 playerPos = player.transform.position;
-        float dist = playerPos.x - factoryStartPoint.position.x;
+        float playerPosX = player.transform.position.x;
+        float limitX = factoryStartPoint.transform.position.x;
+        float diff = playerPosX - limitX;
 
-        if (dist < -10) return;
-
-        Color original1 = new Color(255, 192, 143, 255);
-        Color original2 = new Color(212, 156, 113, 255);
-        Color target1 = new Color(255, 217, 215, 255);
-        Color target2 = new Color(212, 169, 167, 255);
-        Color frontColor = section09Front3.color;
-        Color middleColor = original1;
-        Color backColor = original2;
-        float r1, r2;
-        float g1, g2;
-        float b1, b2;
-        float alpha;
-
-        if (dist < 10)
+        if (diff < 0)
         {
-            // Before enterance
-            if (dist < 0)
-            {
-                alpha = 1;
-                middleColor = original1;
-                backColor = original2;
-            }
-            // During entrance
-            else
-            {
-                alpha = 1 - (dist * 0.1f);
-                r1 = original1.r + (dist * 0);
-                g1 = original1.g + (dist * 2.5f);
-                b1 = original1.b + (dist * 7.2f);
-                r2 = original2.r + (dist * 0);
-                g2 = original2.g + (dist * 1.3f);
-                b2 = original2.b + (dist * 5.4f);
-                middleColor.r = r1;
-                middleColor.g = g1;
-                middleColor.b = b1;
-                backColor.r = r2;
-                backColor.g = g2;
-                backColor.b = b2;
-            }
+            section07Light4.intensity = 1;
+            section07Light4.lightOrder = 1;
+            section08Light.intensity = 0;
+            section08Light.lightOrder = 0;
+            Color color = section08Walls.color;
+            color.a = 1;
+            section08Walls.color = color;
+            section08WallDecos.alpha = 1;
         }
-        // After entrance
-        else
+        if (diff > 0 && diff < 8)
         {
-            alpha = 0;
-            middleColor = target1;
-            backColor = target2;
+            float alpha = (8 - diff) / 10;
+            Color color = section08Walls.color;
+            color.a = alpha;
+            section08Walls.color = color;
+            section08WallDecos.alpha = alpha;
+            section07Light4.lightOrder = 0;
+            section08Light.intensity = alpha;
+            section08Light.lightOrder = 1;
         }
-
-        middleColor /= 255;
-        backColor /= 255;
-
-        frontColor.a = alpha;
-        section09Front4.alpha = alpha;
-        section09Front3.color = frontColor;
-        section09Back2.color = backColor;
-        section09Back1.color = middleColor;
-        section09Ground.color = middleColor;
-        section09Front1.color = middleColor;
-        player.SetColor(middleColor);
-        firstArm.SetColor(middleColor);
-        secondArm.SetColor(middleColor);
+        if (diff > 8)
+        {
+            section07Light4.intensity = 0;
+            section07Light4.lightOrder = 0;
+            section08Light.intensity = 0.8f;
+            section08Light.lightOrder = 1;
+            Color color = section08Walls.color;
+            color.a = 0;
+            section08Walls.color = color;
+            section08WallDecos.alpha = 0;
+        }
     }
 
 }
