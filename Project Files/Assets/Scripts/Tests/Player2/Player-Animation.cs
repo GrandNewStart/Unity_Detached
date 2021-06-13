@@ -30,9 +30,19 @@ public partial class Player
         }
     }
 
-    private void ManageAnimation()
+    private void UpdateAnimation()
     {
-        if (!isGrounded) state = State.air;
+        if (!isGrounded)
+        {
+            state = State.air;
+        }
+        else
+        {
+            if (state == State.air)
+            {
+                state = State.idle;
+            }
+        }
         
         switch (state)
         {

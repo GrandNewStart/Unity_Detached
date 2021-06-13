@@ -48,7 +48,7 @@ public partial class Arm
         }
     }
 
-    private void ForcePlugOut()
+    public void ForcePlugOut()
     {
         currentSwitch.PlugOut();
         currentSwitch = null;

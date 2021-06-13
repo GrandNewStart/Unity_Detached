@@ -54,9 +54,7 @@ public partial class GameManager2 : MonoBehaviour
     }
 
     protected virtual void OnGameStart() { }
-
     protected virtual void OnGameUpdate() { }
-
     protected virtual void OnGameFixedUpdated() { }
     protected virtual void OnGamePause() { }
     protected virtual void OnGameResume() { }

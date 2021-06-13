@@ -9,9 +9,7 @@ public partial class Arm : PhysicalObject2
     public Transform cameraTarget;
     public ArmIndex armIndex = ArmIndex.first;
     private bool hasControl = false;
-    public CapsuleCollider2D col1;
-    public CircleCollider2D col2;
-    public CircleCollider2D col3;
+    public CapsuleCollider2D col;
     private SpriteRenderer sprite;
 
     [Header("Movement")]
@@ -41,9 +39,8 @@ public partial class Arm : PhysicalObject2
     protected override void Start()
     {
         base.Start();
-        sprite = GetComponent<SpriteRenderer>();
-        rigidbody = GetComponent<Rigidbody2D>();
-        animator = GetComponent<Animator>();
+        sprite = normal.GetComponent<SpriteRenderer>();
+        animator = normal.GetComponent<Animator>();
         cameraTarget = transform;
         gameObject.SetActive(false);
     }
@@ -75,9 +72,7 @@ public partial class Arm : PhysicalObject2
 
     private void EnableCollider(bool enabled)
     {
-        col1.enabled = enabled;
-        col2.enabled = enabled;
-        col3.enabled = enabled;
+        col.enabled = enabled;
     }
 
     public void EnableControl(bool enabled)
