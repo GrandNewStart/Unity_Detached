@@ -9,6 +9,7 @@ public partial class Arm : PhysicalObject2
     public Transform cameraTarget;
     public ArmIndex armIndex = ArmIndex.first;
     private bool hasControl = false;
+    public float cameraSize = Constants.defaultCamSize;
     public CapsuleCollider2D col;
     private SpriteRenderer sprite;
 
@@ -70,7 +71,7 @@ public partial class Arm : PhysicalObject2
         UpdateMovement();
     }
 
-    private void EnableCollider(bool enabled)
+    public void EnableCollider(bool enabled)
     {
         col.enabled = enabled;
     }
@@ -91,6 +92,8 @@ public partial class Arm : PhysicalObject2
     public bool HasControl() { return hasControl; }
 
     public void SetPlayer(Player player) { this.player = player; }
+
+    public void SetMovable(bool isMovable) { this.isMovable = isMovable; }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {

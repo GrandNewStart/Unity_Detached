@@ -24,16 +24,16 @@ public class Lift : BaseSwitch
         bottom.x    = platform.transform.position.x;
     }
 
-    protected override void OnPlugIn()
+    public override void PlugIn(Arm arm)
     {
-        base.OnPlugIn();
+        base.PlugIn(arm);
         sprite.sprite = sprite_plugged_green;
         StartCoroutine(RaisePlatform());
     }
 
-    protected override void OnPlugOut()
+    public override void PlugOut()
     {
-        base.OnPlugOut();
+        base.PlugOut();
         sprite.sprite = sprite_unplugged;
         StartCoroutine(LowerPlatform());
     }

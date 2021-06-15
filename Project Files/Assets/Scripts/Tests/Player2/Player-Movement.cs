@@ -4,6 +4,18 @@ using UnityEngine;
 
 public partial class Player
 {
+    protected override void GroundCheck()
+    {
+        if (groundCheckEnabled)
+        {
+            base.GroundCheck();
+        }
+        else
+        {
+            isGrounded = false;
+        }
+    }
+
     private void Move()
     {
         movement = Vector2.zero;
@@ -18,6 +30,7 @@ public partial class Player
     private void Jump()
     {
         if (!isGrounded)    return;
+        if (!isMovable)     return;
         if (isJumped)       return;
         isJumped = Input.GetKeyDown(KeyCode.Space);
     }

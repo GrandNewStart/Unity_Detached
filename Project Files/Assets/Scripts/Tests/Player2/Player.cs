@@ -6,6 +6,7 @@ public partial class Player : PhysicalObject2
 {
     public Transform cameraTarget;
     private bool hasControl = false;
+    public float cameraSize = Constants.defaultCamSize;
     private CapsuleCollider2D col1;
     private CircleCollider2D col2;
     [SerializeField] private GameObject destroyed_head;
@@ -19,6 +20,7 @@ public partial class Player : PhysicalObject2
     private Vector2 movement;
     private bool isJumped = false;
     private bool isMovable = true;
+    private bool groundCheckEnabled = true;
 
     [Header("Shooting")]
     public Arm firstArm;
@@ -155,6 +157,27 @@ public partial class Player : PhysicalObject2
     }
 
     public bool HasControl() { return hasControl; }
+
+    public void EnableCollider(bool enabled)
+    {
+        col1.enabled = enabled;
+        col2.enabled = enabled;
+    }
+
+    public void SetState(State state)
+    {
+        this.state = state;
+    }
+
+    public void SetMovable(bool isMovable)
+    {
+        this.isMovable = isMovable;
+    }
+
+    public void EnableGroundCheck(bool enabled)
+    {
+        groundCheckEnabled = enabled;
+    }
 
     private void OnDrawGizmos()
     {

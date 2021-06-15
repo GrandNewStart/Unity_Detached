@@ -7,6 +7,13 @@ public partial class Player
     private void Charge()
     {
         if (armCount == 0) return;
+        if (!isGrounded)
+        {
+            power = 0;
+            isMovable = true;
+            TurnGauagesOff();
+            return;
+        }
 
         if (Input.GetKey(KeyCode.L) ||
             Input.GetKey(KeyCode.F))
@@ -45,6 +52,7 @@ public partial class Player
     private void Fire()
     {
         if (armCount == 0) return;
+        if (!isGrounded) return;
 
         if (Input.GetKeyUp(KeyCode.L) ||
             Input.GetKeyUp(KeyCode.F))

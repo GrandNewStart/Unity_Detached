@@ -8,7 +8,6 @@ public class Platform : MonoBehaviour
     {
         if (collision.collider.CompareTag("Physical Object"))
         {
-            Debug.Log(collision.collider.name + ": ENTER");
             collision
                 .collider
                 .transform
@@ -21,7 +20,6 @@ public class Platform : MonoBehaviour
     {
         if (collision.collider.CompareTag("Physical Object"))
         {
-            Debug.Log(collision.collider.name + ": EXIT");
             collision
                 .collider
                 .transform

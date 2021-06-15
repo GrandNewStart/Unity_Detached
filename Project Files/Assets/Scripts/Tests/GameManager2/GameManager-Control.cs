@@ -58,16 +58,19 @@ public partial class GameManager2
                 player.EnableControl(true);
                 firstArm.EnableControl(false);
                 secondArm.EnableControl(false);
+                SetCameraSize(player.cameraSize);
                 break;
             case ControlIndex.firstArm:
                 player.EnableControl(false);
                 firstArm.EnableControl(true);
                 secondArm.EnableControl(false);
+                SetCameraSize(firstArm.cameraSize);
                 break;
             case ControlIndex.secondArm:
                 player.EnableControl(false);
                 firstArm.EnableControl(false);
                 secondArm.EnableControl(true);
+                SetCameraSize(secondArm.cameraSize);
                 break;
             case ControlIndex.disabled:
                 player.EnableControl(false);

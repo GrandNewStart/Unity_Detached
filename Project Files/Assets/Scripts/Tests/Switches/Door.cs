@@ -6,16 +6,16 @@ public class Door : BaseSwitch
 {
     [SerializeField] private GameObject door;
 
-    protected override void OnPlugIn()
+    public override void PlugIn(Arm arm)
     {
-        base.OnPlugIn();
+        base.PlugIn(arm);
         door.SetActive(false);
         sprite.sprite = sprite_plugged_green;
     }
 
-    protected override void OnPlugOut()
+    public override void PlugOut()
     {
-        base.OnPlugOut();
+        base.PlugOut();
         door.SetActive(true);
         sprite.sprite = sprite_unplugged;
     }

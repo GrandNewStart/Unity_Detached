@@ -32,19 +32,16 @@ public class BaseSwitch : MonoBehaviour
     public virtual void Control() { }
     public virtual void Pause() { }
     public virtual void Resume() { }
-    protected virtual void OnPlugIn() { }
-    protected virtual void OnPlugOut() { }
     
-    public void PlugIn(Arm arm)
+    public virtual void PlugIn(Arm arm)
     {
         isPlugged = true;
         this.arm = arm;
         arm.cameraTarget = cameraTarget;
         gameManager.SetCameraTarget(cameraTarget);
-        OnPlugIn();
     }
 
-    public void PlugOut()
+    public virtual void PlugOut()
     {
         isPlugged = false;
         arm.cameraTarget = arm.transform;
@@ -61,7 +58,6 @@ public class BaseSwitch : MonoBehaviour
                 gameManager.SetCameraTarget(gameManager.secondArm.transform);
                 break;
         }
-        OnPlugOut();
     }
 
     private void ManageLetterBox()
